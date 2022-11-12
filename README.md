@@ -8,17 +8,12 @@ We use the "React-Native" to make the UI format(front-end), and now I use "Pyhon
 
 ---
 >Why we choose React-Native and Expo
-
+*why is the React-Native
 Because using React-Native is a good choice for developing a dual platform app in a short time.
 
 You just only need to know a few knowledge about css event without javascript then you can make it.
 
-
-Take me for example, 
-I have'n used javascript since I started to do that. 
-However, this project just only spend me about a week to cpmplete!
-
-Then why is the Expo.
+*Then why is the Expo.
 I use a ASUS laptop to develope it. Hence, by Expo I can easily use my Iphone to solve it without a emulator.
 
 ---
