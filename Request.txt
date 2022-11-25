@@ -1,0 +1,133 @@
+2.	獲取資料格式(前端給予)+詳細功能介紹
+
+    1	GetTrains
+        功能介紹:
+            簡而言之，我要從第一個介面拿到符合我要求的車票，該介面上能給的資訊我都給。
+        資料:
+            {
+                'StartStation'  : (String)      起站
+                'ArriveStation' : (String)      迄站
+                'OnewayReturn'  : (String)      ”True”代表是來回 "False"代表僅單程 (不用讀Back資料
+                'StartTime'     : (String)      起程時間 如:2022/11/05 (六) 02:27
+                'BackStartTime' : (String)      回程時間 表示如上
+                'Type'          : (String)      種類 如標準車廂、商務車廂
+                'Tickets'       : (String)      票數 表示:1,2,0,0,0 代表一張成人兩張兒童 逗點區隔
+                'Prefer'        : (String)      偏好 如靠窗優先、靠走道優先、無偏好
+            }
+
+    2	CheckID
+        功能介紹:
+            簡而言之，確認這傢伙是不是給我亂輸入同樣身分證不同名字的狀況。
+        資料:
+            {
+                'Name'      : (String)  名字
+                'Gender'    : (String)  性別,"True"代表男性 "False"代表女性
+                'ID'        : (String)  身分證字號
+                'Phone'     : (String)  手機號碼
+                'Email'     : (String)  電子郵件
+            }
+
+    3	Book
+        功能介紹:
+            簡而言之，給你的訂票資訊。
+        資料:
+            {
+                'Name'              : (String)   姓名
+                'Email'             : (String)   電子郵件
+                'StartDate'         : (String)   出發日期 如:2022/11/05 (六)
+                'BackDate'          : (String)   回程日期 如上表示
+                'StartStation'      : (String)   出發站 如:板橋
+                'ArriveStation'     : (String)   迄站 如上
+                'StartTime'         : (String)   去程出發時間 如:'10:30'
+                'ArriveTime'        : (String)   去程抵達時間 如上
+                'BackStartTime'     : (String)   回程出發時間 如上 若無則'None'
+                'BackArriveTime'    : (String)   回程抵達時間 如上
+                'Tickets'           : (String)   票數 如1,2,0,0,0 代表一張成人兩張兒童
+                'Order'             : (String)   去程車號
+                'BackOrder'         : (String)   回程車號 若無則'None'
+                'Type'              : (String)   種類 如:標準車廂、商務車廂
+            }
+
+    4	TimeTable
+        功能介紹:
+            簡而言之，我要時間表限定起訖站加時間。
+        資料:
+            {
+                'StartStation'  : (String)  起站名稱 如板橋
+                'ArriveStation' : (String)  迄站名稱 如上
+                'StartTime'     : (String)  時間 如2022/11/05
+            };
+
+    5	FindLose
+        功能介紹:
+            簡而言之，尋找失去的車票 給身分證字號跟訂位編號給我那張車票。
+        資料:
+            {
+                'ID'        : (String)  身分證字號
+                'BookID'    : (String)  訂位編號
+            };
+
+    6	FindCode
+        功能介紹:
+            簡而言之，給你基本資訊給我訂位代號。
+        資料:
+            {
+                'StartStation'  : (String)  起站 如板橋
+                'ArriveStation' : (String)  迄站 如上
+                'StartTime'     : (String)  出發時間 如:2022/11/05
+                'Order'         : (String)  車次編號
+                'ID'            : (String)  身分證字號
+            };
+
+    7	GetEditData
+        功能介紹:
+            簡而言之，我要改車票納給我要改的時間所含的車票。
+        資料:
+            {
+                'StartStation'      : (String)  起站 如板橋
+                'ArriveStation'     : (String)  迄站 如上
+                'StartTime'         : (String)  出發時間 如2022/11/05
+                'Type'              : (String)  種類 如標準車廂、商務車廂
+                'Tickets'           : (String)  車票數 如:1,2,0,0,0 代表全票一張兒童兩張 以逗號區隔
+            };
+
+    8	Refund
+        功能介紹:
+            簡而言之，退票。
+        資料:
+            {
+                'BookID'    : (String)  訂位代號
+            };
+
+    9	Pay
+        功能介紹:
+            簡而言之，付款。
+        資料:
+            {
+                'BookID'    : (String)  訂位代號
+            };
+
+    10	Use
+        功能介紹:
+            簡而言之，使用車票。
+        資料:
+            {
+                'BookID'    : (String)  訂位代號
+            };
+
+    11	Edit
+        功能介紹:
+            簡而言之，確定更改該車票。
+        資料:
+            {
+                'BookID'            : (String)  訂位代號
+                'StartDate'         : (String)  去程日期 如2022/11/05
+                'BackDate'          : (String)  回程日期 如上 若無則'None'
+                'StartTime'         : (String)  去程出發時間 如11:30
+                'ArriveTime'        : (String)  去程抵達時間 如上
+                'BackStartTime'     : (String)  回程出發時間 如上 若無則'None'
+                'BackArriveTime'    : (String)  回程抵達時間 如上
+                'Order'             : (String)  去程車次號碼
+                'BackOrder'         : (String)  回程車次號碼 若無則'None'
+                'Tickets'           : (String)  車票數 如 1,2,0,0,0 代表一張全票兩張兒童 逗點區隔
+            };

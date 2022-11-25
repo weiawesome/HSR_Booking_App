@@ -1,0 +1,54 @@
+{
+            'CodeNumber': d[index].CodeNumber,
+            'BussinessState': status,
+            'OnewayReturn': d[index].OnewayReturn,
+            'Type': d[index].Type,
+            'TotalText': d[index].TotalText,
+            'TotalPrice': d[index].TotalPrice,
+            'StartStation': d[index].StartStation,
+            'ArriveStation': d[index].ArriveStation,
+            'NumOfTickets':d[index].NumOfTickets,
+            'Prices':d[index].Prices,
+            'Start': {
+                'Date': d[index].StartDate,
+                'StartTime': d[index].StartTime,
+                'ArriveTime': d[index].ArriveTime,
+                'Order': d[index].Order,
+                'StationsBy': d[index].StationsBy,
+                'Tickets': d[index].Tickets
+            },
+            'Arrive': {
+                'Date': d[index].BackDate,
+                'StartTime': d[index].BackStartTime,
+                'ArriveTime': d[index].BackArriveTime,
+                'Order': d[index].BackOrder,
+                'StationsBy': d[index].BackStationsBy,
+                'Tickets': d[index].BackTickets
+            }
+
+
+
+
+data: {
+    CodeNumber: responseJson.Result,
+    OnewayReturn: oneway_return,
+    StartDate: gotime,
+    BackDate: oneway_return ? backtime : 'None',
+    StartStation: StartstationText,
+    ArriveStation: EndstationText,
+    StartTime: Tickinfo[1],
+    ArriveTime: Tickinfo[2],
+    Order: Tickinfo[0],
+    BackStartTime: oneway_return ? BackTickinfo[1] : 'None',
+    BackArriveTime: oneway_return ? BackTickinfo[2] : 'None',
+    BackOrder: BackTickinfo[0],
+    Type:TypeText,
+    TotalText:TicketsToText(Tickets,oneway_return),
+    TotalPrice:Allprices,
+    StationsBy:Tickinfo[3],
+    BackStationsBy:BackTickinfo[3],
+    NumOfTickets:Tickets,
+    Prices:Prices,
+    Tickets:d1,
+    BackTickets:d2,
+},

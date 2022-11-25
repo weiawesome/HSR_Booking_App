@@ -1,0 +1,2666 @@
+{
+  "南港": {
+    "台北": {
+      "Standard": {
+        "Adult": 40,
+        "Child": 20,
+        "Old": 20,
+        "Love": 20,
+        "Early65": 25,
+        "Early8": 30,
+        "Early9": 35,
+        "Student5": 20,
+        "Student75": 30,
+        "Student88": 35
+      },
+      "Bussiness": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 70,
+        "Child": 35,
+        "Old": 35,
+        "Love": 35,
+        "Early65": 45,
+        "Early8": 55,
+        "Early9": 60,
+        "Student5": 35,
+        "Student75": 50,
+        "Student88": 60
+      },
+      "Bussiness": {
+        "Adult": 310,
+        "Child": 155,
+        "Old": 155,
+        "Love": 155
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 200,
+        "Child": 100,
+        "Old": 100,
+        "Love": 100,
+        "Early65": 130,
+        "Early8": 160,
+        "Early9": 180,
+        "Student5": 100,
+        "Student75": 150,
+        "Student88": 175
+      },
+      "Bussiness": {
+        "Adult": 500,
+        "Child": 250,
+        "Old": 250,
+        "Love": 250
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 330,
+        "Child": 16,
+        "Old": 165,
+        "Love": 165,
+        "Early65": 210,
+        "Early8": 260,
+        "Early9": 295,
+        "Student5": 165,
+        "Student75": 245,
+        "Student88": 290
+      },
+      "Bussiness": {
+        "Adult": 700,
+        "Child": 350,
+        "Old": 350,
+        "Love": 350
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 480,
+        "Child": 240,
+        "Old": 240,
+        "Love": 240,
+        "Early65": 310,
+        "Early8": 380,
+        "Early9": 430,
+        "Student5": 240,
+        "Student75": 360,
+        "Student88": 420
+      },
+      "Bussiness": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 750,
+        "Child": 375,
+        "Old": 375,
+        "Love": 375,
+        "Early65": 485,
+        "Early8": 600,
+        "Early9": 675,
+        "Student5": 375,
+        "Student75": 560,
+        "Student88": 660
+      },
+      "Bussiness": {
+        "Adult": 1330,
+        "Child": 665,
+        "Old": 665,
+        "Love": 665
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 870,
+        "Child": 435,
+        "Old": 435,
+        "Love": 435,
+        "Early65": 565,
+        "Early8": 595,
+        "Early9": 780,
+        "Student5": 435,
+        "Student75": 650,
+        "Student88": 765
+      },
+      "Bussiness": {
+        "Adult": 1510,
+        "Child": 755,
+        "Old": 755,
+        "Love": 755
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 970,
+        "Child": 485,
+        "Old": 485,
+        "Love": 485,
+        "Early65": 630,
+        "Early8": 775,
+        "Early9": 870,
+        "Student5": 485,
+        "Student75": 725,
+        "Student88": 850
+      },
+      "Bussiness": {
+        "Adult": 1660,
+        "Child": 830,
+        "Old": 830,
+        "Love": 830
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 1120,
+        "Child": 560,
+        "Old": 560,
+        "Love": 560,
+        "Early65": 725,
+        "Early8": 895,
+        "Early9": 1005,
+        "Student5": 560,
+        "Student75": 840,
+        "Student88": 985
+      },
+      "Bussiness": {
+        "Adult": 1880,
+        "Child": 940,
+        "Old": 940,
+        "Love": 940
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695,
+        "Early65": 900,
+        "Early8": 1110,
+        "Early9": 1250,
+        "Student5": 695,
+        "Student75": 1040,
+        "Student88": 1220
+      },
+      "Bussiness": {
+        "Adult": 2290,
+        "Child": 1145,
+        "Old": 1145,
+        "Love": 1145
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1530,
+        "Child": 765,
+        "Old": 765,
+        "Love": 765,
+        "Early65": 990,
+        "Early8": 1220,
+        "Early9": 1375,
+        "Student5": 765,
+        "Student75": 1145,
+        "Student88": 1345
+      },
+      "Bussiness": {
+        "Adult": 2500,
+        "Child": 1250,
+        "Old": 1250,
+        "Love": 1250
+      }
+    }
+  },
+  "台北": {
+    "南港": {
+      "Standard": {
+        "Adult": 40,
+        "Child": 40,
+        "Old": 20,
+        "Love": 20,
+        "Early65": 25,
+        "Early8": 25,
+        "Early9": 35,
+        "Student5": 20,
+        "Student75": 30,
+        "Student88": 35
+      },
+      "Bussiness": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 40,
+        "Child": 20,
+        "Old": 20,
+        "Love": 20,
+        "Early65": 25,
+        "Early8": 30,
+        "Early9": 35,
+        "Student5": 20,
+        "Student75": 30,
+        "Student88": 35
+      },
+      "Bussiness": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 160,
+        "Child": 80,
+        "Old": 80,
+        "Love": 80,
+        "Early65": 100,
+        "Early8": 125,
+        "Early9": 140,
+        "Student5": 80,
+        "Student75": 120,
+        "Student88": 140
+      },
+      "Bussiness": {
+        "Adult": 440,
+        "Child": 22,
+        "Old": 220,
+        "Love": 220
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 290,
+        "Child": 145,
+        "Old": 145,
+        "Love": 145,
+        "Early65": 185,
+        "Early8": 230,
+        "Early9": 260,
+        "Student5": 1,
+        "Student75": 215,
+        "Student88": 255
+      },
+      "Bussiness": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 430,
+        "Child": 215,
+        "Old": 215,
+        "Love": 215,
+        "Early65": 275,
+        "Early8": 340,
+        "Early9": 385,
+        "Student5": 215,
+        "Student75": 320,
+        "Student88": 375
+      },
+      "Bussiness": {
+        "Adult": 850,
+        "Child": 425,
+        "Old": 425,
+        "Love": 425
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 700,
+        "Child": 350,
+        "Old": 350,
+        "Love": 350,
+        "Early65": 455,
+        "Early8": 560,
+        "Early9": 630,
+        "Student5": 350,
+        "Student75": 525,
+        "Student88": 615
+      },
+      "Bussiness": {
+        "Adult": 1250,
+        "Child": 625,
+        "Old": 625,
+        "Love": 625
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410,
+        "Early65": 530,
+        "Early8": 655,
+        "Early9": 735,
+        "Student5": 410,
+        "Student75": 615,
+        "Student88": 720
+      },
+      "Bussiness": {
+        "Adult": 1430,
+        "Child": 715,
+        "Old": 715,
+        "Love": 715
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 930,
+        "Child": 465,
+        "Old": 465,
+        "Love": 465,
+        "Early65": 600,
+        "Early8": 740,
+        "Early9": 835,
+        "Student5": 465,
+        "Student75": 695,
+        "Student88": 815
+      },
+      "Bussiness": {
+        "Adult": 1600,
+        "Child": 800,
+        "Old": 800,
+        "Love": 800
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 1080,
+        "Child": 540,
+        "Old": 540,
+        "Love": 540,
+        "Early65": 700,
+        "Early8": 860,
+        "Early9": 970,
+        "Student5": 540,
+        "Student75": 810,
+        "Student88": 950
+      },
+      "Bussiness": {
+        "Adult": 1820,
+        "Child": 910,
+        "Old": 910,
+        "Love": 910
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 1350,
+        "Child": 675,
+        "Old": 675,
+        "Love": 675,
+        "Early65": 875,
+        "Early8": 1080,
+        "Early9": 1215,
+        "Student5": 675,
+        "Student75": 1010,
+        "Student88": 1185
+      },
+      "Bussiness": {
+        "Adult": 2230,
+        "Child": 1115,
+        "Old": 1115,
+        "Love": 1115
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1490,
+        "Child": 745,
+        "Old": 745,
+        "Love": 745,
+        "Early65": 965,
+        "Early8": 1190,
+        "Early9": 1340,
+        "Student5": 745,
+        "Student75": 1115,
+        "Student88": 1310
+      },
+      "Bussiness": {
+        "Adult": 2440,
+        "Child": 1220,
+        "Old": 1220,
+        "Love": 1220
+      }
+    }
+  },
+  "板橋": {
+    "南港": {
+      "Standard": {
+        "Adult": 70,
+        "Child": 35,
+        "Old": 35,
+        "Love": 35,
+        "Early65": 45,
+        "Early8": 55,
+        "Early9": 60,
+        "Student5": 35,
+        "Student75": 50,
+        "Student88": 60
+      },
+      "Bussiness": {
+        "Adult": 310,
+        "Child": 155,
+        "Old": 155,
+        "Love": 155
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 40,
+        "Child": 20,
+        "Old": 20,
+        "Love": 20,
+        "Early65": 25,
+        "Early8": 30,
+        "Early9": 35,
+        "Student5": 20,
+        "Student75": 30,
+        "Student88": 35
+      },
+      "Bussiness": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130,
+        "Early65": 165,
+        "Early8": 205,
+        "Early9": 230,
+        "Student5": 130,
+        "Student75": 195,
+        "Student88": 225
+      },
+      "Bussiness": {
+        "Adult": 590,
+        "Child": 295,
+        "Old": 295,
+        "Love": 295
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200,
+        "Early65": 265,
+        "Early8": 320,
+        "Early9": 360,
+        "Student5": 200,
+        "Student75": 300,
+        "Student88": 350
+      },
+      "Bussiness": {
+        "Adult": 800,
+        "Child": 40,
+        "Old": 400,
+        "Love": 400
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 900,
+        "Child": 450,
+        "Old": 450,
+        "Love": 450,
+        "Early65": 585,
+        "Early8": 720,
+        "Early9": 810,
+        "Student5": 450,
+        "Student75": 675,
+        "Student88": 790
+      },
+      "Bussiness": {
+        "Adult": 1550,
+        "Child": 775,
+        "Old": 775,
+        "Love": 775
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 1050,
+        "Child": 525,
+        "Old": 525,
+        "Love": 525,
+        "Early65": 680,
+        "Early8": 840,
+        "Early9": 9,
+        "Student5": 525,
+        "Student75": 785,
+        "Student88": 920
+      },
+      "Bussiness": {
+        "Adult": 1780,
+        "Child": 890,
+        "Old": 890,
+        "Love": 890
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 1320,
+        "Child": 660,
+        "Old": 660,
+        "Love": 660,
+        "Early65": 855,
+        "Early8": 1055,
+        "Early9": 1185,
+        "Student5": 660,
+        "Student75": 990,
+        "Student88": 1160
+      },
+      "Bussiness": {
+        "Adult": 2180,
+        "Child": 1090,
+        "Old": 1090,
+        "Love": 1090
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1460,
+        "Child": 730,
+        "Old": 730,
+        "Love": 730,
+        "Early65": 945,
+        "Early8": 1165,
+        "Early9": 1310,
+        "Student5": 730,
+        "Student75": 1095,
+        "Student88": 1280
+      },
+      "Bussiness": {
+        "Adult": 2390,
+        "Child": 1195,
+        "Old": 1195,
+        "Love": 1195
+      }
+    }
+  },
+  "桃園": {
+    "南港": {
+      "Standard": {
+        "Adult": 200,
+        "Child": 100,
+        "Old": 100,
+        "Love": 100,
+        "Early65": 130,
+        "Early8": 160,
+        "Early9": 180,
+        "Student5": 100,
+        "Student75": 150,
+        "Student88": 175
+      },
+      "Bussiness": {
+        "Adult": 500,
+        "Child": 250,
+        "Old": 250,
+        "Love": 250
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 160,
+        "Child": 80,
+        "Old": 80,
+        "Love": 80,
+        "Early65": 100,
+        "Early8": 125,
+        "Early9": 140,
+        "Student5": 80,
+        "Student75": 120,
+        "Student88": 140
+      },
+      "Bussiness": {
+        "Adult": 440,
+        "Child": 22,
+        "Old": 220,
+        "Love": 220
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 280,
+        "Child": 140,
+        "Old": 140,
+        "Love": 140,
+        "Early65": 180,
+        "Early8": 220,
+        "Early9": 250,
+        "Student5": 140,
+        "Student75": 210,
+        "Student88": 245
+      },
+      "Bussiness": {
+        "Adult": 620,
+        "Child": 310,
+        "Old": 310,
+        "Love": 310
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 540,
+        "Child": 270,
+        "Old": 270,
+        "Love": 270,
+        "Early65": 350,
+        "Early8": 430,
+        "Early9": 485,
+        "Student5": 270,
+        "Student75": 405,
+        "Student88": 475
+      },
+      "Bussiness": {
+        "Adult": 1010,
+        "Child": 505,
+        "Old": 505,
+        "Love": 505
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 780,
+        "Child": 390,
+        "Old": 390,
+        "Love": 390,
+        "Early65": 505,
+        "Early8": 620,
+        "Early9": 700,
+        "Student5": 390,
+        "Student75": 585,
+        "Student88": 685
+      },
+      "Bussiness": {
+        "Adult": 1370,
+        "Child": 685,
+        "Old": 685,
+        "Love": 685
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460,
+        "Early65": 595,
+        "Early8": 735,
+        "Early9": 825,
+        "Student5": 460,
+        "Student75": 690,
+        "Student88": 805
+      },
+      "Bussiness": {
+        "Adult": 1580,
+        "Child": 790,
+        "Old": 790,
+        "Love": 790
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 1190,
+        "Child": 595,
+        "Old": 595,
+        "Love": 595,
+        "Early65": 770,
+        "Early8": 950,
+        "Early9": 1070,
+        "Student5": 595,
+        "Student75": 890,
+        "Student88": 1045
+      },
+      "Bussiness": {
+        "Adult": 1990,
+        "Child": 995,
+        "Old": 995,
+        "Love": 995
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1330,
+        "Child": 665,
+        "Old": 665,
+        "Love": 665,
+        "Early65": 860,
+        "Early8": 1060,
+        "Early9": 1195,
+        "Student5": 665,
+        "Student75": 995,
+        "Student88": 1170
+      },
+      "Bussiness": {
+        "Adult": 2200,
+        "Child": 1100,
+        "Old": 1100,
+        "Love": 1100
+      }
+    }
+  },
+  "新竹": {
+    "南港": {
+      "Standard": {
+        "Adult": 330,
+        "Child": 16,
+        "Old": 165,
+        "Love": 165,
+        "Early65": 210,
+        "Early8": 260,
+        "Early9": 295,
+        "Student5": 165,
+        "Student75": 245,
+        "Student88": 290
+      },
+      "Bussiness": {
+        "Adult": 700,
+        "Child": 350,
+        "Old": 350,
+        "Love": 350
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 290,
+        "Child": 145,
+        "Old": 145,
+        "Love": 145,
+        "Early65": 185,
+        "Early8": 230,
+        "Early9": 260,
+        "Student5": 1,
+        "Student75": 215,
+        "Student88": 255
+      },
+      "Bussiness": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 260,
+        "Child": 130,
+        "Old": 130,
+        "Love": 130,
+        "Early65": 165,
+        "Early8": 205,
+        "Early9": 230,
+        "Student5": 130,
+        "Student75": 195,
+        "Student88": 225
+      },
+      "Bussiness": {
+        "Adult": 590,
+        "Child": 295,
+        "Old": 295,
+        "Love": 295
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 140,
+        "Child": 70,
+        "Old": 70,
+        "Love": 70,
+        "Early65": 90,
+        "Early8": 110,
+        "Early9": 125,
+        "Student5": 70,
+        "Student75": 105,
+        "Student88": 120
+      },
+      "Bussiness": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205,
+        "Early65": 265,
+        "Early8": 325,
+        "Early9": 365,
+        "Student5": 205,
+        "Student75": 305,
+        "Student88": 360
+      },
+      "Bussiness": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 540,
+        "Child": 270,
+        "Old": 270,
+        "Love": 270,
+        "Early65": 350,
+        "Early8": 43,
+        "Early9": 485,
+        "Student5": 270,
+        "Student75": 405,
+        "Student88": 475
+      },
+      "Bussiness": {
+        "Adult": 1010,
+        "Child": 505,
+        "Old": 505,
+        "Love": 505
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320,
+        "Early65": 415,
+        "Early8": 510,
+        "Early9": 575,
+        "Student5": 320,
+        "Student75": 480,
+        "Student88": 560
+      },
+      "Bussiness": {
+        "Adult": 1160,
+        "Child": 580,
+        "Old": 580,
+        "Love": 580
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 1060,
+        "Child": 530,
+        "Old": 530,
+        "Love": 530,
+        "Early65": 685,
+        "Early8": 845,
+        "Early9": 950,
+        "Student5": 530,
+        "Student75": 795,
+        "Student88": 930
+      },
+      "Bussiness": {
+        "Adult": 1790,
+        "Child": 895,
+        "Old": 895,
+        "Love": 895
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1200,
+        "Child": 600,
+        "Old": 600,
+        "Love": 600,
+        "Early65": 780,
+        "Early8": 960,
+        "Early9": 1080,
+        "Student5": 600,
+        "Student75": 900,
+        "Student88": 1055
+      },
+      "Bussiness": {
+        "Adult": 2000,
+        "Child": 1000,
+        "Old": 1000,
+        "Love": 1000
+      }
+    }
+  },
+  "苗栗": {
+    "南港": {
+      "Standard": {
+        "Adult": 480,
+        "Child": 240,
+        "Old": 240,
+        "Love": 240,
+        "Early65": 310,
+        "Early8": 380,
+        "Early9": 430,
+        "Student5": 240,
+        "Student75": 360,
+        "Student88": 420
+      },
+      "Bussiness": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 430,
+        "Child": 215,
+        "Old": 215,
+        "Love": 215,
+        "Early65": 275,
+        "Early8": 340,
+        "Early9": 385,
+        "Student5": 215,
+        "Student75": 320,
+        "Student88": 375
+      },
+      "Bussiness": {
+        "Adult": 850,
+        "Child": 425,
+        "Old": 425,
+        "Love": 425
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200,
+        "Early65": 265,
+        "Early8": 320,
+        "Early9": 360,
+        "Student5": 200,
+        "Student75": 300,
+        "Student88": 350
+      },
+      "Bussiness": {
+        "Adult": 800,
+        "Child": 40,
+        "Old": 400,
+        "Love": 400
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 280,
+        "Child": 140,
+        "Old": 140,
+        "Love": 140,
+        "Early65": 180,
+        "Early8": 220,
+        "Early9": 250,
+        "Student5": 140,
+        "Student75": 210,
+        "Student88": 245
+      },
+      "Bussiness": {
+        "Adult": 620,
+        "Child": 310,
+        "Old": 310,
+        "Love": 310
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 140,
+        "Child": 70,
+        "Old": 70,
+        "Love": 70,
+        "Early65": 90,
+        "Early8": 110,
+        "Early9": 125,
+        "Student5": 70,
+        "Student75": 105,
+        "Student88": 120
+      },
+      "Bussiness": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 270,
+        "Child": 135,
+        "Old": 135,
+        "Love": 135,
+        "Early65": 175,
+        "Early8": 215,
+        "Early9": 240,
+        "Student5": 135,
+        "Student75": 200,
+        "Student88": 235
+      },
+      "Bussiness": {
+        "Adult": 610,
+        "Child": 305,
+        "Old": 305,
+        "Love": 305
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 390,
+        "Child": 195,
+        "Old": 195,
+        "Love": 195,
+        "Early65": 250,
+        "Early8": 310,
+        "Early9": 350,
+        "Student5": 195,
+        "Student75": 290,
+        "Student88": 340
+      },
+      "Bussiness": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 500,
+        "Child": 250,
+        "Old": 250,
+        "Love": 250,
+        "Early65": 325,
+        "Early8": 400,
+        "Early9": 450,
+        "Student5": 250,
+        "Student75": 375,
+        "Student88": 440
+      },
+      "Bussiness": {
+        "Adult": 950,
+        "Child": 475,
+        "Old": 475,
+        "Love": 475
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320,
+        "Early65": 415,
+        "Early8": 510,
+        "Early9": 575,
+        "Student5": 320,
+        "Student75": 480,
+        "Student88": 560
+      },
+      "Bussiness": {
+        "Adult": 1160,
+        "Child": 580,
+        "Old": 580,
+        "Love": 580
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460,
+        "Early65": 595,
+        "Early8": 735,
+        "Early9": 825,
+        "Student5": 460,
+        "Student75": 690,
+        "Student88": 805
+      },
+      "Bussiness": {
+        "Adult": 1580,
+        "Child": 790,
+        "Old": 790,
+        "Love": 790
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 1060,
+        "Child": 530,
+        "Old": 530,
+        "Love": 530,
+        "Early65": 685,
+        "Early8": 845,
+        "Early9": 950,
+        "Student5": 530,
+        "Student75": 795,
+        "Student88": 930
+      },
+      "Bussiness": {
+        "Adult": 1790,
+        "Child": 895,
+        "Old": 895,
+        "Love": 895
+      }
+    }
+  },
+  "台中": {
+    "南港": {
+      "Standard": {
+        "Adult": 750,
+        "Child": 375,
+        "Old": 375,
+        "Love": 375,
+        "Early65": 485,
+        "Early8": 600,
+        "Early9": 675,
+        "Student5": 375,
+        "Student75": 560,
+        "Student88": 660
+      },
+      "Bussiness": {
+        "Adult": 1330,
+        "Child": 665,
+        "Old": 665,
+        "Love": 665
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 700,
+        "Child": 350,
+        "Old": 350,
+        "Love": 350,
+        "Early65": 455,
+        "Early8": 560,
+        "Early9": 630,
+        "Student5": 350,
+        "Student75": 525,
+        "Student88": 615
+      },
+      "Bussiness": {
+        "Adult": 1250,
+        "Child": 625,
+        "Old": 625,
+        "Love": 625
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 540,
+        "Child": 270,
+        "Old": 270,
+        "Love": 270,
+        "Early65": 350,
+        "Early8": 430,
+        "Early9": 485,
+        "Student5": 270,
+        "Student75": 405,
+        "Student88": 475
+      },
+      "Bussiness": {
+        "Adult": 1010,
+        "Child": 505,
+        "Old": 505,
+        "Love": 505
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205,
+        "Early65": 265,
+        "Early8": 325,
+        "Early9": 365,
+        "Student5": 205,
+        "Student75": 305,
+        "Student88": 360
+      },
+      "Bussiness": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 270,
+        "Child": 135,
+        "Old": 135,
+        "Love": 135,
+        "Early65": 175,
+        "Early8": 215,
+        "Early9": 240,
+        "Student5": 135,
+        "Student75": 200,
+        "Student88": 235
+      },
+      "Bussiness": {
+        "Adult": 610,
+        "Child": 305,
+        "Old": 305,
+        "Love": 305
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 230,
+        "Child": 115,
+        "Old": 115,
+        "Love": 115,
+        "Early65": 145,
+        "Early8": 180,
+        "Early9": 205,
+        "Student5": 115,
+        "Student75": 170,
+        "Student88": 200
+      },
+      "Bussiness": {
+        "Adult": 550,
+        "Child": 275,
+        "Old": 275,
+        "Love": 275
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 380,
+        "Child": 190,
+        "Old": 190,
+        "Love": 190,
+        "Early65": 245,
+        "Early8": 300,
+        "Early9": 340,
+        "Student5": 190,
+        "Student75": 285,
+        "Student88": 330
+      },
+      "Bussiness": {
+        "Adult": 770,
+        "Child": 385,
+        "Old": 385,
+        "Love": 385
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 650,
+        "Child": 325,
+        "Old": 325,
+        "Love": 325,
+        "Early65": 420,
+        "Early8": 520,
+        "Early9": 585,
+        "Student5": 325,
+        "Student75": 485,
+        "Student88": 570
+      },
+      "Bussiness": {
+        "Adult": 1180,
+        "Child": 590,
+        "Old": 590,
+        "Love": 590
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    }
+  },
+  "彰化": {
+    "南港": {
+      "Standard": {
+        "Adult": 870,
+        "Child": 435,
+        "Old": 435,
+        "Love": 435,
+        "Early65": 565,
+        "Early8": 595,
+        "Early9": 780,
+        "Student5": 435,
+        "Student75": 650,
+        "Student88": 765
+      },
+      "Bussiness": {
+        "Adult": 1510,
+        "Child": 755,
+        "Old": 755,
+        "Love": 755
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410,
+        "Early65": 530,
+        "Early8": 655,
+        "Early9": 735,
+        "Student5": 410,
+        "Student75": 615,
+        "Student88": 720
+      },
+      "Bussiness": {
+        "Adult": 1430,
+        "Child": 715,
+        "Old": 715,
+        "Love": 715
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 540,
+        "Child": 270,
+        "Old": 270,
+        "Love": 270,
+        "Early65": 350,
+        "Early8": 43,
+        "Early9": 485,
+        "Student5": 270,
+        "Student75": 405,
+        "Student88": 475
+      },
+      "Bussiness": {
+        "Adult": 1010,
+        "Child": 505,
+        "Old": 505,
+        "Love": 505
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 390,
+        "Child": 195,
+        "Old": 195,
+        "Love": 195,
+        "Early65": 250,
+        "Early8": 310,
+        "Early9": 350,
+        "Student5": 195,
+        "Student75": 290,
+        "Student88": 340
+      },
+      "Bussiness": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 130,
+        "Child": 65,
+        "Old": 65,
+        "Love": 65,
+        "Early65": 80,
+        "Early8": 100,
+        "Early9": 115,
+        "Student5": 65,
+        "Student75": 95,
+        "Student88": 110
+      },
+      "Bussiness": {
+        "Adult": 400,
+        "Child": 200,
+        "Old": 200,
+        "Love": 200
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 110,
+        "Child": 55,
+        "Old": 55,
+        "Love": 55,
+        "Early65": 70,
+        "Early8": 85,
+        "Early9": 95,
+        "Student5": 55,
+        "Student75": 80,
+        "Student88": 95
+      },
+      "Bussiness": {
+        "Adult": 370,
+        "Child": 185,
+        "Old": 185,
+        "Love": 185
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 250,
+        "Child": 125,
+        "Old": 125,
+        "Love": 125,
+        "Early65": 160,
+        "Early8": 200,
+        "Early9": 225,
+        "Student5": 125,
+        "Student75": 185,
+        "Student88": 220
+      },
+      "Bussiness": {
+        "Adult": 580,
+        "Child": 290,
+        "Old": 290,
+        "Love": 290
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 530,
+        "Child": 265,
+        "Old": 265,
+        "Love": 265,
+        "Early65": 340,
+        "Early8": 420,
+        "Early9": 470,
+        "Student5": 265,
+        "Student75": 395,
+        "Student88": 465
+      },
+      "Bussiness": {
+        "Adult": 1000,
+        "Child": 500,
+        "Old": 500,
+        "Love": 500
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    }
+  },
+  "雲林": {
+    "南港": {
+      "Standard": {
+        "Adult": 970,
+        "Child": 485,
+        "Old": 485,
+        "Love": 485,
+        "Early65": 630,
+        "Early8": 775,
+        "Early9": 870,
+        "Student5": 485,
+        "Student75": 725,
+        "Student88": 850
+      },
+      "Bussiness": {
+        "Adult": 1660,
+        "Child": 830,
+        "Old": 830,
+        "Love": 830
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 930,
+        "Child": 465,
+        "Old": 465,
+        "Love": 465,
+        "Early65": 600,
+        "Early8": 740,
+        "Early9": 835,
+        "Student5": 465,
+        "Student75": 695,
+        "Student88": 815
+      },
+      "Bussiness": {
+        "Adult": 1600,
+        "Child": 800,
+        "Old": 800,
+        "Love": 800
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 900,
+        "Child": 450,
+        "Old": 450,
+        "Love": 450,
+        "Early65": 585,
+        "Early8": 720,
+        "Early9": 810,
+        "Student5": 450,
+        "Student75": 675,
+        "Student88": 790
+      },
+      "Bussiness": {
+        "Adult": 1550,
+        "Child": 775,
+        "Old": 775,
+        "Love": 775
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 780,
+        "Child": 390,
+        "Old": 390,
+        "Love": 390,
+        "Early65": 505,
+        "Early8": 620,
+        "Early9": 700,
+        "Student5": 390,
+        "Student75": 585,
+        "Student88": 685
+      },
+      "Bussiness": {
+        "Adult": 1370,
+        "Child": 685,
+        "Old": 685,
+        "Love": 685
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320,
+        "Early65": 415,
+        "Early8": 510,
+        "Early9": 575,
+        "Student5": 320,
+        "Student75": 480,
+        "Student88": 560
+      },
+      "Bussiness": {
+        "Adult": 1160,
+        "Child": 580,
+        "Old": 580,
+        "Love": 580
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 500,
+        "Child": 250,
+        "Old": 250,
+        "Love": 250,
+        "Early65": 325,
+        "Early8": 400,
+        "Early9": 450,
+        "Student5": 250,
+        "Student75": 375,
+        "Student88": 440
+      },
+      "Bussiness": {
+        "Adult": 950,
+        "Child": 475,
+        "Old": 475,
+        "Love": 475
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 230,
+        "Child": 115,
+        "Old": 115,
+        "Love": 115,
+        "Early65": 145,
+        "Early8": 180,
+        "Early9": 205,
+        "Student5": 115,
+        "Student75": 170,
+        "Student88": 200
+      },
+      "Bussiness": {
+        "Adult": 550,
+        "Child": 275,
+        "Old": 275,
+        "Love": 275
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 110,
+        "Child": 55,
+        "Old": 55,
+        "Love": 55,
+        "Early65": 70,
+        "Early8": 85,
+        "Early9": 95,
+        "Student5": 55,
+        "Student75": 80,
+        "Student88": 95
+      },
+      "Bussiness": {
+        "Adult": 370,
+        "Child": 185,
+        "Old": 185,
+        "Love": 185
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 150,
+        "Child": 75,
+        "Old": 75,
+        "Love": 75,
+        "Early65": 95,
+        "Early8": 120,
+        "Early9": 135,
+        "Student5": 75,
+        "Student75": 110,
+        "Student88": 130
+      },
+      "Bussiness": {
+        "Adult": 430,
+        "Child": 215,
+        "Old": 215,
+        "Love": 215
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 420,
+        "Child": 210,
+        "Old": 210,
+        "Love": 210,
+        "Early65": 270,
+        "Early8": 335,
+        "Early9": 375,
+        "Student5": 210,
+        "Student75": 315,
+        "Student88": 365
+      },
+      "Bussiness": {
+        "Adult": 830,
+        "Child": 415,
+        "Old": 415,
+        "Love": 415
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 560,
+        "Child": 280,
+        "Old": 280,
+        "Love": 280,
+        "Early65": 360,
+        "Early8": 445,
+        "Early9": 500,
+        "Student5": 280,
+        "Student75": 420,
+        "Student88": 490
+      },
+      "Bussiness": {
+        "Adult": 1040,
+        "Child": 520,
+        "Old": 520,
+        "Love": 520
+      }
+    }
+  },
+  "嘉義": {
+    "南港": {
+      "Standard": {
+        "Adult": 1120,
+        "Child": 560,
+        "Old": 560,
+        "Love": 560,
+        "Early65": 725,
+        "Early8": 895,
+        "Early9": 1005,
+        "Student5": 560,
+        "Student75": 840,
+        "Student88": 985
+      },
+      "Bussiness": {
+        "Adult": 1880,
+        "Child": 940,
+        "Old": 940,
+        "Love": 940
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 1080,
+        "Child": 540,
+        "Old": 540,
+        "Love": 540,
+        "Early65": 700,
+        "Early8": 860,
+        "Early9": 970,
+        "Student5": 540,
+        "Student75": 810,
+        "Student88": 950
+      },
+      "Bussiness": {
+        "Adult": 1820,
+        "Child": 910,
+        "Old": 910,
+        "Love": 910
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 1050,
+        "Child": 525,
+        "Old": 525,
+        "Love": 525,
+        "Early65": 680,
+        "Early8": 840,
+        "Early9": 9,
+        "Student5": 525,
+        "Student75": 785,
+        "Student88": 920
+      },
+      "Bussiness": {
+        "Adult": 1780,
+        "Child": 890,
+        "Old": 890,
+        "Love": 890
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460,
+        "Early65": 595,
+        "Early8": 735,
+        "Early9": 825,
+        "Student5": 460,
+        "Student75": 690,
+        "Student88": 805
+      },
+      "Bussiness": {
+        "Adult": 1580,
+        "Child": 790,
+        "Old": 790,
+        "Love": 790
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 640,
+        "Child": 320,
+        "Old": 320,
+        "Love": 320,
+        "Early65": 415,
+        "Early8": 510,
+        "Early9": 575,
+        "Student5": 320,
+        "Student75": 480,
+        "Student88": 560
+      },
+      "Bussiness": {
+        "Adult": 1160,
+        "Child": 580,
+        "Old": 580,
+        "Love": 580
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 380,
+        "Child": 190,
+        "Old": 190,
+        "Love": 190,
+        "Early65": 245,
+        "Early8": 300,
+        "Early9": 340,
+        "Student5": 190,
+        "Student75": 285,
+        "Student88": 330
+      },
+      "Bussiness": {
+        "Adult": 770,
+        "Child": 385,
+        "Old": 385,
+        "Love": 385
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 250,
+        "Child": 125,
+        "Old": 125,
+        "Love": 125,
+        "Early65": 160,
+        "Early8": 200,
+        "Early9": 225,
+        "Student5": 125,
+        "Student75": 185,
+        "Student88": 220
+      },
+      "Bussiness": {
+        "Adult": 580,
+        "Child": 290,
+        "Old": 290,
+        "Love": 290
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 150,
+        "Child": 75,
+        "Old": 75,
+        "Love": 75,
+        "Early65": 95,
+        "Early8": 120,
+        "Early9": 135,
+        "Student5": 75,
+        "Student75": 110,
+        "Student88": 130
+      },
+      "Bussiness": {
+        "Adult": 430,
+        "Child": 215,
+        "Old": 215,
+        "Love": 215
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 280,
+        "Child": 140,
+        "Old": 140,
+        "Love": 140,
+        "Early65": 180,
+        "Early8": 220,
+        "Early9": 250,
+        "Student5": 140,
+        "Student75": 210,
+        "Student88": 245
+      },
+      "Bussiness": {
+        "Adult": 620,
+        "Child": 310,
+        "Old": 310,
+        "Love": 310
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205,
+        "Early65": 265,
+        "Early8": 325,
+        "Early9": 365,
+        "Student5": 205,
+        "Student75": 305,
+        "Student88": 360
+      },
+      "Bussiness": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410
+      }
+    }
+  },
+  "台南": {
+    "南港": {
+      "Standard": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695,
+        "Early65": 900,
+        "Early8": 1110,
+        "Early9": 1250,
+        "Student5": 695,
+        "Student75": 1040,
+        "Student88": 1220
+      },
+      "Bussiness": {
+        "Adult": 2290,
+        "Child": 1145,
+        "Old": 1145,
+        "Love": 1145
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 1350,
+        "Child": 675,
+        "Old": 675,
+        "Love": 675,
+        "Early65": 875,
+        "Early8": 1080,
+        "Early9": 1215,
+        "Student5": 675,
+        "Student75": 1010,
+        "Student88": 1185
+      },
+      "Bussiness": {
+        "Adult": 2230,
+        "Child": 1115,
+        "Old": 1115,
+        "Love": 1115
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 1320,
+        "Child": 660,
+        "Old": 660,
+        "Love": 660,
+        "Early65": 855,
+        "Early8": 1055,
+        "Early9": 1185,
+        "Student5": 660,
+        "Student75": 990,
+        "Student88": 1160
+      },
+      "Bussiness": {
+        "Adult": 2180,
+        "Child": 1090,
+        "Old": 1090,
+        "Love": 1090
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 1190,
+        "Child": 595,
+        "Old": 595,
+        "Love": 595,
+        "Early65": 770,
+        "Early8": 950,
+        "Early9": 1070,
+        "Student5": 595,
+        "Student75": 890,
+        "Student88": 1045
+      },
+      "Bussiness": {
+        "Adult": 1990,
+        "Child": 995,
+        "Old": 995,
+        "Love": 995
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 1060,
+        "Child": 530,
+        "Old": 530,
+        "Love": 530,
+        "Early65": 685,
+        "Early8": 845,
+        "Early9": 950,
+        "Student5": 530,
+        "Student75": 795,
+        "Student88": 930
+      },
+      "Bussiness": {
+        "Adult": 1790,
+        "Child": 895,
+        "Old": 895,
+        "Love": 895
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 920,
+        "Child": 460,
+        "Old": 460,
+        "Love": 460,
+        "Early65": 595,
+        "Early8": 735,
+        "Early9": 825,
+        "Student5": 460,
+        "Student75": 690,
+        "Student88": 805
+      },
+      "Bussiness": {
+        "Adult": 1580,
+        "Child": 790,
+        "Old": 790,
+        "Love": 790
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 650,
+        "Child": 325,
+        "Old": 325,
+        "Love": 325,
+        "Early65": 420,
+        "Early8": 520,
+        "Early9": 585,
+        "Student5": 325,
+        "Student75": 485,
+        "Student88": 570
+      },
+      "Bussiness": {
+        "Adult": 1180,
+        "Child": 590,
+        "Old": 590,
+        "Love": 590
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 530,
+        "Child": 265,
+        "Old": 265,
+        "Love": 265,
+        "Early65": 340,
+        "Early8": 420,
+        "Early9": 470,
+        "Student5": 265,
+        "Student75": 395,
+        "Student88": 465
+      },
+      "Bussiness": {
+        "Adult": 1000,
+        "Child": 500,
+        "Old": 500,
+        "Love": 500
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 420,
+        "Child": 210,
+        "Old": 210,
+        "Love": 210,
+        "Early65": 270,
+        "Early8": 335,
+        "Early9": 375,
+        "Student5": 210,
+        "Student75": 315,
+        "Student88": 365
+      },
+      "Bussiness": {
+        "Adult": 830,
+        "Child": 415,
+        "Old": 415,
+        "Love": 415
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 280,
+        "Child": 140,
+        "Old": 140,
+        "Love": 140,
+        "Early65": 180,
+        "Early8": 220,
+        "Early9": 250,
+        "Student5": 140,
+        "Student75": 210,
+        "Student88": 245
+      },
+      "Bussiness": {
+        "Adult": 620,
+        "Child": 310,
+        "Old": 310,
+        "Love": 310
+      }
+    },
+    "左營": {
+      "Standard": {
+        "Adult": 140,
+        "Child": 70,
+        "Old": 70,
+        "Love": 70,
+        "Early65": 90,
+        "Early8": 110,
+        "Early9": 125,
+        "Student5": 70,
+        "Student75": 105,
+        "Student88": 120
+      },
+      "Bussiness": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205
+      }
+    }
+  },
+  "左營": {
+    "南港": {
+      "Standard": {
+        "Adult": 1530,
+        "Child": 765,
+        "Old": 765,
+        "Love": 765,
+        "Early65": 990,
+        "Early8": 1220,
+        "Early9": 1375,
+        "Student5": 765,
+        "Student75": 1145,
+        "Student88": 1345
+      },
+      "Bussiness": {
+        "Adult": 2500,
+        "Child": 1250,
+        "Old": 1250,
+        "Love": 1250
+      }
+    },
+    "台北": {
+      "Standard": {
+        "Adult": 1490,
+        "Child": 745,
+        "Old": 745,
+        "Love": 745,
+        "Early65": 965,
+        "Early8": 1190,
+        "Early9": 1340,
+        "Student5": 745,
+        "Student75": 1115,
+        "Student88": 1310
+      },
+      "Bussiness": {
+        "Adult": 2440,
+        "Child": 1220,
+        "Old": 1220,
+        "Love": 1220
+      }
+    },
+    "板橋": {
+      "Standard": {
+        "Adult": 1460,
+        "Child": 730,
+        "Old": 730,
+        "Love": 730,
+        "Early65": 945,
+        "Early8": 1165,
+        "Early9": 1310,
+        "Student5": 730,
+        "Student75": 1095,
+        "Student88": 1280
+      },
+      "Bussiness": {
+        "Adult": 2390,
+        "Child": 1195,
+        "Old": 1195,
+        "Love": 1195
+      }
+    },
+    "桃園": {
+      "Standard": {
+        "Adult": 1330,
+        "Child": 665,
+        "Old": 665,
+        "Love": 665,
+        "Early65": 860,
+        "Early8": 1060,
+        "Early9": 1195,
+        "Student5": 665,
+        "Student75": 995,
+        "Student88": 1170
+      },
+      "Bussiness": {
+        "Adult": 2200,
+        "Child": 1100,
+        "Old": 1100,
+        "Love": 1100
+      }
+    },
+    "新竹": {
+      "Standard": {
+        "Adult": 1200,
+        "Child": 600,
+        "Old": 600,
+        "Love": 600,
+        "Early65": 780,
+        "Early8": 960,
+        "Early9": 1080,
+        "Student5": 600,
+        "Student75": 900,
+        "Student88": 1055
+      },
+      "Bussiness": {
+        "Adult": 2000,
+        "Child": 1000,
+        "Old": 1000,
+        "Love": 1000
+      }
+    },
+    "苗栗": {
+      "Standard": {
+        "Adult": 1060,
+        "Child": 530,
+        "Old": 530,
+        "Love": 530,
+        "Early65": 685,
+        "Early8": 845,
+        "Early9": 950,
+        "Student5": 530,
+        "Student75": 795,
+        "Student88": 930
+      },
+      "Bussiness": {
+        "Adult": 1790,
+        "Child": 895,
+        "Old": 895,
+        "Love": 895
+      }
+    },
+    "台中": {
+      "Standard": {
+        "Adult": 790,
+        "Child": 395,
+        "Old": 395,
+        "Love": 395,
+        "Early65": 510,
+        "Early8": 630,
+        "Early9": 710,
+        "Student5": 395,
+        "Student75": 590,
+        "Student88": 695
+      },
+      "Bussiness": {
+        "Adult": 1390,
+        "Child": 695,
+        "Old": 695,
+        "Love": 695
+      }
+    },
+    "彰化": {
+      "Standard": {
+        "Adult": 670,
+        "Child": 335,
+        "Old": 335,
+        "Love": 335,
+        "Early65": 435,
+        "Early8": 535,
+        "Early9": 600,
+        "Student5": 335,
+        "Student75": 500,
+        "Student88": 585
+      },
+      "Bussiness": {
+        "Adult": 1210,
+        "Child": 605,
+        "Old": 605,
+        "Love": 605
+      }
+    },
+    "雲林": {
+      "Standard": {
+        "Adult": 560,
+        "Child": 280,
+        "Old": 280,
+        "Love": 280,
+        "Early65": 360,
+        "Early8": 445,
+        "Early9": 500,
+        "Student5": 280,
+        "Student75": 420,
+        "Student88": 490
+      },
+      "Bussiness": {
+        "Adult": 1040,
+        "Child": 520,
+        "Old": 520,
+        "Love": 520
+      }
+    },
+    "嘉義": {
+      "Standard": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205,
+        "Early65": 265,
+        "Early8": 325,
+        "Early9": 365,
+        "Student5": 205,
+        "Student75": 305,
+        "Student88": 360
+      },
+      "Bussiness": {
+        "Adult": 820,
+        "Child": 410,
+        "Old": 410,
+        "Love": 410
+      }
+    },
+    "台南": {
+      "Standard": {
+        "Adult": 140,
+        "Child": 70,
+        "Old": 70,
+        "Love": 70,
+        "Early65": 90,
+        "Early8": 110,
+        "Early9": 125,
+        "Student5": 70,
+        "Student75": 105,
+        "Student88": 120
+      },
+      "Bussiness": {
+        "Adult": 410,
+        "Child": 205,
+        "Old": 205,
+        "Love": 205
+      }
+    }
+  }
+}
