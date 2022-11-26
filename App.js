@@ -166,12 +166,16 @@ export default function App() {
     const [scanned, setScanned] = useState(false);
     const [PaidTicketVisible,setPaidTicketVisible]=useState(false);
     const [QRCodeVisible,setQRCodeVisible]=useState(false);
-    const [QRCodeIndex,setQRCodeIndex]=useState(0);
+    const [QRCodeIndex,setQRCodeIndex]=useState([]);
     const [QRCodeData,setQRCodeData]=useState({});
+    const [Clock,setClock]=useState();
+    const [QRTicketStationsByVisible,setQRTicketStationsByVisible]=useState(false);
 
     async function ReNewDatas(){
         if(Start){
             console.log('Re Newing Datas!');
+            setTicketUse(false);
+            setPayOrTake(false);
             setBookNumber('');
             setGetTicketCode('');
             setIdOfFind('');
@@ -256,7 +260,15 @@ export default function App() {
             console.log('Complete!');
         }
     }
-    useEffect(()=>{ReNewDatas()},[Start]);
+    useEffect(()=>{
+        if(Start) {
+            clearTimeout(Clock);
+            setClock(setTimeout(async () => {
+                await Alert.alert('大笨蛋', '操作逾時 請重新操作謝謝!',[{text:'確定',onPress:()=>{setStarted(true);}}]);
+            }, 10*60 * 1000));
+            ReNewDatas();
+        }
+        },[Start]);
 
 //---------------------------------------------All fetch---------------------------------------------//
     useEffect(()=>{
@@ -290,16 +302,28 @@ export default function App() {
                 .then((responseJson) => {
                     console.log('Data Get!');
                     console.log('Data:',responseJson);
-                    setPrices(responseJson.Price);
-                    setdatas(responseJson.Datas);
-                    setbackdatas(responseJson.BackDatas);
-                    setcomplete(true);
                     console.log('Data Set!');
-                    console.log('Complete!');
+                    try{
+                        if(responseJson['Status']==='False'){
+                            Alert.alert('大笨蛋','非常抱歉 該段時間已無車票 請重新選擇!')
+                            setLoadingVisible(false);
+                        }
+                        else{
+                            setPrices(responseJson.Price);
+                            setdatas(responseJson.Datas);
+                            setbackdatas(responseJson.BackDatas);
+                            setcomplete(true);
+                        }
+                        console.log('Complete!');
+                    }
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
+                    }
                 })
                 .catch((error) => {
                     Alert.alert('大笨蛋', '某些問題出錯 請重試!');
-                    console.error(error);
+                    console.log(error)
                     setLoadingVisible(false);
                 })
                 .then(()=>{
@@ -346,32 +370,38 @@ export default function App() {
             };
             console.log('Data Sent!');
             console.log('Data:',data);
-            fetch(apiurl+'/checkID/',{method:'POST',headers:{
+            fetch(apiurl+'/CheckID/',{method:'POST',headers:{
                     'Accept': 'application/json',
                     'Content-Type':'application/json'
                 },body:JSON.stringify(data)})
                 .then((response) => response.json())
                 .then(async (responseJson) => {
-                    if (responseJson.Status === 'True') {
-                        console.log('Data Get!');
-                        console.log('Data:',responseJson);
-                        await storage.save({
-                            key:'userinfo',
-                            data:{
-                                userName:Name,
-                                userGender:Gender,
-                                userID:IDnumber,
-                                userPhone:Phonenumber,
-                                userEmail:Email,
-                            },
-                            expires: null,
-                        });
-                        setDetailsVisible(true);
-                        setIDcheckVisible(false);
-                        console.log('Data Set!');
-                        console.log('Complete!');
-                    } else {
-                        Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+                    try {
+                        if (responseJson.Status === 'True') {
+                            console.log('Data Get!');
+                            console.log('Data:', responseJson);
+                            await storage.save({
+                                key: 'userinfo',
+                                data: {
+                                    userName: Name,
+                                    userGender: Gender,
+                                    userID: IDnumber,
+                                    userPhone: Phonenumber,
+                                    userEmail: Email,
+                                },
+                                expires: null,
+                            });
+                            setDetailsVisible(true);
+                            setIDcheckVisible(false);
+                            console.log('Data Set!');
+                            console.log('Complete!');
+                        } else {
+                            Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+                        }
+                    }
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
                     }
                 })
                 .catch((error) => {
@@ -404,31 +434,37 @@ export default function App() {
             };
             console.log('Data Sent!');
             console.log('Data:',data);
-            fetch(apiurl+'/checkID/',{method:'POST',headers:{
+            fetch(apiurl+'/CheckID/',{method:'POST',headers:{
                     'Accept': 'application/json',
                     'Content-Type':'application/json'
                 },body:JSON.stringify(data)})
                 .then((response) => response.json())
                 .then(async (responseJson) => {
-                    if (responseJson.Status === 'True') {
-                        console.log('Data Get!');
-                        console.log('Data:',responseJson);
-                        await storage.save({
-                            key:'userinfo',
-                            data:{
-                                userName:Name,
-                                userGender:Gender,
-                                userID:IDnumber,
-                                userPhone:Phonenumber,
-                                userEmail:Email,
-                            },
-                            expires: null,
-                        });
-                        setInfoVisible(false);
-                        console.log('Data Set!');
-                        console.log('Complete!');
-                    } else {
-                        Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+                    try {
+                        if (responseJson.Status === 'True') {
+                            console.log('Data Get!');
+                            console.log('Data:', responseJson);
+                            await storage.save({
+                                key: 'userinfo',
+                                data: {
+                                    userName: Name,
+                                    userGender: Gender,
+                                    userID: IDnumber,
+                                    userPhone: Phonenumber,
+                                    userEmail: Email,
+                                },
+                                expires: null,
+                            });
+                            setInfoVisible(false);
+                            console.log('Data Set!');
+                            console.log('Complete!');
+                        } else {
+                            Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+                        }
+                    }
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
                     }
                 })
                 .catch((error) => {
@@ -465,7 +501,7 @@ export default function App() {
                 setLoadingVisible(true);
                 console.log('Data Sent!');
                 console.log('Data:',data);
-                fetch(apiurl + '/book/', {
+                fetch(apiurl + '/Book/', {
                     method: 'POST', headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
@@ -475,113 +511,120 @@ export default function App() {
                     .then(async (responseJson) => {
                         console.log('Data Get!');
                         console.log('Data:',responseJson);
-                        if (responseJson.Status === 'True') {
-                            let d1 = new Array();
-                            let d2 = new Array();
-                            for (var i = 0; i < 5; i++) {
-                                for (var j = 0; j < Tickets[i]; j++) {
-                                    if(oneway_return){
-                                        d1 = d1.concat(
-                                            {
-                                                'Type': TicketTypeName[i],
-                                                'Position': responseJson.Seat[i][j],
-                                                'Price': Prices[i] / (Tickets[i]*2)
-                                            }
-                                        );
-                                    }
-                                    else {
-                                        d1 = d1.concat(
-                                            {
-                                                'Type': TicketTypeName[i],
-                                                'Position': responseJson.Seat[i][j],
-                                                'Price': Prices[i] / Tickets[i]
-                                            }
-                                        );
-                                    }
-                                }
-                            }
-                            if (oneway_return) {
+                        try {
+                            console.log('Data Set!');
+                            if (responseJson.Status === 'True') {
+                                let d1 = new Array();
+                                let d2 = new Array();
                                 for (var i = 0; i < 5; i++) {
                                     for (var j = 0; j < Tickets[i]; j++) {
-                                        d2 = d2.concat(
-                                            {
-                                                'Type': TicketTypeName[i],
-                                                'Position': responseJson.BackSeat[i][j],
-                                                'Price': Prices[i] / (Tickets[i]*2)
-                                            }
-                                        );
+                                        if(oneway_return){
+                                            d1 = d1.concat(
+                                                {
+                                                    'Type': TicketTypeName[i],
+                                                    'Position': responseJson.Seat[i][j],
+                                                    'Price': Prices[i] / (Tickets[i]*2)
+                                                }
+                                            );
+                                        }
+                                        else {
+                                            d1 = d1.concat(
+                                                {
+                                                    'Type': TicketTypeName[i],
+                                                    'Position': responseJson.Seat[i][j],
+                                                    'Price': Prices[i] / Tickets[i]
+                                                }
+                                            );
+                                        }
                                     }
                                 }
-                            }
-                            setTicketDatas({
-                                'CodeNumber': responseJson.Result,
-                                'BussinessState': false,
-                                'OnewayReturn': oneway_return,
-                                'Type': TypeText,
-                                'TotalText': TicketsToText(Tickets,oneway_return),
-                                'TotalPrice': Allprices,
-                                'StartStation': StartstationText,
-                                'ArriveStation': EndstationText,
-                                'NumOfTickets':Tickets,
-                                'Prices':Prices,
-                                'Start': {
-                                    'Date': TimeText.substring(0,14),
-                                    'StartTime': Tickinfo[1],
-                                    'ArriveTime': Tickinfo[2],
-                                    'Order': Tickinfo[0],
-                                    'StationsBy': Tickinfo[3],
-                                    'Tickets': d1
-                                },
-                                'Arrive': {
-                                    'Date': BackTimeText.substring(0,14),
-                                    'StartTime': BackTickinfo[1],
-                                    'ArriveTime': BackTickinfo[2],
-                                    'Order': BackTickinfo[0],
-                                    'StationsBy': BackTickinfo[3],
-                                    'Tickets': d2
+                                if (oneway_return) {
+                                    for (var i = 0; i < 5; i++) {
+                                        for (var j = 0; j < Tickets[i]; j++) {
+                                            d2 = d2.concat(
+                                                {
+                                                    'Type': TicketTypeName[i],
+                                                    'Position': responseJson.BackSeat[i][j],
+                                                    'Price': Prices[i] / (Tickets[i]*2)
+                                                }
+                                            );
+                                        }
+                                    }
                                 }
-                            });
-                            storage.save({
-                                key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
-                                id: responseJson.Result,
-                                data: {
-                                    CodeNumber: responseJson.Result,
-                                    OnewayReturn: oneway_return,
-                                    StartDate: gotime,
-                                    BackDate: oneway_return ? backtime : 'None',
-                                    StartStation: StartstationText,
-                                    ArriveStation: EndstationText,
-                                    StartTime: Tickinfo[1],
-                                    ArriveTime: Tickinfo[2],
-                                    Order: Tickinfo[0],
-                                    BackStartTime: oneway_return ? BackTickinfo[1] : 'None',
-                                    BackArriveTime: oneway_return ? BackTickinfo[2] : 'None',
-                                    BackOrder: BackTickinfo[0],
-                                    Type:TypeText,
-                                    TotalText:TicketsToText(Tickets,oneway_return),
-                                    TotalPrice:Allprices,
-                                    StationsBy:Tickinfo[3],
-                                    BackStationsBy:BackTickinfo[3],
-                                    NumOfTickets:Tickets,
-                                    Prices:Prices,
-                                    Tickets:d1,
-                                    BackTickets:d2,
-                                },
-                                expires: null,
-                            });
-                            setPayOrUseIndex(BookedDatas.length);
-                            setStarted(true);
-                            setLoadingVisible(false);
-                            setPayticketVisible(true);
-                            setCheck(false);
-                            Alert.alert('大笨蛋', '恭喜你已訂位成功');
-                        } else {
-                            Alert.alert('大笨蛋', '該時段車位已被訂光!');
-                            setLoadingVisible(false);
-                            setCheck(false);
+                                setTicketDatas({
+                                    'CodeNumber': responseJson.BookID,
+                                    'BussinessState': false,
+                                    'OnewayReturn': oneway_return,
+                                    'Type': TypeText,
+                                    'TotalText': TicketsToText(Tickets,oneway_return),
+                                    'TotalPrice': Allprices,
+                                    'StartStation': StartstationText,
+                                    'ArriveStation': EndstationText,
+                                    'NumOfTickets':Tickets,
+                                    'Prices':Prices,
+                                    'Start': {
+                                        'Date': TimeText.substring(0,14),
+                                        'StartTime': Tickinfo[1],
+                                        'ArriveTime': Tickinfo[2],
+                                        'Order': Tickinfo[0],
+                                        'StationsBy': Tickinfo[3],
+                                        'Tickets': d1
+                                    },
+                                    'Arrive': {
+                                        'Date': BackTimeText.substring(0,14),
+                                        'StartTime': BackTickinfo[1],
+                                        'ArriveTime': BackTickinfo[2],
+                                        'Order': BackTickinfo[0],
+                                        'StationsBy': BackTickinfo[3],
+                                        'Tickets': d2
+                                    }
+                                });
+                                storage.save({
+                                    key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
+                                    id: responseJson.BookID,
+                                    data: {
+                                        CodeNumber: responseJson.BookID,
+                                        OnewayReturn: oneway_return,
+                                        StartDate: gotime,
+                                        BackDate: oneway_return ? backtime : 'None',
+                                        StartStation: StartstationText,
+                                        ArriveStation: EndstationText,
+                                        StartTime: Tickinfo[1],
+                                        ArriveTime: Tickinfo[2],
+                                        Order: Tickinfo[0],
+                                        BackStartTime: oneway_return ? BackTickinfo[1] : 'None',
+                                        BackArriveTime: oneway_return ? BackTickinfo[2] : 'None',
+                                        BackOrder: BackTickinfo[0],
+                                        Type:TypeText,
+                                        TotalText:TicketsToText(Tickets,oneway_return),
+                                        TotalPrice:Allprices,
+                                        StationsBy:Tickinfo[3],
+                                        BackStationsBy:BackTickinfo[3],
+                                        NumOfTickets:Tickets,
+                                        Prices:Prices,
+                                        Tickets:d1,
+                                        BackTickets:d2,
+                                    },
+                                    expires: null,
+                                });
+                                setPayOrUseIndex(BookedDatas.length);
+                                setStarted(true);
+                                setLoadingVisible(false);
+                                setPayticketVisible(true);
+                                setCheck(false);
+                                Alert.alert('大笨蛋', '恭喜你已訂位成功');
+                            } else {
+                                Alert.alert('大笨蛋', '該時段車位已被訂光!');
+                                setLoadingVisible(false);
+                                setCheck(false);
+                            }
+                            console.log('Complete!');
                         }
-                        console.log('Data Set!');
-                        console.log('Complete!');
+                        catch (e) {
+                            console.log(e);
+                            Alert.alert('大笨蛋','後端出現問題!');
+                            setLoadingVisible(false);
+                        }
                     })
                     .catch((error) => {
                         console.error(error);
@@ -607,7 +650,7 @@ export default function App() {
         };
         console.log('Data Sent!');
         console.log('Data:',data);
-        fetch(apiurl + '/edit/', {
+        fetch(apiurl + '/GetEditDatas/', {
             method: 'POST', headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -616,24 +659,31 @@ export default function App() {
             .then((response) => response.json())
             .then((responseJson) => {
                 console.log('Data Get!')
-                console.log('Data:',responseJson)
-                let s=0;
-                responseJson.Price.map((item)=>{
-                    s+=item;
-                });
-                setAllprices(s);
-                s=0;
-                responseJson.Fees.map((item)=>{
-                    s+=item;
-                })
-                setAllFees(s);
-                setPrices(responseJson.Price);
-                setFees(responseJson.Fees);
-                setdatas(responseJson.Datas);
-                setEditTrains(true);
-                setEditDateVisible(false);
-                console.log('Data Set!')
-                console.log('Complete!');
+                console.log('Data:',responseJson);
+                console.log('Data Set!');
+                try {
+                    setAllprices(CopyTicketInfo.TotalPrice);
+                    let s = 0, fees = [0, 0, 0, 0, 0];
+                    CopyTicketInfo.NumOfTickets.map((item, index) => {
+                        s += item;
+                        fees[index] += item * 20;
+                        if (CopyTicketInfo.OnewayReturn) {
+                            s += item;
+                            fees[index] += item * 20;
+                        }
+                    })
+                    setAllFees(20 * s);
+                    setPrices(CopyTicketInfo.Prices);
+                    setFees(fees);
+                    setdatas(responseJson.Datas);
+                    setEditTrains(true);
+                    setEditDateVisible(false);
+                    console.log('Complete!');
+                }
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
+                }
             })
             .catch((error) => {
                 Alert.alert('大笨蛋', '某些問題出錯 請重試!');
@@ -650,7 +700,7 @@ export default function App() {
         };
         console.log('Data Sent!');
         console.log('Data:',data);
-        fetch(apiurl+'/pay/',{method:'POST',headers:{
+        fetch(apiurl+'/Pay/',{method:'POST',headers:{
                 'Accept': 'application/json',
                 'Content-Type':'application/json'
             },body:JSON.stringify(data)})
@@ -658,24 +708,31 @@ export default function App() {
             .then(async (responseJson) => {
                 console.log('Data Get!');
                 console.log('Data:',responseJson);
-                if (responseJson.Status === 'True') {
-                    await storage.save({
-                        key: 'PaidTicket', // 注意:请不要在key中使用_下划线符号!
-                        id:BookedDatas[index].CodeNumber,
-                        data: copydata,
-                        expires: null,
-                    });
-                    setStarted(true);
-                    setPayticketVisible(false);
-                    Alert.alert('大笨蛋', '付款成功!');
-                } else {
-                    setPayticketVisible(false);
-                    setStarted(true);
-                    Alert.alert('大笨蛋', '該訂單不存在 請重新訂購!');
-                }
-                await storage.remove({key: 'BookedTicket', id: BookedDatas[index].CodeNumber});
                 console.log('Data Set');
-                console.log('Complete!');
+                try{
+                    if (responseJson.Status === 'True') {
+                        await storage.save({
+                            key: 'PaidTicket', // 注意:请不要在key中使用_下划线符号!
+                            id:BookedDatas[index].CodeNumber,
+                            data: copydata,
+                            expires: null,
+                        });
+                        setStarted(true);
+                        setPayticketVisible(false);
+                        Alert.alert('大笨蛋', '付款成功!');
+                    } else {
+                        setPayticketVisible(false);
+                        setStarted(true);
+                        Alert.alert('大笨蛋', '該訂單不存在 請重新訂購!');
+                    }
+                    await storage.remove({key: 'BookedTicket', id: BookedDatas[index].CodeNumber});
+                    console.log('Complete!');
+                }
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
+                }
+
             })
             .catch((error) => {
                 setPayticketVisible(false);
@@ -691,12 +748,12 @@ export default function App() {
             'OnewayReturn':YourTickets[index].OnewayReturn,
             'Order':YourTickets[index].Order,
             'Seat':YourTickets[index].Tickets[0].Position,
-            'ArriveOrder':YourTickets[index].ArriveOrder,
-            'ArriveSeat':YourTickets[index].BackTickets[0].Position,
+            'ArriveOrder':YourTickets[index].OnewayReturn?YourTickets[index].BackOrder:'None',
+            'ArriveSeat':YourTickets[index].OnewayReturn?YourTickets[index].BackTickets[0].Position:'None',
         };
         console.log('Data Sent!');
         console.log('Data:',data);
-        fetch(apiurl+'/use/',{method:'POST',headers:{
+        fetch(apiurl+'/Use/',{method:'POST',headers:{
                 'Accept': 'application/json',
                 'Content-Type':'application/json'
             },body:JSON.stringify(data)})
@@ -704,28 +761,34 @@ export default function App() {
             .then(async (responseJson) => {
                 console.log('Data Get!');
                 console.log('Data:',responseJson);
-                setStarted(true);
-                if (responseJson.Status === 'True') {
-                    setPayticketVisible(false);
-                    Alert.alert('大笨蛋', '使用成功!');
-                    if(responseJson.Out==='True'){
-                        await storage.save({
-                            key: 'UsedTicket', // 注意:请不要在key中使用_下划线符号!
-                            id:YourTickets[index].CodeNumber+YourTickets[index].Tickets.Position,
-                            data: YourTickets[index],
-                            expires: null,
-                        });
-                        setStarted(true);
-                        await storage.remove({key:'Ticket',id:YourTickets[index].CodeNumber+YourTickets[index].Tickets.Position});
-
-                    }
-                } else {
-                    setPayticketVisible(false);
-                    Alert.alert('大笨蛋', '該車票不存在 請重新訂購!');
-                    await storage.remove({key:'Ticket',id:YourTickets[index].CodeNumber});
-                }
                 console.log('Data Set!');
-                console.log('Complete!');
+                try{
+                    setStarted(true);
+                    if (responseJson.Status === 'True') {
+                        setPayticketVisible(false);
+                        Alert.alert('大笨蛋', '使用成功!');
+                        if(responseJson.Out==='True'){
+                            await storage.save({
+                                key: 'UsedTicket', // 注意:请不要在key中使用_下划线符号!
+                                id:YourTickets[index].CodeNumber+YourTickets[index].Tickets.Position,
+                                data: YourTickets[index],
+                                expires: null,
+                            });
+                            await storage.remove({key:'Ticket',id:YourTickets[index].CodeNumber+YourTickets[index].Tickets[0].Position});
+                            setStarted(true);
+                        }
+                    } else {
+                        setPayticketVisible(false);
+                        Alert.alert('大笨蛋', '該車票不存在 請重新訂購!');
+                        await storage.remove({key:'Ticket',id:YourTickets[index].CodeNumber+YourTickets[index].Tickets[0].Position});
+                        setStarted(true);
+                    }
+                    console.log('Complete!');
+                }
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
+                }
             })
             .catch((error) => {
                 setPayticketVisible(false);
@@ -751,119 +814,130 @@ export default function App() {
                 'BackOrder': CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Order.toString() : 'None',
                 'Tickets':CopyTicketInfo.NumOfTickets.toString(),
             };
-            fetch(apiurl+'/editnow/',{method:'POST',headers:{
+            console.log('Data Sent!');
+            console.log('Data:',data);
+            fetch(apiurl+'/Edit/',{method:'POST',headers:{
                     'Accept': 'application/json',
                     'Content-Type':'application/json'
                 },body:JSON.stringify(data)})
                 .then((response) => response.json())
                 .then(async (responseJson) => {
-                    if (responseJson.Status === 'True') {
-                        let index=0;
-                        let d1 = new Array();
-                        let d2 = new Array();
-                        for (var i = 0; i < 5; i++) {
-                            for (var j = 0; j < CopyTicketInfo.NumOfTickets[i]; j++) {
-                                d1 = d1.concat(
-                                    {
-                                        'Type': CopyTicketInfo.Start.Tickets[index].Type,
-                                        'Position': responseJson.Seat[i][j],
-                                        'Price': Prices[i] / CopyTicketInfo.NumOfTickets[i]
-                                    }
-                                );
-                                index++;
-                            }
-                        }
-                        index=0;
-                        if (CopyTicketInfo.OnewayReturn) {
+                    console.log('Data Get!');
+                    console.log('Data:',responseJson);
+                    console.log('Data Set!');
+                    try{
+                        if (responseJson.Status === 'True') {
+                            let index=0;
+                            let d1 = new Array();
+                            let d2 = new Array();
                             for (var i = 0; i < 5; i++) {
                                 for (var j = 0; j < CopyTicketInfo.NumOfTickets[i]; j++) {
-                                    d2 = d2.concat(
+                                    d1 = d1.concat(
                                         {
-                                            'Type': CopyTicketInfo.Arrive.Tickets[index].Type,
-                                            'Position': responseJson.BackSeat[i][j],
+                                            'Type': CopyTicketInfo.Start.Tickets[index].Type,
+                                            'Position': responseJson.Seat[i][j],
                                             'Price': Prices[i] / CopyTicketInfo.NumOfTickets[i]
                                         }
                                     );
                                     index++;
                                 }
                             }
+                            index=0;
+                            if (CopyTicketInfo.OnewayReturn) {
+                                for (var i = 0; i < 5; i++) {
+                                    for (var j = 0; j < CopyTicketInfo.NumOfTickets[i]; j++) {
+                                        d2 = d2.concat(
+                                            {
+                                                'Type': CopyTicketInfo.Arrive.Tickets[index].Type,
+                                                'Position': responseJson.BackSeat[i][j],
+                                                'Price': Prices[i] / CopyTicketInfo.NumOfTickets[i]
+                                            }
+                                        );
+                                        index++;
+                                    }
+                                }
+                            }
+                            if(!CopyTicketInfo.BussinessState){
+                                await storage.save({
+                                    key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
+                                    id: CopyTicketInfo.CodeNumber,
+                                    data: {
+                                        CodeNumber: CopyTicketInfo.CodeNumber,
+                                        OnewayReturn: CopyTicketInfo.OnewayReturn,
+                                        StartDate: CopyTicketInfo.Start.Date,
+                                        BackDate: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Date : 'None',
+                                        StartStation: CopyTicketInfo.StartStation,
+                                        ArriveStation: CopyTicketInfo.ArriveStation,
+                                        StartTime: CopyTicketInfo.Start.StartTime,
+                                        ArriveTime: CopyTicketInfo.Start.ArriveTime,
+                                        Order: CopyTicketInfo.Start.Order,
+                                        BackStartTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.StartTime : 'None',
+                                        BackArriveTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.ArriveTime : 'None',
+                                        BackOrder: CopyTicketInfo.Arrive.Order,
+                                        Type:CopyTicketInfo.Type,
+                                        TotalText:CopyTicketInfo.TotalText,
+                                        TotalPrice:Allprices,
+                                        StationsBy:CopyTicketInfo.Start.StationsBy,
+                                        BackStationsBy:CopyTicketInfo.Arrive.StationsBy,
+                                        NumOfTickets:CopyTicketInfo.NumOfTickets,
+                                        Prices:Prices,
+                                        Tickets:d1,
+                                        BackTickets:d2,
+                                    },
+                                    expires: null,
+                                });
+                            }
+                            else{
+                                await storage.save({
+                                    key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
+                                    id: CopyTicketInfo.CodeNumber,
+                                    data: {
+                                        CodeNumber: CopyTicketInfo.CodeNumber,
+                                        OnewayReturn: CopyTicketInfo.OnewayReturn,
+                                        StartDate: CopyTicketInfo.Start.Date,
+                                        BackDate: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Date : 'None',
+                                        StartStation: CopyTicketInfo.StartStation,
+                                        ArriveStation: CopyTicketInfo.ArriveStation,
+                                        StartTime: CopyTicketInfo.Start.StartTime,
+                                        ArriveTime: CopyTicketInfo.Start.ArriveTime,
+                                        Order: CopyTicketInfo.Start.Order,
+                                        BackStartTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.StartTime : 'None',
+                                        BackArriveTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.ArriveTime : 'None',
+                                        BackOrder: CopyTicketInfo.Arrive.Order,
+                                        Type:CopyTicketInfo.Type,
+                                        TotalText:CopyTicketInfo.TotalText,
+                                        TotalPrice:Allprices,
+                                        StationsBy:CopyTicketInfo.Start.StationsBy,
+                                        BackStationsBy:CopyTicketInfo.Arrive.StationsBy,
+                                        NumOfTickets:CopyTicketInfo.NumOfTickets,
+                                        Prices:Prices,
+                                        Tickets:d1,
+                                        BackTickets:d2,
+                                    },
+                                    expires: null,
+                                });
+                            }
+                            setStarted(true);
+                            setPayticketVisible(true);
+                            setEditDetailsVisible(false);
+                            CopyTicketInfo.Start.Tickets=d1;
+                            CopyTicketInfo.Arrive.Tickets=d2;
+                            CopyTicketInfo.TotalPrice=Allprices;
+                            CopyTicketInfo.Prices=Prices;
+                            setTicketDatas(CopyTicketInfo);
+                            Alert.alert('大笨蛋', '修改成功!');
+                            setCheck(false);
+                        } else {
+                            setEditDetailsVisible(false);
+                            Alert.alert('大笨蛋', '出現錯誤 請重新修改!');
+                            setCheck(false);
                         }
-                        if(!CopyTicketInfo.BussinessState){
-                            await storage.save({
-                                key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
-                                id: CopyTicketInfo.CodeNumber,
-                                data: {
-                                    CodeNumber: CopyTicketInfo.CodeNumber,
-                                    OnewayReturn: CopyTicketInfo.OnewayReturn,
-                                    StartDate: CopyTicketInfo.Start.Date,
-                                    BackDate: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Date : 'None',
-                                    StartStation: CopyTicketInfo.StartStation,
-                                    ArriveStation: CopyTicketInfo.ArriveStation,
-                                    StartTime: CopyTicketInfo.Start.StartTime,
-                                    ArriveTime: CopyTicketInfo.Start.ArriveTime,
-                                    Order: CopyTicketInfo.Start.Order,
-                                    BackStartTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.StartTime : 'None',
-                                    BackArriveTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.ArriveTime : 'None',
-                                    BackOrder: CopyTicketInfo.Arrive.Order,
-                                    Type:CopyTicketInfo.Type,
-                                    TotalText:CopyTicketInfo.TotalText,
-                                    TotalPrice:Allprices,
-                                    StationsBy:CopyTicketInfo.Start.StationsBy,
-                                    BackStationsBy:CopyTicketInfo.Arrive.StationsBy,
-                                    NumOfTickets:CopyTicketInfo.NumOfTickets,
-                                    Prices:Prices,
-                                    Tickets:d1,
-                                    BackTickets:d2,
-                                },
-                                expires: null,
-                            });
-                        }
-                        else{
-                            await storage.save({
-                                key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
-                                id: CopyTicketInfo.CodeNumber,
-                                data: {
-                                    CodeNumber: CopyTicketInfo.CodeNumber,
-                                    OnewayReturn: CopyTicketInfo.OnewayReturn,
-                                    StartDate: CopyTicketInfo.Start.Date,
-                                    BackDate: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Date : 'None',
-                                    StartStation: CopyTicketInfo.StartStation,
-                                    ArriveStation: CopyTicketInfo.ArriveStation,
-                                    StartTime: CopyTicketInfo.Start.StartTime,
-                                    ArriveTime: CopyTicketInfo.Start.ArriveTime,
-                                    Order: CopyTicketInfo.Start.Order,
-                                    BackStartTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.StartTime : 'None',
-                                    BackArriveTime: CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.ArriveTime : 'None',
-                                    BackOrder: CopyTicketInfo.Arrive.Order,
-                                    Type:CopyTicketInfo.Type,
-                                    TotalText:CopyTicketInfo.TotalText,
-                                    TotalPrice:Allprices,
-                                    StationsBy:CopyTicketInfo.Start.StationsBy,
-                                    BackStationsBy:CopyTicketInfo.Arrive.StationsBy,
-                                    NumOfTickets:CopyTicketInfo.NumOfTickets,
-                                    Prices:Prices,
-                                    Tickets:d1,
-                                    BackTickets:d2,
-                                },
-                                expires: null,
-                            });
-                        }
-                        setStarted(true);
-                        setPayticketVisible(true);
-                        setEditDetailsVisible(false);
-                        CopyTicketInfo.Start.Tickets=d1;
-                        CopyTicketInfo.Arrive.Tickets=d2;
-                        CopyTicketInfo.TotalPrice=Allprices;
-                        CopyTicketInfo.Prices=Prices;
-                        setTicketDatas(CopyTicketInfo);
-                        Alert.alert('大笨蛋', '修改成功!');
-                        setCheck(false);
-                    } else {
-                        setEditDetailsVisible(false);
-                        Alert.alert('大笨蛋', '出現錯誤 請重新修改!');
-                        setCheck(false);
+                        console.log('Complete!');
                     }
-                    console.log('Complete!');
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
+                    }
                 })
                 .catch((error) => {
                     setEditDetailsVisible(false);
@@ -874,41 +948,56 @@ export default function App() {
         }
     };
 
-    const refundnow=()=>{
-        if(!Check){
-            Alert.alert('大笨蛋','同意選項未勾選\n請勾選同意選項以進行後續動作。')
-        }
-        else{
-            const data={
-                'BookID':TicketDatas.CodeNumber,
+    const refundnow=async () => {
+        if (!Check) {
+            Alert.alert('大笨蛋', '同意選項未勾選\n請勾選同意選項以進行後續動作。')
+        } else {
+            let Datas = []
+            for (var i = 0; i < TicketDatas.Start.Tickets.length; i++) {
+                Datas=Datas.concat([[TicketDatas.Start.Order, TicketDatas.Start.Tickets[i].Position]]);
+            }
+
+            for (var i = 0; i < TicketDatas.Arrive.Tickets.length; i++) {
+                Datas=Datas.concat([[TicketDatas.Arrive.Order, TicketDatas.Arrive.Tickets[i].Position]]);
+            }
+            const data = {
+                'BookID': TicketDatas.CodeNumber,
+                'Datas': Datas
             };
             console.log('Data Sent!');
-            console.log('Data:',data);
-            fetch(apiurl+'/refundnow/',{method:'POST',headers:{
+            console.log('Data:', data);
+            fetch(apiurl + '/Refund/', {
+                method: 'POST', headers: {
                     'Accept': 'application/json',
-                    'Content-Type':'application/json'
-                },body:JSON.stringify(data)})
+                    'Content-Type': 'application/json'
+                }, body: JSON.stringify(data)
+            })
                 .then((response) => response.json())
                 .then(async (responseJson) => {
                     console.log('Data Get!');
-                    console.log('Data:',responseJson);
+                    console.log('Data:', responseJson);
                     console.log('Data Set!');
-                    if(responseJson.Status==='True') {
-                        if (!TicketDatas.BussinessState) {
-                            await storage.remove({key: 'BookedTicket', id: TicketDatas.CodeNumber});
+                    try {
+                        if (responseJson.Status === 'True') {
+                            if (!TicketDatas.BussinessState) {
+                                await storage.remove({key: 'BookedTicket', id: TicketDatas.CodeNumber});
+                            } else {
+                                await storage.remove({key: 'Ticket', id: TicketDatas.CodeNumber});
+                            }
+                            setStarted(true);
+                            setRefundDetailsVisible(false);
+                            Alert.alert('大笨蛋', '退票成功!');
+                            setCheck(false);
                         } else {
-                            await storage.remove({key: 'Ticket', id: TicketDatas.CodeNumber});
+                            setRefundDetailsVisible(false);
+                            Alert.alert('大笨蛋', '出現錯誤 請重新操作!');
+                            setCheck(false);
                         }
-                        setStarted(true);
-                        setRefundDetailsVisible(false);
-                        Alert.alert('大笨蛋', '退票成功!');
-                        setCheck(false);
-                    } else {
-                        setRefundDetailsVisible(false);
-                        Alert.alert('大笨蛋', '出現錯誤 請重新操作!');
-                        setCheck(false);
+                        console.log('Complete!');
+                    } catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
                     }
-                    console.log('Complete!');
                 })
                 .catch((error) => {
                     setRefundDetailsVisible(false);
@@ -929,7 +1018,7 @@ export default function App() {
             };
             console.log('Data Sent!');
             console.log('Data:',data);
-            fetch(apiurl + '/getlose/', {
+            fetch(apiurl + '/FindLose/', {
                 method: 'POST', headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -940,6 +1029,111 @@ export default function App() {
                     console.log('Data Get!');
                     console.log('Data:',responseJson);
                     console.log('Data Set!');
+                    try{
+                        if(responseJson.Status==='True') {
+                            console.log(responseJson.Start.Seat);
+                            let d1 = new Array();
+                            let d2 = new Array();
+                            for (var i = 0; i < 5; i++) {
+                                for (var j = 0; j < responseJson.Tickets[i]; j++) {
+                                    d1 = d1.concat(
+                                        {
+                                            'Type': TicketTypeName[i],
+                                            'Position': responseJson.Start.Seat[i][j],
+                                            'Price': responseJson.Prices[i] / responseJson.Tickets[i]
+                                        }
+                                    );
+                                }
+                            }
+                            if (responseJson.OnewayReturn === 'True') {
+                                for (var i = 0; i < 5; i++) {
+                                    for (var j = 0; j < responseJson.Tickets[i]; j++) {
+                                        d2 = d2.concat(
+                                            {
+                                                'Type': TicketTypeName[i],
+                                                'Position': responseJson.Arrive.Seat[i][j],
+                                                'Price': responseJson.Prices[i] / responseJson.Tickets[i]
+                                            }
+                                        );
+                                    }
+                                }
+                            }
+                            let s = 0;
+                            for (var i = 0; i < 5; i++) {
+                                s += responseJson.Prices[i];
+                            }
+                            storage.save({
+                                key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
+                                id: item.Code,
+                                data: {
+                                    CodeNumber: item.Code,
+                                    OnewayReturn: responseJson.OnewayReturn === 'True',
+                                    StartDate: responseJson.Start.Date+' ('+chiness_weeksate[new Date(responseJson.Start.Date).getDay()]+')',
+                                    BackDate: responseJson.OnewayReturn ? responseJson.Arrive.Date+' ('+chiness_weeksate[new Date(responseJson.Arrive.Date).getDay()]+')' : 'None',
+                                    StartStation: responseJson.StartStation,
+                                    ArriveStation: responseJson.ArriveStation,
+                                    StartTime: responseJson.Start.StartTime,
+                                    ArriveTime: responseJson.Start.ArriveTime,
+                                    Order: responseJson.Start.Order,
+                                    BackStartTime: responseJson.OnewayReturn ? responseJson.Arrive.StartTime : 'None',
+                                    BackArriveTime: responseJson.OnewayReturn ? responseJson.Arrive.ArriveTime : 'None',
+                                    BackOrder: responseJson.Arrive.Order,
+                                    Type: responseJson.Type,
+                                    TotalText: TicketsToText(responseJson.Tickets,responseJson.OnewayReturn),
+                                    TotalPrice: s,
+                                    StationsBy: responseJson.Start.StationsBy,
+                                    BackStationsBy: responseJson.Arrive.StationsBy,
+                                    NumOfTickets: responseJson.Tickets,
+                                    Prices: responseJson.Prices,
+                                    Tickets: d1,
+                                    BackTickets: d2,
+                                },
+                                expires: null,
+                            });
+                            setStarted(true);
+                            Alert.alert('大笨蛋','恭喜你 已匯入訂票資訊');
+                            setFindDetailsVisible(false);
+                        }
+                        else{
+                            Alert.alert('大笨蛋','查無資料 請檢查填入資訊');
+                        }
+                        console.log('Complete!');
+                    }
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
+                    }
+                })
+                .catch((error) => {
+                    Alert.alert('大笨蛋', '某些問題出錯 請重試!');
+                    console.error(error);
+                });
+        }
+    };
+
+    const getLoseTicket=()=>{
+        if(GetTicketCode.length===0 || BookNumber.length===0){
+            Alert.alert('大笨蛋','填入資訊不得為空!');
+            return ;
+        }
+        const data = {
+            'ID': GetTicketCode,
+            'BookID':BookNumber,
+        };
+        console.log('Data Sent!');
+        console.log('Data:',data);
+        fetch(apiurl + '/FindLose/', {
+            method: 'POST', headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }, body: JSON.stringify(data)
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                console.log('Data Get!');
+                console.log('Data:',responseJson);
+                console.log('Data Set!');
+                try{
                     if(responseJson.Status==='True') {
                         let d1 = new Array();
                         let d2 = new Array();
@@ -973,9 +1167,9 @@ export default function App() {
                         }
                         storage.save({
                             key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
-                            id: item.Code,
+                            id: BookNumber,
                             data: {
-                                CodeNumber: item.Code,
+                                CodeNumber: BookNumber,
                                 OnewayReturn: responseJson.OnewayReturn === 'True',
                                 StartDate: responseJson.Start.Date+' ('+chiness_weeksate[new Date(responseJson.Start.Date).getDay()]+')',
                                 BackDate: responseJson.OnewayReturn ? responseJson.Arrive.Date+' ('+chiness_weeksate[new Date(responseJson.Arrive.Date).getDay()]+')' : 'None',
@@ -988,7 +1182,7 @@ export default function App() {
                                 BackArriveTime: responseJson.OnewayReturn ? responseJson.Arrive.ArriveTime : 'None',
                                 BackOrder: responseJson.Arrive.Order,
                                 Type: responseJson.Type,
-                                TotalText: TicketsToText(responseJson.Tickets),
+                                TotalText: TicketsToText(responseJson.Tickets,responseJson.OnewayReturn),
                                 TotalPrice: s,
                                 StationsBy: responseJson.Start.StationsBy,
                                 BackStationsBy: responseJson.Arrive.StationsBy,
@@ -999,111 +1193,20 @@ export default function App() {
                             },
                             expires: null,
                         });
+                        setFindDetailsVisible(false);
                         setStarted(true);
                         Alert.alert('大笨蛋','恭喜你 已匯入訂票資訊');
                     }
                     else{
                         Alert.alert('大笨蛋','查無資料 請檢查填入資訊');
+                        setFindDetailsVisible(false);
                     }
                     console.log('Complete!');
-                })
-                .catch((error) => {
-                    Alert.alert('大笨蛋', '某些問題出錯 請重試!');
-                    console.error(error);
-                });
-        }
-    };
-
-    const getLoseTicket=()=>{
-        if(GetTicketCode.length===0 || BookNumber.length===0){
-            Alert.alert('大笨蛋','填入資訊不得為空!');
-            return ;
-        }
-        const data = {
-            'ID': GetTicketCode,
-            'BookID':BookNumber,
-        };
-        console.log('Data Sent!');
-        console.log('Data:',data);
-        fetch(apiurl + '/getlose/', {
-            method: 'POST', headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }, body: JSON.stringify(data)
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log('Data Get!');
-                console.log('Data:',responseJson);
-                console.log('Data Set!');
-                if(responseJson.Status==='True') {
-                    let d1 = new Array();
-                    let d2 = new Array();
-                    for (var i = 0; i < 5; i++) {
-                        for (var j = 0; j < responseJson.Tickets[i]; j++) {
-                            d1 = d1.concat(
-                                {
-                                    'Type': TicketTypeName[i],
-                                    'Position': responseJson.Start.Seat[i][j],
-                                    'Price': responseJson.Prices[i] / responseJson.Tickets[i]
-                                }
-                            );
-                        }
-                    }
-                    if (responseJson.OnewayReturn === 'True') {
-                        for (var i = 0; i < 5; i++) {
-                            for (var j = 0; j < responseJson.Tickets[i]; j++) {
-                                d2 = d2.concat(
-                                    {
-                                        'Type': TicketTypeName[i],
-                                        'Position': responseJson.Arrive.Seat[i][j],
-                                        'Price': responseJson.Prices[i] / responseJson.Tickets[i]
-                                    }
-                                );
-                            }
-                        }
-                    }
-                    let s = 0;
-                    for (var i = 0; i < 5; i++) {
-                        s += responseJson.Prices[i];
-                    }
-                    storage.save({
-                        key: 'BookedTicket', // 注意:请不要在key中使用_下划线符号!
-                        id: BookNumber,
-                        data: {
-                            CodeNumber: BookNumber,
-                            OnewayReturn: responseJson.OnewayReturn === 'True',
-                            StartDate: responseJson.Start.Date+' ('+chiness_weeksate[new Date(responseJson.Start.Date).getDay()]+')',
-                            BackDate: responseJson.OnewayReturn ? responseJson.Arrive.Date+' ('+chiness_weeksate[new Date(responseJson.Arrive.Date).getDay()]+')' : 'None',
-                            StartStation: responseJson.StartStation,
-                            ArriveStation: responseJson.ArriveStation,
-                            StartTime: responseJson.Start.StartTime,
-                            ArriveTime: responseJson.Start.ArriveTime,
-                            Order: responseJson.Start.Order,
-                            BackStartTime: responseJson.OnewayReturn ? responseJson.Arrive.StartTime : 'None',
-                            BackArriveTime: responseJson.OnewayReturn ? responseJson.Arrive.ArriveTime : 'None',
-                            BackOrder: responseJson.Arrive.Order,
-                            Type: responseJson.Type,
-                            TotalText: TicketsToText(responseJson.Tickets),
-                            TotalPrice: s,
-                            StationsBy: responseJson.Start.StationsBy,
-                            BackStationsBy: responseJson.Arrive.StationsBy,
-                            NumOfTickets: responseJson.Tickets,
-                            Prices: responseJson.Prices,
-                            Tickets: d1,
-                            BackTickets: d2,
-                        },
-                        expires: null,
-                    });
-                    setFindDetailsVisible(false);
-                    setStarted(true);
-                    Alert.alert('大笨蛋','恭喜你 已匯入訂票資訊');
                 }
-                else{
-                    Alert.alert('大笨蛋','查無資料 請檢查填入資訊');
-                    setFindDetailsVisible(false);
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
                 }
-                console.log('Complete!');
             })
             .catch((error) => {
                 setFindDetailsVisible(false);
@@ -1131,10 +1234,16 @@ export default function App() {
                 console.log('Data Get!');
                 console.log('Data:',responseJson);
                 console.log('Data Set!');
-                setTableData(responseJson.Datas);
-                setTableVisible(true);
-                settimetable(false);
-                console.log('Complete!');
+                try{
+                    setTableData(responseJson.Datas);
+                    setTableVisible(true);
+                    settimetable(false);
+                    console.log('Complete!');
+                }
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
+                }
             })
             .catch((error) => {
                 Alert.alert('大笨蛋', '某些問題出錯 請重試!');
@@ -1154,7 +1263,9 @@ export default function App() {
                 'Order':OrderOfFind,
                 'ID':IdOfFind,
             };
-            fetch(apiurl+'/findnow/',{method:'POST',headers:{
+            console.log('Data Sent!');
+            console.log('Data:',data);
+            fetch(apiurl+'/FindCode/',{method:'POST',headers:{
                     'Accept': 'application/json',
                     'Content-Type':'application/json'
                 },body:JSON.stringify(data)})
@@ -1163,15 +1274,22 @@ export default function App() {
                     console.log('Data Get!');
                     console.log('Data:',responseJson);
                     console.log('Data Set!');
-                    if(responseJson.Status==='True') {
-                        await setFindOfDatas(responseJson.Datas);
-                        setFindDetailsVisible(true);
-                        setfindcodeVisible(false);
-                        Alert.alert('大笨蛋', '查詢成功!');
-                    } else {
-                        Alert.alert('大笨蛋','請注意 無資料\n請確認您輸入的資料是否正確，並請重新輸入。');
+                    try{
+                        if(responseJson.Status==='True') {
+                            await setFindOfDatas(responseJson.Datas);
+                            setFindDetailsVisible(true);
+                            setfindcodeVisible(false);
+                            Alert.alert('大笨蛋', '查詢成功!');
+                        } else {
+                            Alert.alert('大笨蛋','請注意 無資料\n請確認您輸入的資料是否正確，並請重新輸入。');
+                        }
+                        console.log('Complete!');
                     }
-                    console.log('Complete!');
+                    catch (e) {
+                        console.log(e)
+                        Alert.alert('大笨蛋', '後端出現問題!');
+                    }
+
                 })
                 .catch((error) => {
                     console.error(error);
@@ -1461,6 +1579,16 @@ export default function App() {
     };
 
     const backbook=(index)=>{
+        if(gotime===backtime){
+            if(Number(Tickinfo[2].substring(0,2))>Number(backdatas[index].StartTime.substring(0,2))){
+                Alert.alert('大笨蛋','回程出發時間不得早於出發抵達時間!');
+                return;
+            }
+            else if (Number(Tickinfo[2].substring(0,2))===Number(backdatas[index].StartTime.substring(0,2))){
+                Alert.alert('大笨蛋','回程出發時間不得早於出發抵達時間!');
+                return;
+            }
+        }
         setBackTickinfo([backdatas[index].Order,backdatas[index].StartTime,backdatas[index].ArriveTime,backdatas[index].StationsBy]);
         setIDcheckVisible(true);
         setBackBookVisible(false);
@@ -1536,7 +1664,9 @@ export default function App() {
 
     async function test(){
         await storage.clearMapForKey('BookedTicket');
+        await storage.clearMapForKey('PaidTicket');
         await storage.clearMapForKey('Ticket');
+        await storage.clearMapForKey('UsedTicket');
     };
 
     const cancelsettime=()=>{
@@ -1634,7 +1764,7 @@ export default function App() {
 
     function TicketsToText(arr,state=false){
         let s=new String();
-        Tickets.map((item,index)=>{
+        arr.map((item,index)=>{
             if(item!==0){
                 if(s.length!==0){
                     s=s.concat(', ');
@@ -1671,58 +1801,91 @@ export default function App() {
                 let nt=[0,0,0,0,0];
                 let ps=[0,0,0,0,0];
                 if(TicketDatas.Start.Tickets[i].Type==='全票'){
-                    nt[0]=TicketDatas.OnewayReturn?2:1;
+                    nt[0]=1;
                     ps[0]=TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price;
                 }
                 else if(TicketDatas.Start.Tickets[i].Type==='孩童'){
-                    nt[1]=TicketDatas.OnewayReturn?2:1;
+                    nt[1]=1;
                     ps[1]=TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price;
                 }
                 else if(TicketDatas.Start.Tickets[i].Type==='敬老'){
-                    nt[2]=TicketDatas.OnewayReturn?2:1;
+                    nt[2]=1;
                     ps[2]=TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price;
                 }
                 else if(TicketDatas.Start.Tickets[i].Type==='愛心'){
-                    nt[3]=TicketDatas.OnewayReturn?2:1;
+                    nt[3]=1;
                     ps[3]=TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price;
                 }
                 else if(TicketDatas.Start.Tickets[i].Type==='大學生'){
-                    nt[4]=TicketDatas.OnewayReturn?2:1;
+                    nt[4]=1;
                     ps[4]=TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price;
                 }
-                await storage.save({
-                    key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
-                    id:TicketDatas.CodeNumber+TicketDatas.Start.Tickets[i].Position,
-                    data: {
-                        CodeNumber: TicketDatas.CodeNumber,
-                        OnewayReturn: TicketDatas.OnewayReturn,
-                        StartDate: TicketDatas.Start.Date,
-                        BackDate: TicketDatas.Arrive.Date,
-                        StartStation: TicketDatas.StartStation,
-                        ArriveStation: TicketDatas.ArriveStation,
-                        StartTime: TicketDatas.Start.StartTime,
-                        ArriveTime: TicketDatas.Start.ArriveTime,
-                        Order: TicketDatas.Start.Order,
-                        BackStartTime: TicketDatas.Arrive.StartTime,
-                        BackArriveTime: TicketDatas.Arrive.ArriveTime,
-                        BackOrder: TicketDatas.Arrive.Order,
-                        Type:TicketDatas.Type,
-                        TotalText:TicketDatas.OnewayReturn?TicketDatas.Start.Tickets[i].Type+'*2':TicketDatas.Start.Tickets[i].Type+'*1',
-                        TotalPrice:TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price,
-                        StationsBy:TicketDatas.Start.StationsBy,
-                        BackStationsBy:TicketDatas.Arrive.StationsBy,
-                        NumOfTickets:nt,
-                        Prices:ps,
-                        Tickets:[TicketDatas.Start.Tickets[i]],
-                        BackTickets:[TicketDatas.Arrive.Tickets[i]],
-                    },
-                    expires: null,
-                });
+                const data={
+                    "BookID": TicketDatas.CodeNumber,
+                    "Datas": TicketDatas.OnewayReturn?[[TicketDatas.Start.Order,TicketDatas.Start.Tickets[i].Position],[TicketDatas.Arrive.Order,TicketDatas.Arrive.Tickets[i].Position]]:[[TicketDatas.Start.Order,TicketDatas.Start.Tickets[i].Position]]
+                };
+                console.log('Data Sent!');
+                console.log('Data:',data);
+                await fetch(apiurl+'/Take/',{method:'POST',headers:{
+                        'Accept': 'application/json',
+                        'Content-Type':'application/json'
+                    },body:JSON.stringify(data)})
+                    .then((response) => response.json())
+                    .then(async (responseJson) => {
+                        try {
+                            console.log('Data Get!');
+                            console.log('Data:', responseJson);
+                            console.log('Data Set!')
+                            if (responseJson.Status === 'True') {
+                                await storage.save({
+                                    key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
+                                    id:TicketDatas.CodeNumber+TicketDatas.Start.Tickets[i].Position,
+                                    data: {
+                                        CodeNumber: TicketDatas.CodeNumber,
+                                        OnewayReturn: TicketDatas.OnewayReturn,
+                                        StartDate: TicketDatas.Start.Date,
+                                        BackDate: TicketDatas.Arrive.Date,
+                                        StartStation: TicketDatas.StartStation,
+                                        ArriveStation: TicketDatas.ArriveStation,
+                                        StartTime: TicketDatas.Start.StartTime,
+                                        ArriveTime: TicketDatas.Start.ArriveTime,
+                                        Order: TicketDatas.Start.Order,
+                                        BackStartTime: TicketDatas.Arrive.StartTime,
+                                        BackArriveTime: TicketDatas.Arrive.ArriveTime,
+                                        BackOrder: TicketDatas.Arrive.Order,
+                                        Type:TicketDatas.Type,
+                                        TotalText:TicketDatas.OnewayReturn?TicketDatas.Start.Tickets[i].Type+'*2':TicketDatas.Start.Tickets[i].Type+'*1',
+                                        TotalPrice:TicketDatas.OnewayReturn?Number(TicketDatas.Start.Tickets[i].Price)+Number(TicketDatas.Arrive.Tickets[i].Price):TicketDatas.Start.Tickets[i].Price,
+                                        StationsBy:TicketDatas.Start.StationsBy,
+                                        BackStationsBy:TicketDatas.Arrive.StationsBy,
+                                        NumOfTickets:nt,
+                                        Prices:ps,
+                                        Tickets:[TicketDatas.Start.Tickets[i]],
+                                        BackTickets:[TicketDatas.Arrive.Tickets[i]],
+                                    },
+                                    expires: null,
+                                });
+                                console.log('Complete!');
+                            } else {
+                                Alert.alert('大笨蛋', '該車票已被取過了!');
+                            }
+                        }
+                        catch (e) {
+                            console.log(e)
+                            Alert.alert('大笨蛋', '後端出現問題!');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+                    });
             }
             await storage.remove({key: 'PaidTicket', id: PaidDatas[index].CodeNumber});
             setStarted(true);
             setPaidTicketVisible(false);
+            Alert.alert('大笨蛋','已完成分票程序!');
         }
+
     }
 
     const openurl=(index)=>{
@@ -1796,11 +1959,15 @@ export default function App() {
         }
         else if(CopyTicketInfo.OnewayReturn){
             setEditCall(false);
-            if(new Date(switchType(CopyTicketInfo.Start.Date))>new Date(switchType(CopyTicketInfo.Arrive.Date))){
+            if((new Date(switchType(CopyTicketInfo.Start.Date))>new Date(switchType(CopyTicketInfo.Arrive.Date))) && (CopyTicketInfo.Start.Date!==CopyTicketInfo.Arrive.Date)){
                 Alert.alert('大笨蛋','去程時間不能比回程時間晚!');
             }
             else if(CopyTicketInfo.Start.Date===CopyTicketInfo.Arrive.Date){
-                if(Number(CopyTicketInfo.Start.ArriveTime.substring(0,2))<=Number(CopyTicketInfo.Arrive.StartTime.substring(0,2))){
+                if(Number(CopyTicketInfo.Start.ArriveTime.substring(0,2))<Number(CopyTicketInfo.Arrive.StartTime.substring(0,2))){
+                    setEditDetailsVisible(true);
+                    setEditVisible(false);
+                }
+                else if((Number(CopyTicketInfo.Start.ArriveTime.substring(0,2))===Number(CopyTicketInfo.Arrive.StartTime.substring(0,2)))){
                     if(Number(CopyTicketInfo.Start.ArriveTime.substring(3,5))<=Number(CopyTicketInfo.Arrive.StartTime.substring(3,5))){
                         Alert.alert('大笨蛋','去程時間不能比回程時間晚!');
                     }
@@ -1808,6 +1975,9 @@ export default function App() {
                         setEditDetailsVisible(true);
                         setEditVisible(false);
                     }
+                }
+                else{
+                    Alert.alert('大笨蛋','去程時間不能比回程時間晚!');
                 }
             }
             else{
@@ -1842,15 +2012,76 @@ export default function App() {
         getBarCodeScannerPermissions();
     }, []);
 
-    const GetTicketFromQRCode=async (data) => {
-        await storage.save({
-            key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
-            id: data.CodeNumber + data.Tickets.Position,
-            data: data,
-            expires: null,
-        });
-        setStarted(true);
-        Alert.alert('Ticket has benn saved!');
+    const GetTicketFromQRCode=async (Data) => {
+        console.log(Data);
+        Alert.alert('大笨蛋','確認拿取\n訂位代號為:'+Data.CodeNumber+'\n種類為:'+Data.Tickets[0].Type+'的車票',
+            [{text:'確認',onPress:async () => {
+                    const data={
+                        "BookID": Data.CodeNumber,
+                        "Datas": Data.OnewayReturn?[[Data.Order,Data.Tickets[0].Position],[Data.BackOrder,Data.BackTickets[0].Position]]:[[Data.Order,Data.Tickets[0].Position]]
+                    };
+                    console.log('Data Sent!');
+                    console.log('Data:',data);
+                    fetch(apiurl+'/HasTake/',{method:'POST',headers:{
+                            'Accept': 'application/json',
+                            'Content-Type':'application/json'
+                        },body:JSON.stringify(data)})
+                        .then((response) => response.json())
+                        .then(async (responseJson) => {
+                            try {
+                                if (responseJson.Status === 'False') {
+                                    console.log('Data Get!');
+                                    console.log('Data:', responseJson);
+                                    console.log('Complete!');
+                                    console.log('Data Sent!');
+                                    console.log('Data:',data);
+                                    fetch(apiurl+'/Take/',{method:'POST',headers:{
+                                            'Accept': 'application/json',
+                                            'Content-Type':'application/json'
+                                        },body:JSON.stringify(data)})
+                                        .then((response) => response.json())
+                                        .then(async (responseJson) => {
+                                            try {
+                                                console.log('Data Get!');
+                                                console.log('Data:', responseJson);
+                                                if (responseJson.Status === 'True') {
+                                                    console.log('Data Set!');
+                                                    await storage.save({
+                                                        key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
+                                                        id: Data.CodeNumber + Data.Tickets[0].Position,
+                                                        data: Data,
+                                                        expires: null,
+                                                    });
+                                                    setStarted(true);
+                                                    Alert.alert('Ticket has benn saved!');
+                                                    console.log('Complete!');
+                                                } else {
+                                                    Alert.alert('大笨蛋', '該車票已被取過了!');
+                                                }
+                                            }
+                                            catch (e) {
+                                                console.log(e)
+                                                Alert.alert('大笨蛋', '後端出現問題!');
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            console.error(error);
+                                            Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+                                        });
+                                } else {
+                                    Alert.alert('大笨蛋', '該車票已被取過了!');
+                                }
+                            }
+                            catch (e) {
+                                console.log(e)
+                                Alert.alert('大笨蛋', '後端出現問題!');
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+                        });
+                }},{text:'取消',onPress:()=>{return;}}])
     }
 
     const handleBarCodeScanned = ({ type, data }) => {
@@ -1874,7 +2105,7 @@ export default function App() {
         else{
             let nt=[0,0,0,0,0];
             let ps=[0,0,0,0,0];
-            nt[index]=TicketDatas.OnewayReturn?2:1;
+            nt[index]=1;
             ps[index]=TicketDatas.OnewayReturn?TicketDatas.Start.Tickets[Getindex-1].Price+TicketDatas.Arrive.Tickets[Getindex-1].Price:TicketDatas.Start.Tickets[Getindex-1].Price;
             let d={
                 CodeNumber: TicketDatas.CodeNumber,
@@ -1884,7 +2115,7 @@ export default function App() {
                 StartStation: TicketDatas.StartStation,
                 ArriveStation: TicketDatas.ArriveStation,
                 StartTime: TicketDatas.Start.StartTime,
-                ArriveTime: TicketDatas.Arrive.StartTime,
+                ArriveTime: TicketDatas.Start.ArriveTime,
                 Order: TicketDatas.Start.Order,
                 BackStartTime: TicketDatas.Arrive.StartTime,
                 BackArriveTime: TicketDatas.Arrive.ArriveTime,
@@ -1900,19 +2131,97 @@ export default function App() {
                 BackTickets:[TicketDatas.Arrive.Tickets[Getindex-1]],
             }
             setQRCodeData(d);
-            setQRCodeIndex(index);
+            setQRCodeIndex([index,Getindex]);
             setQRCodeVisible(true);
             setPaidTicketVisible(false);
         }
     }
 
     const checkGot=()=>{
-        setPaidTicketVisible(true);
-        setQRCodeVisible(false);
+        const data={
+            "BookID": QRCodeData.CodeNumber,
+            "Datas": QRCodeData.OnewayReturn?[[QRCodeData.Order,QRCodeData.Tickets[0].Position],[QRCodeData.BackOrder,QRCodeData.BackTickets[0].Position]]:[[QRCodeData.Order,QRCodeData.Tickets[0].Position]]
+        };
+        console.log('Data Sent!');
+        console.log('Data:',data);
+        fetch(apiurl+'/HasTake/',{method:'POST',headers:{
+                'Accept': 'application/json',
+                'Content-Type':'application/json'
+            },body:JSON.stringify(data)})
+            .then((response) => response.json())
+            .then(async (responseJson) => {
+                try {
+                    console.log('Data Get!');
+                    console.log('Data:',responseJson);
+                    if (responseJson.Status === 'False') {
+                        setPaidTicketVisible(true);
+                        setQRCodeVisible(false);
+                    } else {
+                        let d=TicketDatas;
+                        d.Start.Tickets.splice(QRCodeIndex[1]-1,1);
+                        if(d.OnewayReturn){
+                            d.Arrive.Tickets.splice(QRCodeIndex[1]-1,1);
+                        }
+                        if(d.Start.Tickets.length===0 && d.Arrive.Tickets.length===0){
+                            await storage.remove({key:'PaidTicket',id:d.CodeNumber});
+                            setStarted(true);
+                            Alert.alert('大笨蛋','該車票已全部分出去!');
+                            setQRCodeVisible(false);
+                        }
+                        else{
+                            d.NumOfTickets[QRCodeIndex[0]]-=1;
+                            d.Prices[QRCodeIndex[0]]-=QRCodeData.Prices[QRCodeIndex[0]]
+                            d.TotalText=TicketsToText(d.NumOfTickets,d.OnewayReturn);
+                            d.TotalPrice-=QRCodeData.TotalPrice;
+                            let ds={
+                                    CodeNumber: d.CodeNumber,
+                                    OnewayReturn: d.OnewayReturn,
+                                    StartDate: d.Start.Date,
+                                    BackDate: d.Arrive.Date,
+                                    StartStation: d.StartStation,
+                                    ArriveStation: d.ArriveStation,
+                                    StartTime: d.Start.StartTime,
+                                    ArriveTime: d.Start.ArriveTime,
+                                    Order: d.Start.Order,
+                                    BackStartTime: d.Arrive.StartTime,
+                                    BackArriveTime: d.Arrive.ArriveTime,
+                                    BackOrder: d.Arrive.Order,
+                                    Type:d.Type,
+                                    TotalText:TicketsToText(d.NumOfTickets,d.OnewayReturn),
+                                    TotalPrice:d.TotalPrice,
+                                    StationsBy:d.Start.StationsBy,
+                                    BackStationsBy:d.Arrive.StationsBy,
+                                    NumOfTickets:d.NumOfTickets,
+                                    Prices:d.Prices,
+                                    Tickets:d.Start.Tickets,
+                                    BackTickets:d.Arrive.Tickets,
+                            }
+                            await storage.save({
+                                key: 'PaidTicket', // 注意:请不要在key中使用_下划线符号!
+                                id:d.CodeNumber,
+                                data: ds,
+                                expires: null,
+                            });
+                            setTicketDatas(d);
+                            setPaidTicketVisible(true);
+                            setQRCodeVisible(false);
+                            setStarted(true);
+                        }
+                    }
+                }
+                catch (e) {
+                    console.log(e)
+                    Alert.alert('大笨蛋', '後端出現問題!');
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+            });
     }
 
     return (
-        <View style={[styles.container,{opacity:TableStationsByVisible || timetable || findfare || findcodeVisible ||TableDateVisible || TableVisible||ChooseStationVisible ||Gainfare|| FindDateVisible ||FindDetailsVisible||TrainsStationsByVisible ||EditDetailsVisible ||RefundDetailsVisible ||EditVisible ||EditTrains ||EditDateVisible ||PayticketVisible ||BookStationsByVisible ||BackBookStationsByVisible || PayTicketStationsByVisible ||EditVisible ||BookVisible||BackBookVisible||IDcheckVisible||DetailsVisible?0:1}]}>
+        <View style={[styles.container,{opacity:PaidTicketStationsByVisible || PaidTicketVisible||QRCodeVisible||QRTicketStationsByVisible||TableStationsByVisible || timetable || findfare || findcodeVisible ||TableDateVisible || TableVisible||ChooseStationVisible ||Gainfare|| FindDateVisible ||FindDetailsVisible||TrainsStationsByVisible ||EditDetailsVisible ||RefundDetailsVisible ||EditVisible ||EditTrains ||EditDateVisible ||PayticketVisible ||BookStationsByVisible ||BackBookStationsByVisible || PayTicketStationsByVisible ||EditVisible ||BookVisible||BackBookVisible||IDcheckVisible||DetailsVisible?0:1}]}>
 
             <View style={styles.hbox}>
                 <Text style={styles.Htext}>高鐵訂票系統</Text>
@@ -1928,9 +2237,11 @@ export default function App() {
                 <View style={{position:'absolute',width:'100%',height:'100%',backgroundColor:'#FFFFFF',zIndex:999}}>
                     <Lottie source={require('./icons/chicken.json')} autoPlay loop speed={4}/>
                     <Text style={{alignSelf:'center',alignContent:'center',fontSize:25,justifyContent:'center',marginTop:'40%'}}>在努力加載中......</Text>
-                    <TouchableOpacity style={{width:'80%',height:'5%',alignSelf:'center',alignContent:'center',justifyContent:'center',position:'absolute',marginTop:'5%',bottom:'10%',borderWidth:2,borderRadius:3,borderColor:'#D83714'}} onPress={cancelOnload}>
-                        <Text style={{alignSelf:'center',alignContent:'center',textAlign:'center',textAlignVertical:'center',color:'#D83714',fontSize:20,fontWeight:'bold'}}>取消</Text>
-                    </TouchableOpacity>
+                    {(!Book) &&(
+                        <TouchableOpacity style={{width:'80%',height:'5%',alignSelf:'center',alignContent:'center',justifyContent:'center',position:'absolute',marginTop:'5%',bottom:'10%',borderWidth:2,borderRadius:3,borderColor:'#D83714'}} onPress={cancelOnload}>
+                            <Text style={{alignSelf:'center',alignContent:'center',textAlign:'center',textAlignVertical:'center',color:'#D83714',fontSize:20,fontWeight:'bold'}}>取消</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             )}
 
@@ -2400,7 +2711,7 @@ export default function App() {
                         </View>
                         <View style={load_view.inputview}>
                             <Text style={load_view.explaintext}>取票驗證碼/取票識別碼</Text>
-                            <TextInput style={load_view.inputtext} autoCapitalize={'characters'} maxLength={6} onChangeText={setGetTicketCode} value={GetTicketCode} placeholder="驗證碼或身分證/護照/居留證號末4碼"></TextInput>
+                            <TextInput style={load_view.inputtext} autoCapitalize={'characters'} maxLength={10} onChangeText={setGetTicketCode} value={GetTicketCode} placeholder="驗證碼或身分證/護照/居留證號末4碼"></TextInput>
                             <View style={load_view.seg_line}></View>
                         </View>
                     </View>
@@ -2528,7 +2839,7 @@ export default function App() {
                 </ScrollView>
             )}
 
-            <Modal animationType="slide" transparent={false} visible={ScanVisible} onRequestClose={()=>{setScanVisible(false)}}>
+            <Modal animationType="slide" transparent={false} visible={ScanVisible} onRequestClose={()=>{setScanVisible(false);setScanned(false);}}>
                 {(hasPermission === null)  &&(
                     <Text style={{fontSize:30,fontWeight:'bold',alignSelf:'center',alignContent:'center',justifyContent:'center'}}>Requesting for camera permission</Text>
                 )}
@@ -2548,7 +2859,7 @@ export default function App() {
                             </View>
                         </View>
                         <View style={{flex:1,justifyContent:'flex-end'}}>
-                            <TouchableOpacity style={{marginBottom:'15%',backgroundColor:'#D83714',borderRadius:30,alignItems:'center',alignSelf:'center'}} onPress={()=>{setScanVisible(false)}}>
+                            <TouchableOpacity style={{marginBottom:'15%',backgroundColor:'#D83714',borderRadius:30,alignItems:'center',alignSelf:'center'}} onPress={()=>{setScanVisible(false);setScanned(false);}}>
                                 <Text style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>返回</Text>
                             </TouchableOpacity>
                         </View>
@@ -3526,32 +3837,23 @@ export default function App() {
             </Modal>
 
             <View style={styles.ebox}>
-
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{
-                    setPage(0);
-                }}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(0);setStarted(true);}}>
                     <Image source={Page===0?require('./icons/Ticket_orange.png'):require('./icons/Ticket_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===0?'#D83714':'#A3A3A3'}]}>我的車票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(1);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(1);setStarted(true);}}>
                     <Image source={Page===1?require('./icons/book_orange.png'):require('./icons/book_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===1?'#D83714':'#A3A3A3'}]}>訂票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{
-                    setPage(2);
-                }}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(2);setStarted(true);}}>
                     <Image source={Page===2?require('./icons/Buy_orange.png'):require('./icons/Buy_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===2?'#D83714':'#A3A3A3'}]}>付款/取票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{
-                    setPage(3);
-                }}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(3);setStarted(true);}}>
                     <Image source={Page===3?require('./icons/load_orange.png'):require('./icons/load_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===3?'#D83714':'#A3A3A3'}]}>載入訂位</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{
-                    setPage(4);
-                }}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(4);setStarted(true);}}>
                     <Image source={Page===4?require('./icons/others_orange.png'):require('./icons/others_gray.png')} style={[styles.icons,{width:'40%'}]}></Image>
                     <Text style={[styles.icons_text,{color:Page===4?'#D83714':'#A3A3A3'}]}>其他</Text>
                 </TouchableOpacity>
@@ -4033,7 +4335,7 @@ export default function App() {
                                 <View style={ticket_style.info_view}>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>交易狀態</Text>
-                                        <Text style={[ticket_style.down_info,{color:'#000000'}]}>{TicketDatas.BussinessState?'已付款':'未付款'}</Text>
+                                        <Text style={[ticket_style.down_info,{color:'#000000'}]}>{TicketDatas.BussinessState?'已使用':'已付款'}</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>付款期限</Text>
@@ -4041,7 +4343,7 @@ export default function App() {
                                     </View>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'單程票':'去回票'} / {TicketDatas.Type} / 對號座</Text>
+                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>票數</Text>
@@ -4194,7 +4496,7 @@ export default function App() {
                             <View style={ticket_style.card2}>
                                 <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
                                     <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
-                                    <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Start.Order);setStationsByDatas(TicketDatas.Start.StationsBy);setPayTicketStationsByVisible(true);setPayticketVisible(false);}}>
+                                    <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Start.Order);setStationsByDatas(TicketDatas.Start.StationsBy);setQRTicketStationsByVisible(true);setQRCodeVisible(false);}}>
                                         <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -4222,7 +4524,7 @@ export default function App() {
                                 <View style={ticket_style.card2}>
                                     <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
                                         <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
-                                        <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Arrive.Order);setStationsByDatas(TicketDatas.Arrive.StationsBy);setPayTicketStationsByVisible(true);setPayticketVisible(false);}}>
+                                        <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Arrive.Order);setStationsByDatas(TicketDatas.Arrive.StationsBy);setQRTicketStationsByVisible(true);setQRCodeVisible(false);}}>
                                             <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -4256,6 +4558,73 @@ export default function App() {
                         </TouchableOpacity>
                     </View>
                 </View>
+            </Modal>
+
+            <Modal animationType="slide" transparent={false} visible={QRTicketStationsByVisible} onRequestClose={() =>{setQRCodeVisible(true);setQRTicketStationsByVisible(false);}}>
+                <View style={[styles.container,{justifyContent: 'flex-start'}]}>
+                    <View style={[Booking_style.hbox,{height: '10%'}]}>
+                        <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setQRCodeVisible(true);setQRTicketStationsByVisible(false);}}>
+                            <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
+                        </TouchableOpacity>
+                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                    </View>
+                    <View style={Booking_style.wcard}>
+                        <View style={Booking_style.upcard}>
+                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <View style={{flex:2}}></View>
+                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                        </View>
+                        <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
+                        <View style={Booking_style.downcard}>
+                            <View style={Booking_style.cardfortext}>
+                                {StationsByDatas.map((item,index)=>{
+                                    if(index===StartStation || index===EndStation){
+                                        return (
+                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                        )
+                                    }
+                                    else if(item.length===0){
+                                        return(
+                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                        )
+                                    }
+                                    else{
+                                        return (
+                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                        )
+                                    }
+                                })
+                                }
+                            </View>
+                            <View style={Booking_style.cardforcircle}>
+                            </View>
+                            <View style={Booking_style.cardfortext}>
+                                {StationsByDatas.map((item,index)=>{
+                                    if(item.length===0){
+                                        return (
+                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                        )
+                                    }
+                                    else if(index===StartStation || index===EndStation){
+                                        return (
+                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                        )
+                                    }
+                                    else{
+                                        return (
+                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                        )
+                                    }
+                                })
+                                }
+                            </View>
+                        </View>
+                        <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setQRCodeVisible(true);setQRTicketStationsByVisible(false);}}>
+                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
             </Modal>
 
             <Modal animationType="slide" transparent={false} visible={PayTicketStationsByVisible} onRequestClose={() =>{setPayticketVisible(true);setPayTicketStationsByVisible(false);}}>
@@ -4352,7 +4721,7 @@ export default function App() {
                                     </View>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'單程票':'去回票'} / {TicketDatas.Type} / 對號座</Text>
+                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
                                         <Text style={ticket_style.up_info}>票數</Text>
@@ -4793,7 +5162,7 @@ export default function App() {
                                     <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
                                             <Text style={Booking_style.Stations_text}>{CopyTicketInfo.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{CopyTicketInfo.Start.StartTime}</Text>
+                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.StartTime}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
                                             <Text style={Booking_style.order_text}>------></Text>
@@ -4801,7 +5170,7 @@ export default function App() {
                                         </View>
                                         <View style={Booking_style.order_view}>
                                             <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
+                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -4834,14 +5203,27 @@ export default function App() {
                                 <View style={[Booking_style.seg_line,{height:'0.5%',width: '100%'}]}></View>
                             )}
                             <View style={Booking_style.cost_view}>
-                                <View style={[Booking_style.cost_info_view,{flex:1.5}]}>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]:""}</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]:""}</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]:""}</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]:""}</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]:""}</Text>
-                                </View>
+                                {(!CopyTicketInfo.OnewayReturn) && (
+                                    <View style={[Booking_style.cost_info_view,{flex:1.5}]}>
+                                        <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]:""}</Text>
+                                    </View>
+                                )}
+                                {CopyTicketInfo.OnewayReturn && (
+                                    <View style={[Booking_style.cost_info_view,{flex:1.5}]}>
+                                        <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]*2:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]*2:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]*2:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]*2:""}</Text>
+                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]*2:""}</Text>
+                                    </View>
+                                )}
+
                                 <View style={Booking_style.cost_info_view}>
                                     <Text style={Booking_style.cost_info_title}>變更後票價</Text>
                                     <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[0])}</Text>
@@ -4946,7 +5328,7 @@ export default function App() {
                                     <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
                                             <Text style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{TicketDatas.Start.StartTime}</Text>
+                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
                                             <Text style={Booking_style.order_text}>------></Text>
@@ -4997,11 +5379,11 @@ export default function App() {
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
                                     <Text style={Booking_style.cost_info_title}>票數</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.NumOfTickets[0])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.NumOfTickets[1])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.NumOfTickets[2])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.NumOfTickets[3])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.NumOfTickets[4])}</Text>
+                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*2:TicketDatas.NumOfTickets[0]}</Text>
+                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*2:TicketDatas.NumOfTickets[1]}</Text>
+                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*2:TicketDatas.NumOfTickets[2]}</Text>
+                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*2:TicketDatas.NumOfTickets[3]}</Text>
+                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*2:TicketDatas.NumOfTickets[4]}</Text>
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
                                     <Text style={Booking_style.cost_info_title}>小計</Text>
@@ -5011,14 +5393,26 @@ export default function App() {
                                     <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[3])}</Text>
                                     <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[4])}</Text>
                                 </View>
-                                <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>手續費</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[0])*TicketDatas.BussinessState?20:0}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[1])*TicketDatas.BussinessState?20:0}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[2])*TicketDatas.BussinessState?20:0}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[3])*TicketDatas.BussinessState?20:0}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[4])*TicketDatas.BussinessState?20:0}</Text>
-                                </View>
+                                {(!TicketDatas.BussinessState) &&(
+                                    <View style={Booking_style.cost_info_view}>
+                                        <Text style={Booking_style.cost_info_title}>手續費</Text>
+                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[0])*0}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[1])*0}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[2])*0}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[3])*0}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[4])*0}</Text>
+                                    </View>
+                                )}
+                                {TicketDatas.BussinessState &&(
+                                    <View style={Booking_style.cost_info_view}>
+                                        <Text style={Booking_style.cost_info_title}>手續費</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*40:TicketDatas.NumOfTickets[0]*20}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*40:TicketDatas.NumOfTickets[1]*20}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*40:TicketDatas.NumOfTickets[2]*20}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*40:TicketDatas.NumOfTickets[3]*20}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*40:TicketDatas.NumOfTickets[4]*20}</Text>
+                                    </View>
+                                )}
                             </View>
                         </View>
                         <View style={[Booking_style.Details_view,{marginTop:'5%',alignSelf:'center',height:200}]}>
@@ -5031,15 +5425,15 @@ export default function App() {
                                 </View>
                                 {TicketDatas.BussinessState &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
                                         <Text style={Booking_style.cost_info_text}>TWD 0</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD {20*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))}</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD {moneyManifest(TicketDatas.TotalPrice-(20*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))))}</Text>
+                                        <Text style={Booking_style.cost_info_text}>TWD {20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))}</Text>
+                                        <Text style={Booking_style.cost_info_text}>TWD {moneyManifest(TicketDatas.TotalPrice-(20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))))}</Text>
                                     </View>
                                 )}
                                 {(!TicketDatas.BussinessState) &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{moneyManifest(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))}</Text>
+                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
                                         <Text style={Booking_style.cost_info_text}>TWD 0</Text>
                                         <Text style={Booking_style.cost_info_text}>未付款</Text>
                                         <Text style={Booking_style.cost_info_text}>未付款</Text>
