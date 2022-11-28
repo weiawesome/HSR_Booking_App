@@ -13,9 +13,9 @@ import {
     ScrollView,
     TextInput,
     KeyboardAvoidingView,
-    Keyboard, Animated, Easing, Linking, SafeAreaView
+    Linking
 } from 'react-native';
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import storage from "./storage";
 import DatePicker from 'react-native-modern-datepicker';
 import { getToday, getFormatedDate } from 'react-native-modern-datepicker';
@@ -35,8 +35,8 @@ if (
 export default function App() {
 //---------------------------------------------Declare---------------------------------------------//
     //App
-    // const apiurl='https://wei4test.onrender.com';
-    const apiurl='https://wei4test-api.herokuapp.com';
+    const apiurl='https://wei4test.onrender.com';
+    // const apiurl='https://wei4test-api.herokuapp.com';
     const Version='1.0.0';
     const ContractUrl='https://www.thsrc.com.tw/ArticleContent/7de57796-db08-4d94-b183-bd62618859db/assets/2209677d-297c-4a21-b941-bfbb7a1b60a7.pdf';
     const TexpressUrl='https://www.thsrc.com.tw/ArticleContent/4d262503-84bc-4963-a58e-4ca1a6453ad3';
@@ -170,12 +170,11 @@ export default function App() {
     const [QRCodeData,setQRCodeData]=useState({});
     const [Clock,setClock]=useState();
     const [QRTicketStationsByVisible,setQRTicketStationsByVisible]=useState(false);
+    const [OriginDatas,setOringinDatas]=useState([]);
 
     async function ReNewDatas(){
         if(Start){
             console.log('Re Newing Datas!');
-            setTicketUse(false);
-            setPayOrTake(false);
             setBookNumber('');
             setGetTicketCode('');
             setIdOfFind('');
@@ -642,11 +641,13 @@ export default function App() {
         let s=day.substring(0,10);
         setDateOfEdit(s);
         const data = {
-            'StartStation': CopyTicketInfo.StartStation.toString(),
-            'ArriveStation': CopyTicketInfo.ArriveStation.toString(),
-            'StartTime': backType(DateOfEdit).toString(),
+            'StartStation': editstate?CopyTicketInfo.StartStation.toString():CopyTicketInfo.ArriveStation.toString(),
+            'ArriveStation': editstate?CopyTicketInfo.ArriveStation.toString():CopyTicketInfo.StartStation.toString(),
+            'StartTime': backType(s.substring(0,10)).toString(),
             'Type': CopyTicketInfo.Type.toString(),
             'Tickets': CopyTicketInfo.NumOfTickets.toString(),
+            'Datas':OriginDatas,
+            'BussinessState':CopyTicketInfo.BussinessState
         };
         console.log('Data Sent!');
         console.log('Data:',data);
@@ -956,9 +957,10 @@ export default function App() {
             for (var i = 0; i < TicketDatas.Start.Tickets.length; i++) {
                 Datas=Datas.concat([[TicketDatas.Start.Order, TicketDatas.Start.Tickets[i].Position]]);
             }
-
-            for (var i = 0; i < TicketDatas.Arrive.Tickets.length; i++) {
-                Datas=Datas.concat([[TicketDatas.Arrive.Order, TicketDatas.Arrive.Tickets[i].Position]]);
+            if(TicketDatas.OnewayReturn){
+                for (var i = 0; i < TicketDatas.Arrive.Tickets.length; i++) {
+                    Datas=Datas.concat([[TicketDatas.Arrive.Order, TicketDatas.Arrive.Tickets[i].Position]]);
+                }
             }
             const data = {
                 'BookID': TicketDatas.CodeNumber,
@@ -3837,23 +3839,23 @@ export default function App() {
             </Modal>
 
             <View style={styles.ebox}>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(0);setStarted(true);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(0);setPayOrTake(false);}}>
                     <Image source={Page===0?require('./icons/Ticket_orange.png'):require('./icons/Ticket_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===0?'#D83714':'#A3A3A3'}]}>我的車票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(1);setStarted(true);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(1);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===1?require('./icons/book_orange.png'):require('./icons/book_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===1?'#D83714':'#A3A3A3'}]}>訂票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(2);setStarted(true);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(2);setTicketUse(false);}}>
                     <Image source={Page===2?require('./icons/Buy_orange.png'):require('./icons/Buy_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===2?'#D83714':'#A3A3A3'}]}>付款/取票</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(3);setStarted(true);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(3);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===3?require('./icons/load_orange.png'):require('./icons/load_gray.png')} style={styles.icons}></Image>
                     <Text style={[styles.icons_text,{color:Page===3?'#D83714':'#A3A3A3'}]}>載入訂位</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(4);setStarted(true);}}>
+                <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(4);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===4?require('./icons/others_orange.png'):require('./icons/others_gray.png')} style={[styles.icons,{width:'40%'}]}></Image>
                     <Text style={[styles.icons_text,{color:Page===4?'#D83714':'#A3A3A3'}]}>其他</Text>
                 </TouchableOpacity>
@@ -4818,7 +4820,7 @@ export default function App() {
                                         <Text style={ticket_style.refundtext}>稍後付款</Text>
                                     </TouchableOpacity>
                                 )}
-                                <TouchableOpacity style={ticket_style.funcbtn} onPress={()=>{let d=TicketDatas;setCopyTicketInfo(d);setEditVisible(true);setPayticketVisible(false);}}>
+                                <TouchableOpacity style={ticket_style.funcbtn} onPress={()=>{setOringinDatas(TicketDatas.OnewayReturn?[TicketDatas.Start.Order,TicketDatas.Start.Tickets[0].Position,TicketDatas.Arrive.Order,TicketDatas.Arrive.Tickets[0].Position]:[TicketDatas.Start.Order,TicketDatas.Start.Tickets[0].Position]);let d=TicketDatas;setCopyTicketInfo(d);setEditVisible(true);setPayticketVisible(false);}}>
                                     <Image style={ticket_style.refundimg} source={require('./icons/edit.png')}></Image>
                                     <Text style={ticket_style.refundtext}>修改</Text>
                                 </TouchableOpacity>
@@ -4829,7 +4831,6 @@ export default function App() {
                             </View>
                         </ScrollView>
                     </View>
-
                     <View style={ticket_style.btview}>
                         <TouchableOpacity style={ticket_style.paybtn} onPress={()=>{getit(TicketDatas.BussinessState,PayOrUseIndex);}}>
                             <Text style={ticket_style.paytext}>{TicketDatas.BussinessState?'立即使用':'立即付款'}</Text>
@@ -5454,7 +5455,7 @@ export default function App() {
                         shadowRadius: 2,
                         //該屬性僅支援Android
                         elevation:1.5,backgroundColor:'#FFFFFF',justifyContent:'center',height:80,width:'100%',flexDirection:'row',alignContent:'center'}}>
-                        <TouchableOpacity onPress={()=>refundnow()} style={[Booking_style.submit_btn,{backgroundColor:'#D83714',borderWidth:0,margin:0,height:30,width: '70%',alignSelf: 'center'}]}>
+                        <TouchableOpacity onPress={()=>{refundnow()}} style={[Booking_style.submit_btn,{backgroundColor:'#D83714',borderWidth:0,margin:0,height:30,width: '70%',alignSelf: 'center'}]}>
                             <Text style={[Booking_style.submit_text,{color:'#FFFFFF',fontSize: 12}]}>確定</Text>
                         </TouchableOpacity>
                     </View>
@@ -6223,12 +6224,13 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 'auto',
         marginTop:'10%',
-        fontStyle:'normal',
-        fontWeight:'400',
+        fontStyle:'italic',
+        fontWeight:'bold',
         fontSize:25,
         color: '#FFFFFF',
         alignSelf:'center',
         justifyContent:'center',
+        letterSpacing:5
     },
     user_image:{
         resizeMode:'contain',

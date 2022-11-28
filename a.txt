@@ -1,57 +1,14 @@
-Edit 指令很怪
-第一次無法修改
-
-Take
-
-
-let d={
-    CodeNumber: TicketDatas.CodeNumber,
-    OnewayReturn: TicketDatas.OnewayReturn,
-    StartDate: TicketDatas.Start.Date,
-    BackDate: TicketDatas.Arrive.Date,
-    StartStation: TicketDatas.StartStation,
-    ArriveStation: TicketDatas.ArriveStation,
-    StartTime: TicketDatas.Start.StartTime,
-    ArriveTime: TicketDatas.Start.ArriveTime,
-    Order: TicketDatas.Start.Order,
-    BackStartTime: TicketDatas.Arrive.StartTime,
-    BackArriveTime: TicketDatas.Arrive.ArriveTime,
-    BackOrder: TicketDatas.Arrive.Order,
-    Type:TicketDatas.Type,
-   + TotalText:TicketDatas.OnewayReturn?TicketTypeName[index]+'*2':TicketTypeName[index]+'*1',
-   + TotalPrice:TicketDatas.OnewayReturn?TicketDatas.Start.Tickets[Getindex-1].Price+TicketDatas.Arrive.Tickets[Getindex-1].Price:TicketDatas.Start.Tickets[Getindex-1].Price,
-    StationsBy:TicketDatas.Start.StationsBy,
-    BackStationsBy:TicketDatas.Arrive.StationsBy,
-   + NumOfTickets:nt,
-   + Prices:ps,
-   + Tickets:[TicketDatas.Start.Tickets[Getindex-1]],
-   + BackTickets:[TicketDatas.Arrive.Tickets[Getindex-1]],
-}
-
-
-'CodeNumber': d[index].CodeNumber,
-'BussinessState': status,
-'OnewayReturn': d[index].OnewayReturn,
-'Type': d[index].Type,
-'TotalText': d[index].TotalText,        +
-'TotalPrice': d[index].TotalPrice,      +
-'StartStation': d[index].StartStation,
-'ArriveStation': d[index].ArriveStation,
-'NumOfTickets':d[index].NumOfTickets,   +
-'Prices':d[index].Prices,               +
-'Start': {
-    'Date': d[index].StartDate,
-    'StartTime': d[index].StartTime,
-    'ArriveTime': d[index].ArriveTime,
-    'Order': d[index].Order,
-    'StationsBy': d[index].StationsBy,
-    'Tickets': d[index].Tickets         +
-},
-'Arrive': {
-    'Date': d[index].BackDate,
-    'StartTime': d[index].BackStartTime,
-    'ArriveTime': d[index].BackArriveTime,
-    'Order': d[index].BackOrder,
-    'StationsBy': d[index].BackStationsBy,
-    'Tickets': d[index].BackTickets     +
+{
+"CommandType": "PaidEdit",
+"BookID":
+"OneWayReturn": ,
+"StartDate":
+"BackDate":
+"OriginOrder":
+"OriginSeat"
+"OriginBackOrder":
+"OriginBackSeat"
+"Order":
+"BackOrder":
+"BackSeat":
 }
