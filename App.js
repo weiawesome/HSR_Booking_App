@@ -175,6 +175,7 @@ export default function App() {
     async function ReNewDatas(){
         if(Start){
             console.log('Re Newing Datas!');
+            setDetailsVisible(false);
             setBookNumber('');
             setGetTicketCode('');
             setIdOfFind('');
@@ -410,67 +411,69 @@ export default function App() {
         }
     };
 
-    const InfoComplete=()=>{
-        if(Name===''){
-            Alert.alert('大笨蛋','名字不能是空的!');
-        }
-        else if(!(IDnumber.match(/^[A-Z](1|2)\d{8}$/i))){
-            Alert.alert('大笨蛋','身分證號碼格式不符\n提示 : 大寫英文字加數字共10位!');
-        }
-        else if(!(Phonenumber.match(/09\d{8}$/))){
-            Alert.alert('大笨蛋','電話號碼格式不符\n提示 : 09加上8位數字!');
-        }
-        else if(!(Email.match(/^(([.](?=[^.]|^))|[\w_%{|}#$~`+!?-])+@(?:[\w-]+\.)+[a-zA-Z.]{2,63}$/))){
-            Alert.alert('大笨蛋','電子信箱格式不符');
-        }
-        else{
-            const data={
-                'Name':Name.toString(),
-                'Gender': Gender,
-                'ID' : IDnumber.toString(),
-                'Phone':Phonenumber.toString(),
-                'Email':Email.toString(),
-            };
-            console.log('Data Sent!');
-            console.log('Data:',data);
-            fetch(apiurl+'/CheckID/',{method:'POST',headers:{
-                    'Accept': 'application/json',
-                    'Content-Type':'application/json'
-                },body:JSON.stringify(data)})
-                .then((response) => response.json())
-                .then(async (responseJson) => {
-                    try {
-                        if (responseJson.Status === 'True') {
-                            console.log('Data Get!');
-                            console.log('Data:', responseJson);
-                            await storage.save({
-                                key: 'userinfo',
-                                data: {
-                                    userName: Name,
-                                    userGender: Gender,
-                                    userID: IDnumber,
-                                    userPhone: Phonenumber,
-                                    userEmail: Email,
-                                },
-                                expires: null,
-                            });
-                            setInfoVisible(false);
-                            console.log('Data Set!');
-                            console.log('Complete!');
-                        } else {
-                            Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
-                        }
-                    }
-                    catch (e) {
-                        console.log(e)
-                        Alert.alert('大笨蛋', '後端出現問題!');
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
-                });
-        }
+    const InfoComplete=async () => {
+        await storage.save({
+            key: 'userinfo',
+            data: {
+                userName: Name,
+                userGender: Gender,
+                userID: IDnumber,
+                userPhone: Phonenumber,
+                userEmail: Email,
+            },
+            expires: null,
+        });
+        setInfoVisible(false);
+    //     if(Name===''){
+    //         Alert.alert('大笨蛋','名字不能是空的!');
+    //     }
+    //     else if(!(IDnumber.match(/^[A-Z](1|2)\d{8}$/i))){
+    //         Alert.alert('大笨蛋','身分證號碼格式不符\n提示 : 大寫英文字加數字共10位!');
+    //     }
+    //     else if(!(Phonenumber.match(/09\d{8}$/))){
+    //         Alert.alert('大笨蛋','電話號碼格式不符\n提示 : 09加上8位數字!');
+    //     }
+    //     else if(!(Email.match(/^(([.](?=[^.]|^))|[\w_%{|}#$~`+!?-])+@(?:[\w-]+\.)+[a-zA-Z.]{2,63}$/))){
+    //         Alert.alert('大笨蛋','電子信箱格式不符');
+    //     }
+    //     else{
+    //         const data={
+    //             'Name':Name.toString(),
+    //             'Gender': Gender,
+    //             'ID' : IDnumber.toString(),
+    //             'Phone':Phonenumber.toString(),
+    //             'Email':Email.toString(),
+    //         };
+    //         console.log('Data Sent!');
+    //         console.log('Data:',data);
+    //         fetch(apiurl+'/CheckID/',{method:'POST',headers:{
+    //                 'Accept': 'application/json',
+    //                 'Content-Type':'application/json'
+    //             },body:JSON.stringify(data)})
+    //             .then((response) => response.json())
+    //             .then(async (responseJson) => {
+    //                 try {
+    //                     if (responseJson.Status === 'True') {
+    //                         console.log('Data Get!');
+    //                         console.log('Data:', responseJson);
+    //
+    //
+    //                         console.log('Data Set!');
+    //                         console.log('Complete!');
+    //                     } else {
+    //                         Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+    //                     }
+    //                 }
+    //                 catch (e) {
+    //                     console.log(e)
+    //                     Alert.alert('大笨蛋', '後端出現問題!');
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error);
+    //                 Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+    //             });
+    // }
     };
 
     useEffect(()=>{
@@ -638,6 +641,7 @@ export default function App() {
     },[Book]);
 
     async function completeselecteditday(){
+        console.log(OriginDatas);
         let s=day.substring(0,10);
         setDateOfEdit(s);
         const data = {
@@ -646,8 +650,6 @@ export default function App() {
             'StartTime': backType(s.substring(0,10)).toString(),
             'Type': CopyTicketInfo.Type.toString(),
             'Tickets': CopyTicketInfo.NumOfTickets.toString(),
-            'Datas':OriginDatas,
-            'BussinessState':CopyTicketInfo.BussinessState
         };
         console.log('Data Sent!');
         console.log('Data:',data);
@@ -813,7 +815,9 @@ export default function App() {
                 'BackArriveTime': CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.ArriveTime.toString() : 'None',
                 'Order': CopyTicketInfo.Start.Order.toString(),
                 'BackOrder': CopyTicketInfo.OnewayReturn ? CopyTicketInfo.Arrive.Order.toString() : 'None',
-                'Tickets':CopyTicketInfo.NumOfTickets.toString(),
+                'Tickets':CopyTicketInfo.NumOfTickets,
+                'Datas':OriginDatas,
+                'BussinessState':CopyTicketInfo.BussinessState
             };
             console.log('Data Sent!');
             console.log('Data:',data);
@@ -2226,7 +2230,7 @@ export default function App() {
         <View style={[styles.container,{opacity:PaidTicketStationsByVisible || PaidTicketVisible||QRCodeVisible||QRTicketStationsByVisible||TableStationsByVisible || timetable || findfare || findcodeVisible ||TableDateVisible || TableVisible||ChooseStationVisible ||Gainfare|| FindDateVisible ||FindDetailsVisible||TrainsStationsByVisible ||EditDetailsVisible ||RefundDetailsVisible ||EditVisible ||EditTrains ||EditDateVisible ||PayticketVisible ||BookStationsByVisible ||BackBookStationsByVisible || PayTicketStationsByVisible ||EditVisible ||BookVisible||BackBookVisible||IDcheckVisible||DetailsVisible?0:1}]}>
 
             <View style={styles.hbox}>
-                <Text style={styles.Htext}>高鐵訂票系統</Text>
+                <Text allowFontScaling={false} style={styles.Htext}>高鐵訂票系統</Text>
                 <View style={{position: 'absolute',top:'55%',left: '85%',width:'5%'}}>
                     <TouchableOpacity onPress={()=>{setInfoVisible(true);}}>
                         <Image source={require('./icons/user.png')} style={styles.user_image}></Image>
@@ -2238,10 +2242,10 @@ export default function App() {
             {LoadingVisible &&(
                 <View style={{position:'absolute',width:'100%',height:'100%',backgroundColor:'#FFFFFF',zIndex:999}}>
                     <Lottie source={require('./icons/chicken.json')} autoPlay loop speed={4}/>
-                    <Text style={{alignSelf:'center',alignContent:'center',fontSize:25,justifyContent:'center',marginTop:'40%'}}>在努力加載中......</Text>
+                    <Text allowFontScaling={false} style={{alignSelf:'center',alignContent:'center',fontSize:25,justifyContent:'center',marginTop:'40%'}}>在努力加載中......</Text>
                     {(!Book) &&(
                         <TouchableOpacity style={{width:'80%',height:'5%',alignSelf:'center',alignContent:'center',justifyContent:'center',position:'absolute',marginTop:'5%',bottom:'10%',borderWidth:2,borderRadius:3,borderColor:'#D83714'}} onPress={cancelOnload}>
-                            <Text style={{alignSelf:'center',alignContent:'center',textAlign:'center',textAlignVertical:'center',color:'#D83714',fontSize:20,fontWeight:'bold'}}>取消</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',alignContent:'center',textAlign:'center',textAlignVertical:'center',color:'#D83714',fontSize:20,fontWeight:'bold'}}>取消</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -2251,10 +2255,10 @@ export default function App() {
                 <View style={[MyTicket_style.normal_view,{backgroundColor:((!TicketUse)&&YourTickets.length!==0)||((TicketUse)&&UsedTickets.length!==0)?'#D9D9D9':'#FFFFFF'}]}>
                     <View style={{flexDirection:'row',width:'100%'}}>
                         <TouchableOpacity style={{marginTop:'5%',flex:1,alignSelf:'center'}} onPress={()=>{if(TicketUse){setTicketUse(false);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>未使用</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>未使用</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{marginTop:'5%',flex:1,alignSelf:'center'}} onPress={()=>{if(!TicketUse){setTicketUse(true);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>已使用</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>已使用</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{width:'100%',alignContent:'flex-start'}}>
@@ -2289,28 +2293,28 @@ export default function App() {
                                                         {text: '取消' },
                                                     ])}>
                                                 <View style={Paying_style.up}>
-                                                    <Text style={Paying_style.code_text}>訂位編號</Text>
-                                                    <Text style={Paying_style.ID_text}>{item.CodeNumber}</Text>
-                                                    <Text style={Paying_style.no_paid_text}></Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.code_text}>訂位編號</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.ID_text}>{item.CodeNumber}</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.no_paid_text}></Text>
                                                 </View>
                                                 {/*<View style={[styles.seg_line,{width:'100%'}]}></View>*/}
                                                 <View style={Booking_style.tickets_view}>
                                                     <View style={{flex:1}}>
-                                                        <Text>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
+                                                        <Text allowFontScaling={false}>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
                                                     </View>
                                                     <View style={{flex:3,flexDirection:'row'}}>
                                                         <View style={Booking_style.up}>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.Stations_text}>{item.StartStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.StartStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.order_text}>------></Text>
-                                                                <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -2318,21 +2322,21 @@ export default function App() {
                                                 {item.OnewayReturn===true && (
                                                     <View style={Booking_style.tickets_view}>
                                                         <View style={{flex:1}}>
-                                                            <Text>回程 · {item.BackDate}</Text>
+                                                            <Text allowFontScaling={false}>回程 · {item.BackDate}</Text>
                                                         </View>
                                                         <View style={{flex:3,flexDirection:'row'}}>
                                                             <View style={Booking_style.up}>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                                    <Text style={Booking_style.order_text}>{item.BackOrder}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{item.BackOrder}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -2359,28 +2363,28 @@ export default function App() {
                                                         {text: '取消' },
                                                     ])}>
                                                 <View style={Paying_style.up}>
-                                                    <Text style={Paying_style.code_text}>訂位編號</Text>
-                                                    <Text style={Paying_style.ID_text}>{item.CodeNumber}</Text>
-                                                    <Text style={Paying_style.no_paid_text}></Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.code_text}>訂位編號</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.ID_text}>{item.CodeNumber}</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.no_paid_text}></Text>
                                                 </View>
                                                 {/*<View style={[styles.seg_line,{width:'100%'}]}></View>*/}
                                                 <View style={Booking_style.tickets_view}>
                                                     <View style={{flex:1}}>
-                                                        <Text>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
+                                                        <Text allowFontScaling={false}>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
                                                     </View>
                                                     <View style={{flex:3,flexDirection:'row'}}>
                                                         <View style={Booking_style.up}>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.Stations_text}>{item.StartStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.StartStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.order_text}>------></Text>
-                                                                <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -2388,21 +2392,21 @@ export default function App() {
                                                 {item.OnewayReturn===true && (
                                                     <View style={Booking_style.tickets_view}>
                                                         <View style={{flex:1}}>
-                                                            <Text>回程 · {item.BackDate}</Text>
+                                                            <Text allowFontScaling={false}>回程 · {item.BackDate}</Text>
                                                         </View>
                                                         <View style={{flex:3,flexDirection:'row'}}>
                                                             <View style={Booking_style.up}>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                                    <Text style={Booking_style.order_text}>{item.BackOrder}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{item.BackOrder}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -2422,31 +2426,31 @@ export default function App() {
                     <View style={{width:'100%',flex:3,justifyContent:'flex-start', alignSelf:'center'}}>
                         <View style={{marginTop:'1%',alignSelf:'center',width:'50%',height:'60%',alignContent:'center',justifyContent:'space-between',flexDirection:'row'}}>
                             <View style={styles.circle}></View>
-                            <Text style={styles.work_text}>全線正常營運</Text>
+                            <Text allowFontScaling={false} style={styles.work_text}>全線正常營運</Text>
                         </View>
                         <View style={[styles.seg_line,{marginTop:'1%',height:1}]}></View>
                     </View>
                     <View style={[styles.chossen_bars,{flex: 3}]}>
                         <TouchableOpacity style={styles.station_choose} onPress={()=>{setStations(StartStation);setIsStart(true);setlocationtype(0);setChooseStationVisible(true);}}>
-                            <Text style={styles.sation_start_end}>起程站</Text>
-                            <Text style={styles.station}>{StartstationText}</Text>
+                            <Text allowFontScaling={false} style={styles.sation_start_end}>起程站</Text>
+                            <Text allowFontScaling={false} style={styles.station}>{StartstationText}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.return_oneway_frame} onPress={switchStation}>
                             <Image style={styles.return_oneway_img} source={expanded?require('./icons/return_ticket.png'):require('./icons/one_way_ticket.png')}></Image>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.station_choose} onPress={()=>{setStations(EndStation);setIsStart(false);setlocationtype(0);setChooseStationVisible(true);}}>
-                            <Text style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
-                            <Text style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
+                            <Text allowFontScaling={false} style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
+                            <Text allowFontScaling={false} style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.chossen_bars]}>
                         <View style={styles.chosebg}>
                             <View style={[styles.move_bar,{left:expanded?'50%':'5%'}]}></View>
                             <TouchableOpacity onPress={one_way_ticket} style={{flex:1,alignItems:'center'}}>
-                                <Text >單程票</Text>
+                                <Text allowFontScaling={false} >單程票</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={return_ticket} style={{flex:1,alignItems:'center'}}>
-                                <Text>去回票</Text>
+                                <Text allowFontScaling={false}>去回票</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -2456,8 +2460,8 @@ export default function App() {
                             <Image source={require('./icons/go_date.png')} style={styles.menu_icon}></Image>
                         </View>
                         <View style={styles.chossen_pos}>
-                            <Text style={styles.chossen_title}>去程時間</Text>
-                            <Text style={styles.chossen_text}>{TimeText}</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_title}>去程時間</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_text}>{TimeText}</Text>
                         </View>
                         <View style={styles.to_pos}>
                             <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
@@ -2470,8 +2474,8 @@ export default function App() {
                                 <Image source={require('./icons/back_date.png')} style={styles.menu_icon}></Image>
                             </View>
                             <View style={styles.chossen_pos}>
-                                <Text style={styles.chossen_title}>回程時間</Text>
-                                <Text style={styles.chossen_text}>{BackTimeText}</Text>
+                                <Text allowFontScaling={false} style={styles.chossen_title}>回程時間</Text>
+                                <Text allowFontScaling={false} style={styles.chossen_text}>{BackTimeText}</Text>
                             </View>
                             <View style={styles.to_pos}>
                                 <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
@@ -2486,8 +2490,8 @@ export default function App() {
                             <Image source={require('./icons/train.png')} style={styles.menu_icon}></Image>
                         </View>
                         <View style={styles.chossen_pos}>
-                            <Text style={styles.chossen_title}>車廂種類</Text>
-                            <Text style={styles.chossen_text}>{TypeText}</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_title}>車廂種類</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_text}>{TypeText}</Text>
                         </View>
                         <View style={styles.to_pos}>
                             <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
@@ -2499,8 +2503,8 @@ export default function App() {
                             <Image source={require('./icons/people.png')} style={styles.menu_icon}></Image>
                         </View>
                         <View style={styles.chossen_pos}>
-                            <Text style={styles.chossen_title}>乘客人數</Text>
-                            <Text style={[styles.chossen_text,{maxWidth:'95%'}]}>{AllticketText}</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_title}>乘客人數</Text>
+                            <Text allowFontScaling={false} style={[styles.chossen_text,{maxWidth:'95%'}]}>{AllticketText}</Text>
                         </View>
                         <View style={styles.to_pos}>
                             <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
@@ -2513,8 +2517,8 @@ export default function App() {
                             <Image source={require('./icons/seat.png')} style={styles.menu_icon}></Image>
                         </View>
                         <View style={styles.chossen_pos}>
-                            <Text style={styles.chossen_title}>座位偏好</Text>
-                            <Text style={styles.chossen_text}>{PreText}</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_title}>座位偏好</Text>
+                            <Text allowFontScaling={false} style={styles.chossen_text}>{PreText}</Text>
                         </View>
                         <View style={styles.to_pos}>
                             <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
@@ -2523,7 +2527,7 @@ export default function App() {
                     {sumTickets===1 && (
                     <View style={[styles.seg_line,{width: '90%',height:'0.2%'}]}></View>)}
                     <TouchableOpacity style={[styles.submit_btn,{flex:2,margin:'5%'}]}  onPress={()=>{setSearch(true);}}>
-                    <Text style={styles.submit_text}>查詢</Text>
+                    <Text allowFontScaling={false} style={styles.submit_text}>查詢</Text>
                 </TouchableOpacity>
             </View>
             )}
@@ -2532,10 +2536,10 @@ export default function App() {
                 <View style={[Paying_style.normal_view,{backgroundColor:((!PayOrTake)&&BookedDatas.length!==0)||((PayOrTake)&&PaidDatas.length!==0)?'#D9D9D9':'#FFFFFF'}] }>
                     <View style={{flexDirection:'row',width:'100%'}}>
                         <TouchableOpacity style={{marginTop:'5%',flex:1,alignSelf:'center'}} onPress={()=>{if(PayOrTake){setPayOrTake(false);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>付款</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>付款</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{marginTop:'5%',flex:1,alignSelf:'center'}} onPress={()=>{if(!PayOrTake){setPayOrTake(true);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>取票</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontSize:15,fontWeight:'bold'}}>取票</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{width:'100%',alignContent:'flex-start'}}>
@@ -2566,28 +2570,28 @@ export default function App() {
                                                         {text: '取消' },
                                                     ])}}>
                                                 <View style={Paying_style.up}>
-                                                    <Text style={Paying_style.code_text}>訂位編號</Text>
-                                                    <Text style={Paying_style.ID_text}>{item.CodeNumber}</Text>
-                                                    <Text style={Paying_style.no_paid_text}>未付款</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.code_text}>訂位編號</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.ID_text}>{item.CodeNumber}</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.no_paid_text}>未付款</Text>
                                                 </View>
                                                 {/*<View style={[styles.seg_line,{width:'100%'}]}></View>*/}
                                                 <View style={Booking_style.tickets_view}>
                                                     <View style={{flex:1}}>
-                                                        <Text>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
+                                                        <Text allowFontScaling={false}>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
                                                     </View>
                                                     <View style={{flex:3,flexDirection:'row'}}>
                                                         <View style={Booking_style.up}>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.Stations_text}>{item.StartStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.StartStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.order_text}>------></Text>
-                                                                <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -2595,21 +2599,21 @@ export default function App() {
                                                 {item.OnewayReturn===true && (
                                                     <View style={Booking_style.tickets_view}>
                                                         <View style={{flex:1}}>
-                                                            <Text>回程 · {item.BackDate}</Text>
+                                                            <Text allowFontScaling={false}>回程 · {item.BackDate}</Text>
                                                         </View>
                                                         <View style={{flex:3,flexDirection:'row'}}>
                                                             <View style={Booking_style.up}>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                                    <Text style={Booking_style.order_text}>{item.BackOrder}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{item.BackOrder}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -2636,28 +2640,28 @@ export default function App() {
                                                         {text: '取消' },
                                                     ])}}>
                                                 <View style={Paying_style.up}>
-                                                    <Text style={Paying_style.code_text}>訂位編號</Text>
-                                                    <Text style={Paying_style.ID_text}>{item.CodeNumber}</Text>
-                                                    <Text style={Paying_style.no_paid_text}>已付款</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.code_text}>訂位編號</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.ID_text}>{item.CodeNumber}</Text>
+                                                    <Text allowFontScaling={false} style={Paying_style.no_paid_text}>已付款</Text>
                                                 </View>
                                                 {/*<View style={[styles.seg_line,{width:'100%'}]}></View>*/}
                                                 <View style={Booking_style.tickets_view}>
                                                     <View style={{flex:1}}>
-                                                        <Text>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
+                                                        <Text allowFontScaling={false}>{item.OnewayReturn?'去程':'單程'} · {item.StartDate}</Text>
                                                     </View>
                                                     <View style={{flex:3,flexDirection:'row'}}>
                                                         <View style={Booking_style.up}>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.Stations_text}>{item.StartStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.StartStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.StartTime}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={Booking_style.order_text}>------></Text>
-                                                                <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                                             </View>
                                                             <View style={Booking_style.order_view}>
-                                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
-                                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.ArriveStation}</Text>
+                                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.ArriveTime}</Text>
                                                             </View>
                                                         </View>
                                                     </View>
@@ -2665,21 +2669,21 @@ export default function App() {
                                                 {item.OnewayReturn===true && (
                                                     <View style={Booking_style.tickets_view}>
                                                         <View style={{flex:1}}>
-                                                            <Text>回程 · {item.BackDate}</Text>
+                                                            <Text allowFontScaling={false}>回程 · {item.BackDate}</Text>
                                                         </View>
                                                         <View style={{flex:3,flexDirection:'row'}}>
                                                             <View style={Booking_style.up}>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{item.ArriveStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackStartTime}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                                    <Text style={Booking_style.order_text}>{item.BackOrder}</Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{item.BackOrder}</Text>
                                                                 </View>
                                                                 <View style={Booking_style.order_view}>
-                                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
-                                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{item.StartStation}</Text>
+                                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{item.BackArriveTime}</Text>
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -2694,7 +2698,7 @@ export default function App() {
                     {PayOrTake && (
                         <TouchableOpacity style={{flexDirection:'row',justifyContent:'center',alignContent:'center',position:'absolute',width:'100%',bottom:'0%',backgroundColor:'#FFFFFF'}} onPress={()=>{setScanVisible(true)}}>
                             <Image style={{marginRight:'5%',alignSelf:'center',width:'8%',aspectRatio:1,resizeMode:'contain',marginVertical:'5%'}} source={require('./icons/camera.png')}></Image>
-                            <Text style={{alignSelf:'center',marginVertical:'5%',fontSize:15,fontWeight:'bold',}}>開啟相機 掃描條碼 進行分票</Text>
+                            <Text allowFontScaling={false} style={{alignSelf:'center',marginVertical:'5%',fontSize:15,fontWeight:'bold',}}>開啟相機 掃描條碼 進行分票</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -2704,24 +2708,24 @@ export default function App() {
                 <ScrollView style={load_view.bgview}>
                     <View style={load_view.card}>
                         <View style={load_view.infoview}>
-                            <Text style={load_view.infotext}>提供網路訂票、TGO 會員及其他適用專案之訂位紀錄載入 T Express 進行付款/取票;如欲取得他人T Express分票支手機票證，請輸入分票人提供之取票驗證碼進行取票。</Text>
+                            <Text allowFontScaling={false} style={load_view.infotext}>提供網路訂票、TGO 會員及其他適用專案之訂位紀錄載入 T Express 進行付款/取票;如欲取得他人T Express分票支手機票證，請輸入分票人提供之取票驗證碼進行取票。</Text>
                         </View>
                         <View style={load_view.inputview}>
-                            <Text style={load_view.explaintext}>訂位代號</Text>
+                            <Text allowFontScaling={false} style={load_view.explaintext}>訂位代號</Text>
                             <TextInput style={load_view.inputtext} keyboardType='numeric' maxLength={8} onChangeText={setBookNumber} value={BookNumber} placeholder="訂位代號共8碼"></TextInput>
                             <View style={load_view.seg_line}></View>
                         </View>
                         <View style={load_view.inputview}>
-                            <Text style={load_view.explaintext}>取票驗證碼/取票識別碼</Text>
+                            <Text allowFontScaling={false} style={load_view.explaintext}>取票驗證碼/取票識別碼</Text>
                             <TextInput style={load_view.inputtext} autoCapitalize={'characters'} maxLength={10} onChangeText={setGetTicketCode} value={GetTicketCode} placeholder="驗證碼或身分證/護照/居留證號末4碼"></TextInput>
                             <View style={load_view.seg_line}></View>
                         </View>
                     </View>
                     <TouchableOpacity style={load_view.completebtn} onPress={()=>{getLoseTicket()}}>
-                        <Text style={load_view.completetext}>完成</Text>
+                        <Text allowFontScaling={false} style={load_view.completetext}>完成</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={load_view.findbtn} onPress={()=>openurl(2)}>
-                        <Text style={load_view.findtext}>查詢訂位代號</Text>
+                        <Text allowFontScaling={false} style={load_view.findtext}>查詢訂位代號</Text>
                     </TouchableOpacity>
                 </ScrollView>
             )}
@@ -2734,7 +2738,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/clockTable.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>高鐵時刻表</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>高鐵時刻表</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2744,7 +2748,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={[other_style.icons,{height:'100%'}]} source={require('./icons/moneyInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>票價資訊</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>票價資訊</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2754,7 +2758,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={[other_style.icons,{height:'100%'}]} source={require('./icons/codeInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>查詢訂位代號</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>查詢訂位代號</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2767,7 +2771,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/merchandiseInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>交易注意事項</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>交易注意事項</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2777,7 +2781,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/contractInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>旅客運送契約</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>旅客運送契約</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2787,7 +2791,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/useInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>使用導覽</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>清除票券</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2800,7 +2804,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/quesInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>關於HSR-Booking</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>關於HSR-Booking</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2810,7 +2814,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/webInfo.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>前往高鐵網站</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>前往高鐵網站</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2820,7 +2824,7 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/App.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>前往高鐵台鐵APP</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>前往高鐵台鐵APP</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
@@ -2830,23 +2834,23 @@ export default function App() {
                             <View style={other_style.iconspos}>
                                 <Image style={other_style.icons} source={require('./icons/TLife.png')}></Image>
                             </View>
-                            <Text style={other_style.btntext}>前往高鐵 TLife 網站</Text>
+                            <Text allowFontScaling={false} style={other_style.btntext}>前往高鐵 TLife 網站</Text>
                             <View style={other_style.topos}>
                                 <Image style={other_style.toimg} source={require('./icons/to.png')}></Image>
                             </View>
                         </TouchableOpacity>
                         <View style={other_style.seg_line}></View>
                     </View>
-                    <Text style={other_style.Vtext}>版本 {Version}</Text>
+                    <Text allowFontScaling={false} style={other_style.Vtext}>版本 {Version}</Text>
                 </ScrollView>
             )}
 
             <Modal animationType="slide" transparent={false} visible={ScanVisible} onRequestClose={()=>{setScanVisible(false);setScanned(false);}}>
                 {(hasPermission === null)  &&(
-                    <Text style={{fontSize:30,fontWeight:'bold',alignSelf:'center',alignContent:'center',justifyContent:'center'}}>Requesting for camera permission</Text>
+                    <Text allowFontScaling={false} style={{fontSize:30,fontWeight:'bold',alignSelf:'center',alignContent:'center',justifyContent:'center'}}>Requesting for camera permission</Text>
                 )}
                 {(hasPermission === false) &&(
-                    <Text style={{fontSize:30,fontWeight:'bold',alignSelf:'center',alignContent:'center',justifyContent:'center'}}>No access to camera</Text>
+                    <Text allowFontScaling={false} style={{fontSize:30,fontWeight:'bold',alignSelf:'center',alignContent:'center',justifyContent:'center'}}>No access to camera</Text>
                 )}
                 {(hasPermission===true) &&(
                     <View style={{flex:1}}>
@@ -2857,17 +2861,17 @@ export default function App() {
                         </BarCodeScanner>
                         <View style={{flex:1,justifyContent:'flex-start'}}>
                             <View style={{marginTop:'15%',backgroundColor:'#D9D9D9',borderRadius:30,alignItems:'center',alignSelf:'center'}}>
-                                <Text style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>進行分票 掃描條碼</Text>
+                                <Text allowFontScaling={false} style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>進行分票 掃描條碼</Text>
                             </View>
                         </View>
                         <View style={{flex:1,justifyContent:'flex-end'}}>
                             <TouchableOpacity style={{marginBottom:'15%',backgroundColor:'#D83714',borderRadius:30,alignItems:'center',alignSelf:'center'}} onPress={()=>{setScanVisible(false);setScanned(false);}}>
-                                <Text style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>返回</Text>
+                                <Text allowFontScaling={false} style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>返回</Text>
                             </TouchableOpacity>
                         </View>
                         {scanned &&
                             <TouchableOpacity style={{marginBottom:'15%',backgroundColor:'#D83714',borderRadius:30,alignItems:'center',alignSelf:'center'}} onPress={()=>{setScanned(false);}}>
-                                <Text style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>Tap to Scan Again!</Text>
+                                <Text allowFontScaling={false} style={{color:'#FFFFFF',fontWeight:'bold',fontSize:20,margin:'5%'}}>Tap to Scan Again!</Text>
                             </TouchableOpacity>
                         }
                     </View>
@@ -2883,37 +2887,37 @@ export default function App() {
                             </TouchableOpacity>
                         )}
                         {(!TableStationsByVisible &&!ChooseStationVisible && !TableDateVisible && !TableVisible) &&(
-                            <Text style={Booking_style.bigtitle}>高鐵時刻表</Text>
+                            <Text allowFontScaling={false} style={Booking_style.bigtitle}>高鐵時刻表</Text>
                         )}
                     </View>
                     <View style={[load_view.card,{height:350}]}>
                         <View style={load_view.infoview}>
                             <View style={[other_style.textview,{marginTop: '5%'}]}>
-                                <Text style={other_style.NumberText}>1.</Text>
-                                <Text style={other_style.NormalText}>本時刻表查詢係以營運日為單位，提供旅客查詢出發日期之營運時刻表。</Text>
+                                <Text allowFontScaling={false} style={other_style.NumberText}>1.</Text>
+                                <Text allowFontScaling={false} style={other_style.NormalText}>本時刻表查詢係以營運日為單位，提供旅客查詢出發日期之營運時刻表。</Text>
                             </View>
                             <View style={[other_style.textview,{marginTop:'5%',marginBottom:'5%'}]}>
-                                <Text style={other_style.NumberText}>2.</Text>
-                                <Text style={other_style.NormalText}>旅客可自行透過「更新」功能查詢最新時刻表。</Text>
+                                <Text allowFontScaling={false} style={other_style.NumberText}>2.</Text>
+                                <Text allowFontScaling={false} style={other_style.NormalText}>旅客可自行透過「更新」功能查詢最新時刻表。</Text>
                             </View>
                         </View>
                         <View style={{marginBottom:'10%',flexDirection:'row',height:'15%',alignSelf:'center',width:'90%',alignContent:'center',justifyContent:'center'}}>
                             <TouchableOpacity style={[styles.station_choose]} onPress={()=>{setStations(StartStation);setIsStart(true);setlocationtype(1);setChooseStationVisible(true);settimetable(false);}}>
-                                <Text style={styles.sation_start_end}>起程站</Text>
-                                <Text style={styles.station}>{StartstationText}</Text>
+                                <Text allowFontScaling={false} style={styles.sation_start_end}>起程站</Text>
+                                <Text allowFontScaling={false} style={styles.station}>{StartstationText}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.return_oneway_frame} onPress={switchStation}>
                                 <Image style={styles.return_oneway_img} source={require('./icons/return_ticket.png')}></Image>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.station_choose} onPress={()=>{setStations(EndStation);setIsStart(false);setlocationtype(1);setChooseStationVisible(true);settimetable(false);}}>
-                                <Text style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
-                                <Text style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
+                                <Text allowFontScaling={false} style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
+                                <Text allowFontScaling={false} style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={[load_view.inputview,{height:'20%'}]} onPress={()=>{setTableDateVisible(true);settimetable(false);}}>
-                            <Text style={[load_view.explaintext,{fontSize: 14}]}>出發日期</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>出發日期</Text>
                             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                <Text style={[load_view.inputtext,{fontSize: 14}]}>{TableTimeText}</Text>
+                                <Text allowFontScaling={false} style={[load_view.inputtext,{fontSize: 14}]}>{TableTimeText}</Text>
                                 <View style={[load_view.chooseview,{position:'absolute',right:'10%'}]}>
                                     <Image style={load_view.chooseimg} source={require('./icons/choose_arrow.png')}></Image>
                                 </View>
@@ -2922,7 +2926,7 @@ export default function App() {
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={[load_view.completebtn,{height: '5%'}]} onPress={()=>{getTimeTable()}}>
-                        <Text style={[load_view.completetext,{fontSize: 20}]}>查詢</Text>
+                        <Text allowFontScaling={false} style={[load_view.completetext,{fontSize: 20}]}>查詢</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -2933,37 +2937,37 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'22%'}]} onPress={() => {settimetable(true);setTableVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.title}>當日時刻表</Text>
+                        <Text allowFontScaling={false} style={Booking_style.title}>當日時刻表</Text>
                         <View style={Booking_style.direction_view}>
-                            <Text style={Booking_style.start_end_text}>{start}</Text>
-                            <Text style={Booking_style.start_end_text}>------></Text>
-                            <Text style={Booking_style.start_end_text}>{end}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{start}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>------></Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{end}</Text>
                         </View>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.bookingtime_text}>{TableTimeText}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bookingtime_text}>{TableTimeText}</Text>
                     </View>
                     <ScrollView style={Booking_style.menu}>{
                         TableData.map((item,index) => {
                             return (
                                 <View key={index} style={Booking_style.cards}>
                                     <View style={Booking_style.up}>
-                                        <Text style={Booking_style.timetext}>{item.StartTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.StartTime}</Text>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                         </View>
-                                        <Text style={Booking_style.timetext}>{item.ArriveTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.ArriveTime}</Text>
                                     </View>
                                     <View style={Booking_style.seg_line}></View>
                                     <View style={Booking_style.down}>
                                         <View style={Booking_style.totaltime_view}>
                                             <Image style={Booking_style.down_icons} source={require('./icons/time.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
                                         </View>
                                         <TouchableOpacity style={Booking_style.route_btn} onPress={()=>{setStationsByOrder(item.Order);setStationsByDatas(item.StationsBy);setTableStationsByVisible(true);setTableVisible(false);}}>
                                             <Image style={Booking_style.route_img} source={require('./icons/route.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -2980,13 +2984,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setTableVisible(true);setTableStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -2994,17 +2998,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -3016,17 +3020,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -3034,7 +3038,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setTableVisible(true);setTableStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -3044,7 +3048,7 @@ export default function App() {
             <Modal animationType="slide" transparent={false} visible={TableDateVisible} onRequestClose={() => {settimetable(true);setTableDateVisible(!TableDateVisible);}}>
                 <View style={{alignSelf:'center',justifyContent:'space-around',width:'100%',height:'100%'}}>
                     <View style={styles.hbox}>
-                        <Text style={[styles.Htext]}>選擇出發日期</Text>
+                        <Text allowFontScaling={false} style={[styles.Htext]}>選擇出發日期</Text>
                     </View>
                     {CalerdarVisible && (
                         <DatePicker
@@ -3068,14 +3072,14 @@ export default function App() {
                     )}
                     <View style={{flex:3,flexDirection:'row',justifyContent:'center',alignContent:'center'}}>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',backgroundColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={settablebeinit}>
-                            <Text style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',borderWidth:3,borderColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={cancelsettabletime}>
-                            <Text style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={{alignContent:'center',alignSelf:'center',justifyContent:'center',margin:'10%',width:'90%',backgroundColor:'#34393E',height:'8%',borderRadius:10}} onPress={completeselecttableday}>
-                        <Text style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
+                        <Text allowFontScaling={false} style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -3088,19 +3092,19 @@ export default function App() {
                         </TouchableWithoutFeedback>
                         <View style={[styles.menu,{height:'20%'}]}>
                             <View style={styles.title}>
-                                <Text style={styles.title_text}>擇一填寫</Text>
+                                <Text allowFontScaling={false} style={styles.title_text}>擇一填寫</Text>
                             </View>
                             <View style={styles.seg_line}></View>
                             <TouchableOpacity style={styles.choices} onPress={()=>{setIdPassportModal(false);setIdOrPassport('身分證字號');}}>
-                                <Text style={styles.menu_text}>身分證字號</Text>
+                                <Text allowFontScaling={false} style={styles.menu_text}>身分證字號</Text>
                             </TouchableOpacity>
                             <View style={styles.seg_line}></View>
                             <TouchableOpacity style={styles.choices} onPress={()=>{setIdPassportModal(false);setIdOrPassport('護照/居留證號碼');}}>
-                                <Text style={styles.menu_text}>護照/居留證號碼</Text>
+                                <Text allowFontScaling={false} style={styles.menu_text}>護照/居留證號碼</Text>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={styles.cancel_btn} onPress={() => setIdPassportModal(false)}>
-                            <Text style={styles.cancel_text}>取消</Text>
+                            <Text allowFontScaling={false} style={styles.cancel_text}>取消</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -3113,7 +3117,7 @@ export default function App() {
                             </TouchableOpacity>
                         )}
                         {(!ChooseStationVisible && !FindDateVisible &&!FindDetailsVisible) &&(
-                            <Text style={Booking_style.bigtitle}>查詢訂位代號</Text>
+                            <Text allowFontScaling={false} style={Booking_style.bigtitle}>查詢訂位代號</Text>
                         )}
                     </View>
 
@@ -3121,31 +3125,31 @@ export default function App() {
                         <View style={[load_view.card,{height:550}]}>
                             <View style={load_view.infoview}>
                                 <View style={[other_style.textview,{marginTop: '5%'}]}>
-                                    <Text style={other_style.NumberText}>1.</Text>
-                                    <Text style={other_style.NormalText}>適用查詢透過網路訂票系統及自動語音訂位服務預定之訂位紀錄。</Text>
+                                    <Text allowFontScaling={false} style={other_style.NumberText}>1.</Text>
+                                    <Text allowFontScaling={false} style={other_style.NormalText}>適用查詢透過網路訂票系統及自動語音訂位服務預定之訂位紀錄。</Text>
                                 </View>
                                 <View style={[other_style.textview,{marginTop:'5%',marginBottom:'5%'}]}>
-                                    <Text style={other_style.NumberText}>2.</Text>
-                                    <Text style={other_style.NormalText}>不適用查詢已逾發車當天日期或已取票之訂位紀錄。</Text>
+                                    <Text allowFontScaling={false} style={other_style.NumberText}>2.</Text>
+                                    <Text allowFontScaling={false} style={other_style.NormalText}>不適用查詢已逾發車當天日期或已取票之訂位紀錄。</Text>
                                 </View>
                             </View>
                             <View style={{marginBottom:'10%',flexDirection:'row',height:'15%',alignSelf:'center',width:'90%',alignContent:'center',justifyContent:'center'}}>
                                 <TouchableOpacity style={[styles.station_choose]} onPress={()=>{setStations(StartStation);setIsStart(true);setlocationtype(3);setChooseStationVisible(true);setfindcodeVisible(false);}}>
-                                    <Text style={styles.sation_start_end}>起程站</Text>
-                                    <Text style={styles.station}>{StartstationText}</Text>
+                                    <Text allowFontScaling={false} style={styles.sation_start_end}>起程站</Text>
+                                    <Text allowFontScaling={false} style={styles.station}>{StartstationText}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.return_oneway_frame} onPress={switchStation}>
                                     <Image style={styles.return_oneway_img} source={require('./icons/return_ticket.png')}></Image>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.station_choose} onPress={()=>{setStations(EndStation);setIsStart(false);setlocationtype(3);setChooseStationVisible(true);setfindcodeVisible(false);}}>
-                                    <Text style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
-                                    <Text style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
+                                    <Text allowFontScaling={false} style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
+                                    <Text allowFontScaling={false} style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
                                 </TouchableOpacity>
                             </View>
                             <TouchableOpacity style={[load_view.inputview,{height:'20%'}]} onPress={()=>{setFindDateVisible(true);setfindcodeVisible(false);}}>
-                                <Text style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
                                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                    <Text style={[load_view.inputtext,{fontSize: 14}]}>{FindTimeText}</Text>
+                                    <Text allowFontScaling={false} style={[load_view.inputtext,{fontSize: 14}]}>{FindTimeText}</Text>
                                     <View style={[load_view.chooseview,{position:'absolute',right:'10%'}]}>
                                         <Image style={load_view.chooseimg} source={require('./icons/choose_arrow.png')}></Image>
                                     </View>
@@ -3153,16 +3157,16 @@ export default function App() {
                                 <View style={load_view.seg_line}></View>
                             </TouchableOpacity>
                             <View style={[load_view.inputview,{height:'20%'}]}>
-                                <Text style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
                                 <TextInput style={[load_view.inputtext,{fontSize: 14}]} onChangeText={setOrderOfFind} value={OrderOfFind} placeholder="車次號碼"></TextInput>
                                 <View style={load_view.seg_line}></View>
                             </View>
                             <View style={[load_view.inputview,{width:'90%',height:'20%'}]}>
-                                <Text style={[load_view.explaintext,{color:'#000000',fontSize: 15}]}>取票識別碼</Text>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{color:'#000000',fontSize: 15}]}>取票識別碼</Text>
                                 <View style={load_view.idview}>
                                     <TouchableOpacity style={[load_view.idbtn,{height:'30%'}]} onPress={()=>{setIdPassportModal(true);}}>
                                         <View style={load_view.idtextview}>
-                                            <Text style={load_view.idtext}>{IdOrPassport}</Text>
+                                            <Text allowFontScaling={false} style={load_view.idtext}>{IdOrPassport}</Text>
                                             <View style={load_view.chooseview}>
                                                 <Image style={load_view.chooseimg} source={require('./icons/choose_arrow.png')}></Image>
                                             </View>
@@ -3181,7 +3185,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={load_view.completebtn} onPress={()=>{getLoseCode()}}>
-                            <Text style={load_view.completetext}>完成</Text>
+                            <Text allowFontScaling={false} style={load_view.completetext}>完成</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </KeyboardAvoidingView>
@@ -3193,59 +3197,59 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setfindcodeVisible(true);setFindDetailsVisible(false)}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>查詢訂位代號</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>查詢訂位代號</Text>
                     </View>
                     <ScrollView style={{width:'100%'}}>
                     <View style={[load_view.card,{height:250}]}>
                         <View style={[load_view.inputview,{height:'20%',marginTop:'5%'}]}>
-                            <Text style={[load_view.explaintext,{fontSize: 14}]}>取票人證號</Text>
-                            <Text style={load_view.inputtext}>{IdOfFind}</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>取票人證號</Text>
+                            <Text allowFontScaling={false} style={load_view.inputtext}>{IdOfFind}</Text>
                             <View style={load_view.seg_line}></View>
                         </View>
                         <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text style={[load_view.explaintext,{fontSize: 14}]}>起訖車站</Text>
-                            <Text style={load_view.inputtext}>{StartstationText} - {EndstationText}</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>起訖車站</Text>
+                            <Text allowFontScaling={false} style={load_view.inputtext}>{StartstationText} - {EndstationText}</Text>
                             <View style={load_view.seg_line}></View>
                         </View>
                         <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
-                            <Text style={load_view.inputtext}>{FindTimeText}</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
+                            <Text allowFontScaling={false} style={load_view.inputtext}>{FindTimeText}</Text>
                             <View style={load_view.seg_line}></View>
                         </View>
                         <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
-                            <Text style={load_view.inputtext}>{OrderOfFind}</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
+                            <Text allowFontScaling={false} style={load_view.inputtext}>{OrderOfFind}</Text>
                             <View style={load_view.seg_line}></View>
                         </View>
                     </View>
-                    <Text style={{marginBottom:'5%',marginTop:'5%',alignSelf:'center',textAlign:'left',textAlignVertical:'center',width:'81%',maxWidth:'100%',fontWeight:'bold',fontSize:15}}>符合結果之訂位紀錄如下，點選訂位代號可將該筆訂位紀錄擷取至手機。</Text>
+                    <Text allowFontScaling={false} style={{marginBottom:'5%',marginTop:'5%',alignSelf:'center',textAlign:'left',textAlignVertical:'center',width:'81%',maxWidth:'100%',fontWeight:'bold',fontSize:15}}>符合結果之訂位紀錄如下，點選訂位代號可將該筆訂位紀錄擷取至手機。</Text>
                     <View style={[load_view.card,{flexDirection:'row',height:'auto'}]}>
                         <View style={[load_view.triview,{justifyContent:'flex-start',marginLeft:'5%'}]}>
-                            <Text style={load_view.explaintext}>訂位代號</Text>
+                            <Text allowFontScaling={false} style={load_view.explaintext}>訂位代號</Text>
                             {FindOfDatas.map((item,index)=>{
                                 return(
                                     <TouchableOpacity style={load_view.findcodebtn} key={index} onPress={()=>{loadticketnow(item.State==='True',item)}}>
-                                        <Text style={[load_view.findcodetext,{textAlign:'left',textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714'}]}>{item.Code}</Text>
+                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'left',textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714'}]}>{item.Code}</Text>
                                     </TouchableOpacity>
                                 );
                             })}
                         </View>
                         <View style={load_view.triview}>
-                            <Text style={[load_view.explaintext,{textAlign: 'center'}]}>交易狀態</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign: 'center'}]}>交易狀態</Text>
                             {FindOfDatas.map((item,index)=>{
                                 return(
                                     <TouchableOpacity key={index} style={load_view.findcodebtn} onPress={()=>{loadticketnow(item.State==='True',item)}}>
-                                        <Text style={[load_view.findcodetext,{textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714',textAlign:'center'}]}>{item.State==='True'?'已付款':'未付款'}</Text>
+                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714',textAlign:'center'}]}>{item.State==='True'?'已付款':'未付款'}</Text>
                                     </TouchableOpacity>
                                 );
                             })}
                         </View>
                         <View style={[load_view.triview,{justifyContent:'flex-start',marginRight:'5%'}]}>
-                            <Text style={[load_view.explaintext,{textAlign:'right'}]}>付款期限</Text>
+                            <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign:'right'}]}>付款期限</Text>
                             {FindOfDatas.map((item,index)=>{
                                 return(
                                     <View key={index} style={load_view.findcodebtn}>
-                                        <Text style={[load_view.findcodetext,{textAlign:'right'}]}>{item.State==='True'?'已付款':'發車前30分'}</Text>
+                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'right'}]}>{item.State==='True'?'已付款':'發車前30分'}</Text>
                                     </View>
                                 );
                             })}
@@ -3263,37 +3267,37 @@ export default function App() {
                         </TouchableOpacity>
                     )}
                     {(!ChooseStationVisible && !Gainfare) &&(
-                        <Text style={Booking_style.bigtitle}>票價資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>票價資訊</Text>
                     )}
                 </View>
                 <View style={{width:'100%'}}>
                     <View style={[load_view.card,{height:300}]}>
                         <View style={[load_view.infoview]}>
                             <View style={[other_style.textview,{marginTop: '5%'}]}>
-                                <Text style={other_style.NumberText}>1.</Text>
-                                <Text style={other_style.NormalText}>本票價資訊專區所顯示之價格，以旅客查詢當日之售價計費;票價或優惠折扣資訊若有變動，請以各車站現場及企業網站公告為準。</Text>
+                                <Text allowFontScaling={false} style={other_style.NumberText}>1.</Text>
+                                <Text allowFontScaling={false} style={other_style.NormalText}>本票價資訊專區所顯示之價格，以旅客查詢當日之售價計費;票價或優惠折扣資訊若有變動，請以各車站現場及企業網站公告為準。</Text>
                             </View>
                             <View style={[other_style.textview,{marginTop:'5%',marginBottom:'5%'}]}>
-                                <Text style={other_style.NumberText}>2.</Text>
-                                <Text style={[other_style.NormalText]}>本票價表未提及之優惠折扣方案，請查詢台灣高鐵企業網站 www.thsrc.com.tw。</Text>
+                                <Text allowFontScaling={false} style={other_style.NumberText}>2.</Text>
+                                <Text allowFontScaling={false} style={[other_style.NormalText]}>本票價表未提及之優惠折扣方案，請查詢台灣高鐵企業網站 www.thsrc.com.tw。</Text>
                             </View>
                         </View>
                         <View style={{marginBottom:'10%',flexDirection:'row',height:'15%',alignSelf:'center',width:'90%',alignContent:'center',justifyContent:'center'}}>
                             <TouchableOpacity style={[styles.station_choose]} onPress={()=>{setStations(StartStation);setIsStart(true);setlocationtype(2);setChooseStationVisible(true);setfindfare(false);}}>
-                                <Text style={styles.sation_start_end}>起程站</Text>
-                                <Text style={styles.station}>{StartstationText}</Text>
+                                <Text allowFontScaling={false} style={styles.sation_start_end}>起程站</Text>
+                                <Text allowFontScaling={false} style={styles.station}>{StartstationText}</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.return_oneway_frame} onPress={switchStation}>
                                 <Image style={styles.return_oneway_img} source={require('./icons/return_ticket.png')}></Image>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.station_choose} onPress={()=>{setStations(EndStation);setIsStart(false);setlocationtype(2);setChooseStationVisible(true);setfindfare(false);}}>
-                                <Text style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
-                                <Text style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
+                                <Text allowFontScaling={false} style={[styles.sation_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
+                                <Text allowFontScaling={false} style={[styles.station,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                     <TouchableOpacity style={[load_view.completebtn,{height: '10%'}]} onPress={()=>{setGainfare(true);setfindfare(false);}}>
-                        <Text style={[load_view.completetext,{fontSize: 20}]}>查詢</Text>
+                        <Text allowFontScaling={false} style={[load_view.completetext,{fontSize: 20}]}>查詢</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -3304,14 +3308,14 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setfindfare(true);setGainfare(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>票價資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>票價資訊</Text>
                     </View>
                     <View style={other_style.parrelbar}>
                         <TouchableOpacity style={other_style.typebtn} onPress={()=>{if(!fareinfo){setfareinfo(true);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={[other_style.typetext,{color:fareinfo?'#D83714':'#A3A3A3'}]}>標準車廂</Text>
+                            <Text allowFontScaling={false} style={[other_style.typetext,{color:fareinfo?'#D83714':'#A3A3A3'}]}>標準車廂</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={other_style.typebtn} onPress={()=>{if(fareinfo){setfareinfo(false);LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);}}}>
-                            <Text style={[other_style.typetext,{color:(!fareinfo)?'#D83714':'#A3A3A3'}]}>商務車廂</Text>
+                            <Text allowFontScaling={false} style={[other_style.typetext,{color:(!fareinfo)?'#D83714':'#A3A3A3'}]}>商務車廂</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={other_style.typebar}>
@@ -3320,58 +3324,58 @@ export default function App() {
                     <View style={other_style.allfareview}>
                         <View style={other_style.stationview}>
                             <View style={other_style.triview}>
-                                <Text style={other_style.stationname}>起程站</Text>
-                                <Text style={other_style.stationtext}>{StartstationText}</Text>
+                                <Text allowFontScaling={false} style={other_style.stationname}>起程站</Text>
+                                <Text allowFontScaling={false} style={other_style.stationtext}>{StartstationText}</Text>
                             </View>
                             <View style={other_style.triview}></View>
                             {/*<Image source={}></Image>*/}
                             <View style={other_style.triview}>
-                                <Text style={[other_style.stationname,{textAlign:'right'}]}>到達站</Text>
-                                <Text style={[other_style.stationtext,{textAlign:'right'}]}>{EndstationText}</Text>
+                                <Text allowFontScaling={false} style={[other_style.stationname,{textAlign:'right'}]}>到達站</Text>
+                                <Text allowFontScaling={false} style={[other_style.stationtext,{textAlign:'right'}]}>{EndstationText}</Text>
                             </View>
                         </View>
                         <View style={other_style.seg_line}></View>
                         {fareinfo &&(
                             <View style={other_style.faresview}>
                                 <View style={other_style.lrfareview}>
-                                    <Text style={other_style.leftfare}>全票</Text>
-                                    <Text style={other_style.leftfare}>孩童</Text>
-                                    <Text style={other_style.leftfare}>敬老</Text>
-                                    <Text style={other_style.leftfare}>愛心</Text>
-                                    <Text style={other_style.leftfare}>早鳥65折</Text>
-                                    <Text style={other_style.leftfare}>早鳥8折</Text>
-                                    <Text style={other_style.leftfare}>早鳥9折</Text>
-                                    <Text style={other_style.leftfare}>大學生5折</Text>
-                                    <Text style={other_style.leftfare}>大學生75折</Text>
-                                    <Text style={[other_style.leftfare,{marginBottom:'15%'}]}>大學生88折</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>全票</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>孩童</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>敬老</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>愛心</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>早鳥65折</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>早鳥8折</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>早鳥9折</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>大學生5折</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>大學生75折</Text>
+                                    <Text allowFontScaling={false} style={[other_style.leftfare,{marginBottom:'15%'}]}>大學生88折</Text>
                                 </View>
                                 <View style={other_style.lrfareview}>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Adult)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Child)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Old)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Love)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early65)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early8)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early9)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student5)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student75)}</Text>
-                                    <Text style={[other_style.rightfare,{marginBottom:'15%'}]}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student88)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Adult)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Child)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Old)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Love)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early65)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early8)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Early9)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student5)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student75)}</Text>
+                                    <Text allowFontScaling={false} style={[other_style.rightfare,{marginBottom:'15%'}]}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Standard.Student88)}</Text>
                                 </View>
                             </View>
                         )}
                         {!fareinfo &&(
                             <View style={other_style.faresview}>
                                 <View style={other_style.lrfareview}>
-                                    <Text style={other_style.leftfare}>全票</Text>
-                                    <Text style={other_style.leftfare}>孩童</Text>
-                                    <Text style={other_style.leftfare}>敬老</Text>
-                                    <Text style={[other_style.leftfare,{marginBottom:'15%'}]}>愛心</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>全票</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>孩童</Text>
+                                    <Text allowFontScaling={false} style={other_style.leftfare}>敬老</Text>
+                                    <Text allowFontScaling={false} style={[other_style.leftfare,{marginBottom:'15%'}]}>愛心</Text>
                                 </View>
                                 <View style={other_style.lrfareview}>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Adult)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Child)}</Text>
-                                    <Text style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Old)}</Text>
-                                    <Text style={[other_style.rightfare,{marginBottom:'15%'}]}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Love)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Adult)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Child)}</Text>
+                                    <Text allowFontScaling={false} style={other_style.rightfare}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Old)}</Text>
+                                    <Text allowFontScaling={false} style={[other_style.rightfare,{marginBottom:'15%'}]}>TWD {moneyManifest(Fares[StartstationText][EndstationText].Bussiness.Love)}</Text>
                                 </View>
                             </View>
                         )}
@@ -3382,7 +3386,7 @@ export default function App() {
             <Modal animationType="slide" transparent={false} visible={FindDateVisible} onRequestClose={() => {setfindcodeVisible(true);setFindDateVisible(!FindDateVisible);}}>
                 <View style={{alignSelf:'center',justifyContent:'space-around',width:'100%',height:'100%'}}>
                     <View style={styles.hbox}>
-                        <Text style={[styles.Htext]}>請選擇日期</Text>
+                        <Text allowFontScaling={false} style={[styles.Htext]}>請選擇日期</Text>
                     </View>
                     {CalerdarVisible && (
                         <DatePicker
@@ -3406,14 +3410,14 @@ export default function App() {
                     )}
                     <View style={{flex:3,flexDirection:'row',justifyContent:'center',alignContent:'center'}}>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',backgroundColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={setfindbeinit}>
-                            <Text style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',borderWidth:3,borderColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={cancelsetfindtime}>
-                            <Text style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={{alignContent:'center',alignSelf:'center',justifyContent:'center',margin:'10%',width:'90%',backgroundColor:'#34393E',height:'8%',borderRadius:10}} onPress={completeselectfindday}>
-                        <Text style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
+                        <Text allowFontScaling={false} style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -3424,115 +3428,115 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setcautionsVisible(false)}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>交易注意事項</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>交易注意事項</Text>
                     </View>
                     <ScrollView style={other_style.scview}>
                         <View style={[other_style.textview,{marginTop: '5%'}]}>
-                            <Text style={other_style.OrangeText}>使用者條款</Text>
+                            <Text allowFontScaling={false} style={other_style.OrangeText}>使用者條款</Text>
                         </View>
                         <View style={[other_style.textview,{marginTop: '5%',marginBottom:'5%'}]}>
-                            <Text style={[other_style.NormalText,{maxWidth:'100%'}]}>歡迎使用台灣高鐵T Express行動購票服務，為了您的權益，請詳細閱讀以下注意事項。如果您點選「同意」，就將視為您事先已知悉、並同意本條款，如果您無法接受本條款時，請勿使用本系統訂位/購票。您可利用高鐵企業網站之「聯絡我們」或撥打台灣高鐵客服專線（服務時間
+                            <Text allowFontScaling={false} style={[other_style.NormalText,{maxWidth:'100%'}]}>歡迎使用台灣高鐵T Express行動購票服務，為了您的權益，請詳細閱讀以下注意事項。如果您點選「同意」，就將視為您事先已知悉、並同意本條款，如果您無法接受本條款時，請勿使用本系統訂位/購票。您可利用高鐵企業網站之「聯絡我們」或撥打台灣高鐵客服專線（服務時間
                                 06:00~24:00)：市話撥打4066-3000 （代表號），手機請撥打02-4066-3000，國際來話請撥+886-2-4066-3000與我們聯繫。謝謝！
                             </Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>1.</Text>
-                            <Text style={other_style.NormalText}>您在訂位完成後，即構成有效購票契約，雙方之權利義務依台灣高鐵報請交通部備查並對外公告實施之「旅客運送契約」和其他依法訂定之詳細營運規章及對外公告内容。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>1.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>您在訂位完成後，即構成有效購票契約，雙方之權利義務依台灣高鐵報請交通部備查並對外公告實施之「旅客運送契約」和其他依法訂定之詳細營運規章及對外公告内容。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>2.</Text>
-                            <Text style={other_style.NormalText}>您同意訂位後如未在台灣高鐵指定之期限内付款時，台灣高鐵可逕行取消您的訂位紀錄。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>2.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>您同意訂位後如未在台灣高鐵指定之期限内付款時，台灣高鐵可逕行取消您的訂位紀錄。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>3.</Text>
-                            <Text style={other_style.NormalText}>您同意以本系統取得之QR Code手機票證為搭乘高鐵之唯一票證，並不得透過任何方式複製截圖或傳輸其他手機使用。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>3.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>您同意以本系統取得之QR Code手機票證為搭乘高鐵之唯一票證，並不得透過任何方式複製截圖或傳輸其他手機使用。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>4.</Text>
-                            <Text style={other_style.NormalText}>您同意於使用本系統所提供之功能或以手機票證乘車時，得於必要時依高鐵人員要求配合手機操作，或由高鐵人員於您的手機進行相關票證查驗作業。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>4.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>您同意於使用本系統所提供之功能或以手機票證乘車時，得於必要時依高鐵人員要求配合手機操作，或由高鐵人員於您的手機進行相關票證查驗作業。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>5.</Text>
-                            <Text style={other_style.NormalText}>本系統若因高鐵公司營運或系統控管之事由而無法提供服務時，請逕洽高鐵各車站或使用其他購票通路辦理購/取票事宜。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>5.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>本系統若因高鐵公司營運或系統控管之事由而無法提供服務時，請逕洽高鐵各車站或使用其他購票通路辦理購/取票事宜。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>6.</Text>
-                            <Text style={other_style.NormalText}>您同意本系統「個人資料設定」與「取票人資訊」内所含之身分證字號、護照號碼、會員帳號、企業會員統編、電話與電子郵件等資料，以及相關訂票資訊內容：確由旅客自行提供，如非本人提供，應由提供人告知與旅客之關係及資料來源。又本公司基於個人資料保護法規定，於執行職務或業務之必要範圍內蒐集、處理及利用旅客個人資料，目的為確保本系統能提供最佳服務。有關旅客個人資料保護權益事項等請參考台灣高鐵企業網站www.thsrc.com.tw及車站公告。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>6.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>您同意本系統「個人資料設定」與「取票人資訊」内所含之身分證字號、護照號碼、會員帳號、企業會員統編、電話與電子郵件等資料，以及相關訂票資訊內容：確由旅客自行提供，如非本人提供，應由提供人告知與旅客之關係及資料來源。又本公司基於個人資料保護法規定，於執行職務或業務之必要範圍內蒐集、處理及利用旅客個人資料，目的為確保本系統能提供最佳服務。有關旅客個人資料保護權益事項等請參考台灣高鐵企業網站www.thsrc.com.tw及車站公告。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>7.</Text>
-                            <Text style={other_style.NormalText}>有關本條款之行使、及所有因本條款所生或與本條款有關之爭議，應以中華民國法律為準據法。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>7.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>有關本條款之行使、及所有因本條款所生或與本條款有關之爭議，應以中華民國法律為準據法。</Text>
                         </View>
                         <View style={[other_style.textview,{marginTop:'10%',marginBottom:'5%'}]}>
-                            <Text style={other_style.OrangeText}>交易注意事項</Text>
+                            <Text allowFontScaling={false} style={other_style.OrangeText}>交易注意事項</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>1.</Text>
-                            <Text style={other_style.NormalText}>取得手機票證後，僅限用原取票手機開啟乘車票證（含乘車條 碼QR Code)，且該票證無法轉移至其他手機使用，請您於取票前先行確認將使用本手機通過閘門乘車。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>1.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>取得手機票證後，僅限用原取票手機開啟乘車票證（含乘車條 碼QR Code)，且該票證無法轉移至其他手機使用，請您於取票前先行確認將使用本手機通過閘門乘車。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>2.</Text>
-                            <Text style={other_style.NormalText}>訂位紀錄付款前/後，可使用手機辦理行程變更、減少人數及刪除行程；手機票證開立後，僅能辦理退票作業，若您要變更行程請於列車出發前30分鐘，持手機票證前往車站辦理。使用手機分票功能後，末被其他手機領取之票證，可由執行分票之手機辦理退票。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>2.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>訂位紀錄付款前/後，可使用手機辦理行程變更、減少人數及刪除行程；手機票證開立後，僅能辦理退票作業，若您要變更行程請於列車出發前30分鐘，持手機票證前往車站辦理。使用手機分票功能後，末被其他手機領取之票證，可由執行分票之手機辦理退票。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>3.</Text>
-                            <Text style={other_style.NormalText}>己付款之訂位紀錄，每段行程各可於本系統辦理變更行程乙次，免收手續費，之後如欲再次變更，須辦理「退票」後重新訂票購買；退票或退費作業(含減少人數及刪減單段行程)皆須收取相關手續費用。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>3.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>己付款之訂位紀錄，每段行程各可於本系統辦理變更行程乙次，免收手續費，之後如欲再次變更，須辦理「退票」後重新訂票購買；退票或退費作業(含減少人數及刪減單段行程)皆須收取相關手續費用。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>4.</Text>
-                            <Text style={other_style.NormalText}>手機票證因去程已搭，或已渝退票時限末使用，如無法於手機端辦理回程變更或回程退票時，請於列車出發前30分鐘持手機票證至高鐵車站辦理。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>4.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>手機票證因去程已搭，或已渝退票時限末使用，如無法於手機端辦理回程變更或回程退票時，請於列車出發前30分鐘持手機票證至高鐵車站辦理。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>5.</Text>
-                            <Text style={other_style.NormalText}>透過本系統預訂一小時內車次，訂位完成時須立即付款，預訂30分鐘内車次者，付款後不受理退費/退票。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>5.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>透過本系統預訂一小時內車次，訂位完成時須立即付款，預訂30分鐘内車次者，付款後不受理退費/退票。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>6.</Text>
-                            <Text style={other_style.NormalText}>手機分票服務僅適用本系統或網路訂票完成付款之多人交易，一旦經分票功能處理後，該訂位紀錄內之所有車票僅能透過手機取票，無法選擇其他通路開票，請您使用此功能前，務必確認所有同行者均持有智慧型手機，且已安裝「台灣高鐵TExpress]，以利取票乘車。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>6.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>手機分票服務僅適用本系統或網路訂票完成付款之多人交易，一旦經分票功能處理後，該訂位紀錄內之所有車票僅能透過手機取票，無法選擇其他通路開票，請您使用此功能前，務必確認所有同行者均持有智慧型手機，且已安裝「台灣高鐵TExpress]，以利取票乘車。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>7.</Text>
-                            <Text style={other_style.NormalText}>訂位紀錄中含敬老/愛心票者，可至車站售票窗口或本公司合作之便利商店付款/取票，取票時須核驗搭乘者之身分證明文件(如：身分證、身心障礙證明）。凡透過車站窗口購/取敬老/愛心票的旅客，自該次購/取票的翌日起至次年年底前，可開放使用自動售票機、T Express行動購票App取票（身心障礙證明之重新鑑定日期如早於次年年底，以該重新鑑定日期為限）。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>7.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>訂位紀錄中含敬老/愛心票者，可至車站售票窗口或本公司合作之便利商店付款/取票，取票時須核驗搭乘者之身分證明文件(如：身分證、身心障礙證明）。凡透過車站窗口購/取敬老/愛心票的旅客，自該次購/取票的翌日起至次年年底前，可開放使用自動售票機、T Express行動購票App取票（身心障礙證明之重新鑑定日期如早於次年年底，以該重新鑑定日期為限）。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>8.</Text>
-                            <Text style={other_style.NormalText}>手機票證之電子車票證明可直接透過本系統下載，或可至高鐵企業網站之「交易/搭乘紀錄查詢」專區下載。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>8.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>手機票證之電子車票證明可直接透過本系統下載，或可至高鐵企業網站之「交易/搭乘紀錄查詢」專區下載。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>9.</Text>
-                            <Text style={other_style.NormalText}>手機票證為不記名乘車票，如手機遺失或故障致無法出示手機票證者，恕無法受理車票補發作業，旅客須另行購票搭乘。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>9.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>手機票證為不記名乘車票，如手機遺失或故障致無法出示手機票證者，恕無法受理車票補發作業，旅客須另行購票搭乘。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>10.</Text>
-                            <Text style={other_style.NormalText}>乘車、查驗票或辦理相關票務作業時，應透過本系統出示手機票證，如手機遺失、故障或電池耗盡等因素，致手機無法使用本系統顯示手機票證時，將視同末攜帶有效乘車票處理。為保障旅客權益，敬請妥善保管手機票證，並於乘車前確認手機電力是否充足。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>10.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>乘車、查驗票或辦理相關票務作業時，應透過本系統出示手機票證，如手機遺失、故障或電池耗盡等因素，致手機無法使用本系統顯示手機票證時，將視同末攜帶有效乘車票處理。為保障旅客權益，敬請妥善保管手機票證，並於乘車前確認手機電力是否充足。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>11.</Text>
-                            <Text style={other_style.NormalText}>手機票證限以所載之日期、車次有效，逾期作廢。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>11.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>手機票證限以所載之日期、車次有效，逾期作廢。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>12.</Text>
-                            <Text style={other_style.NormalText}>敬老/愛心票種限本國籍旅客購買使用，購買時請填寫搭乘者之姓名及身分證字號，取票及乘車時，並請備妥有效身分證明文件核驗。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>12.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>敬老/愛心票種限本國籍旅客購買使用，購買時請填寫搭乘者之姓名及身分證字號，取票及乘車時，並請備妥有效身分證明文件核驗。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>13.</Text>
-                            <Text style={other_style.NormalText}>持用學生票者，如學生證「無當學期註冊章或為免蓋註冊章」，務必合併出示「在學證明正本」方得適用優惠，詳情請參閱企網大學生優惠活動說明。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>13.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>持用學生票者，如學生證「無當學期註冊章或為免蓋註冊章」，務必合併出示「在學證明正本」方得適用優惠，詳情請參閱企網大學生優惠活動說明。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>14.</Text>
-                            <Text style={other_style.NormalText}>本系統訂位時輸入電子郵件者，於完成訂位、付款、退票及辦理行程變更後，將自動寄發確認信函。尖峰車次可能有座位不相鄰之情況，請留意系統顯示之座位資訊。另，本系統提供商務車廂旅客於訂位完成後，每一行程即可重新選位乙次（限非當日行程）。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>14.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>本系統訂位時輸入電子郵件者，於完成訂位、付款、退票及辦理行程變更後，將自動寄發確認信函。尖峰車次可能有座位不相鄰之情況，請留意系統顯示之座位資訊。另，本系統提供商務車廂旅客於訂位完成後，每一行程即可重新選位乙次（限非當日行程）。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>15.</Text>
-                            <Text style={other_style.NormalText}>列車運行中斷、運轉變更或因可歸責於本公司之事由導致列車遲延而得退費時，請務必保留手機票證，並於乘車日起一年內憑手機票證至各車站辦理退費。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>15.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>列車運行中斷、運轉變更或因可歸責於本公司之事由導致列車遲延而得退費時，請務必保留手機票證，並於乘車日起一年內憑手機票證至各車站辦理退費。</Text>
                         </View>
                         <View style={other_style.textview}>
-                            <Text style={other_style.NumberText}>16.</Text>
-                            <Text style={other_style.NormalText}>本系統可提供旅客於訂位/付款後事先取得便利商店電子結帳條碼，請逕至合作業者門市結帳(特殊門市除外)並取得便利商店實體車票乘車，使用方式詳見公告。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>16.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>本系統可提供旅客於訂位/付款後事先取得便利商店電子結帳條碼，請逕至合作業者門市結帳(特殊門市除外)並取得便利商店實體車票乘車，使用方式詳見公告。</Text>
                         </View>
                         <View style={[other_style.textview,{marginBottom:'10%'}]}>
-                            <Text style={other_style.NumberText}>17.</Text>
-                            <Text style={other_style.NormalText}>相關票務規定，均依台灣高鐵「旅客運送契約」辦理。其他訂票及乘車注意事項請參考台灣高鐵企業網站及車站公告，或撥打台灣高鐵客服專線（服務時間：06:00~24:00)：市話撥打4066-3000（代表號），手機請撥打02-4066-3000，國際來話請撥+886-2-4066-3000。以上皆為付費電話，依一般市話及行動電話、國際電話費率標準計費。</Text>
+                            <Text allowFontScaling={false} style={other_style.NumberText}>17.</Text>
+                            <Text allowFontScaling={false} style={other_style.NormalText}>相關票務規定，均依台灣高鐵「旅客運送契約」辦理。其他訂票及乘車注意事項請參考台灣高鐵企業網站及車站公告，或撥打台灣高鐵客服專線（服務時間：06:00~24:00)：市話撥打4066-3000（代表號），手機請撥打02-4066-3000，國際來話請撥+886-2-4066-3000。以上皆為付費電話，依一般市話及行動電話、國際電話費率標準計費。</Text>
                         </View>
                     </ScrollView>
                 </View>
@@ -3541,7 +3545,7 @@ export default function App() {
             <Modal animationType="slide" transparent={false} visible={SelectDateMode} onRequestClose={() => setSelectedDate(!selectedDate)}>
                 <View style={{alignSelf:'center',justifyContent:'space-around',width:'100%',height:'100%'}}>
                     <View style={styles.hbox}>
-                        <Text style={[styles.Htext]}>{Gostate?'去程時間':'回程時間'}</Text>
+                        <Text allowFontScaling={false} style={[styles.Htext]}>{Gostate?'去程時間':'回程時間'}</Text>
                     </View>
                     {CalerdarVisible && (
                         <DatePicker
@@ -3567,14 +3571,14 @@ export default function App() {
                     )}
                     <View style={{flex:3,flexDirection:'row',justifyContent:'center',alignContent:'center'}}>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',backgroundColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={setbeinit}>
-                            <Text style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',borderWidth:3,borderColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={cancelsettime}>
-                            <Text style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={{alignContent:'center',alignSelf:'center',justifyContent:'center',margin:'10%',width:'90%',backgroundColor:'#34393E',height:'8%',borderRadius:10}} onPress={completeselectday}>
-                        <Text style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
+                        <Text allowFontScaling={false} style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -3582,22 +3586,22 @@ export default function App() {
             <Modal animationType="slide" transparent={false} visible={ChooseStationVisible} onRequestClose={() => {if(locationtype===1){settimetable(true);}else if(locationtype===2){setfindfare(true);}else if(locationtype===3){setfindcodeVisible(true);}setChooseStationVisible(false);}}>
                 <View style={styles.container}>
                     <View style={styles.Hview}>
-                        <Text style={styles.Choose_text}>選擇車站</Text>
+                        <Text allowFontScaling={false} style={styles.Choose_text}>選擇車站</Text>
                     </View>
                     <View style={styles.result_view}>
                         <View style={styles.manifest_view}>
-                            <Text style={styles.target_start_end}>起程站</Text>
+                            <Text allowFontScaling={false} style={styles.target_start_end}>起程站</Text>
                             <TouchableOpacity style={[styles.target_station_box,{borderWidth:IsStart?1.5:0}]} onPress={StartStationPress}>
-                                <Text style={[styles.target_station_text,{color:IsStart?'#000000':'#9f9b9b'}]}>{StartstationText}</Text>
+                                <Text allowFontScaling={false} style={[styles.target_station_text,{color:IsStart?'#000000':'#9f9b9b'}]}>{StartstationText}</Text>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={[styles.change_frame]} onPress={switchStation}>
                             <Image style={[styles.return_oneway_img,{top:'10%'}]} source={require('./icons/return_ticket.png')}></Image>
                         </TouchableOpacity>
                         <View style={styles.manifest_view}>
-                            <Text style={[styles.target_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
+                            <Text allowFontScaling={false} style={[styles.target_start_end,{alignSelf:'flex-end'}]}>到達站</Text>
                             <TouchableOpacity style={[styles.target_station_box,{borderWidth:IsStart?0:1.5,alignSelf:'flex-end'}]} onPress={EndStationPress}>
-                                <Text style={[styles.target_station_text,{color:IsStart?'#9f9b9b':'#000000'}]}>{EndstationText}</Text>
+                                <Text allowFontScaling={false} style={[styles.target_station_text,{color:IsStart?'#9f9b9b':'#000000'}]}>{EndstationText}</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -3606,74 +3610,74 @@ export default function App() {
                         <View style={styles.stations_frames}>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===0?1.5:0}]} onPress={()=>{SetTargetStation(0)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===0?'#D83714':'#9f9b9b'}]}>{Stations_Name[0]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===0?'#D83714':'#9f9b9b'}]}>{Stations_Name[0]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===1?1.5:0}]} onPress={()=>{SetTargetStation(1)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===1?'#D83714':'#9f9b9b'}]}>{Stations_Name[1]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===1?'#D83714':'#9f9b9b'}]}>{Stations_Name[1]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===2?1.5:0}]} onPress={()=>{SetTargetStation(2)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===2?'#D83714':'#9f9b9b'}]}>{Stations_Name[2]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===2?'#D83714':'#9f9b9b'}]}>{Stations_Name[2]}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.stations_frames}>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===3?1.5:0}]} onPress={()=>{SetTargetStation(3)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===3?'#D83714':'#9f9b9b'}]}>{Stations_Name[3]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===3?'#D83714':'#9f9b9b'}]}>{Stations_Name[3]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===4?1.5:0}]} onPress={()=>{SetTargetStation(4)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===4?'#D83714':'#9f9b9b'}]}>{Stations_Name[4]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===4?'#D83714':'#9f9b9b'}]}>{Stations_Name[4]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===5?1.5:0}]} onPress={()=>{SetTargetStation(5)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===5?'#D83714':'#9f9b9b'}]}>{Stations_Name[5]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===5?'#D83714':'#9f9b9b'}]}>{Stations_Name[5]}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.stations_frames}>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===6?1.5:0}]} onPress={()=>{SetTargetStation(6)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===6?'#D83714':'#9f9b9b'}]}>{Stations_Name[6]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===6?'#D83714':'#9f9b9b'}]}>{Stations_Name[6]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===7?1.5:0}]} onPress={()=>{SetTargetStation(7)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===7?'#D83714':'#9f9b9b'}]}>{Stations_Name[7]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===7?'#D83714':'#9f9b9b'}]}>{Stations_Name[7]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===8?1.5:0}]} onPress={()=>{SetTargetStation(8)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===8?'#D83714':'#9f9b9b'}]}>{Stations_Name[8]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===8?'#D83714':'#9f9b9b'}]}>{Stations_Name[8]}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                         <View style={styles.stations_frames}>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===9?1.5:0}]} onPress={()=>{SetTargetStation(9)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===9?'#D83714':'#9f9b9b'}]}>{Stations_Name[9]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===9?'#D83714':'#9f9b9b'}]}>{Stations_Name[9]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===10?1.5:0}]} onPress={()=>{SetTargetStation(10)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===10?'#D83714':'#9f9b9b'}]}>{Stations_Name[10]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===10?'#D83714':'#9f9b9b'}]}>{Stations_Name[10]}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.manifest_view}>
                                 <TouchableOpacity style={[styles.target_station_box,{borderWidth: Stations===11?1.5:0}]} onPress={()=>{SetTargetStation(11)}}>
-                                    <Text style={[styles.target_station_text,{fontSize: 17,color: Stations===11?'#D83714':'#9f9b9b'}]}>{Stations_Name[11]}</Text>
+                                    <Text allowFontScaling={false} style={[styles.target_station_text,{fontSize: 17,color: Stations===11?'#D83714':'#9f9b9b'}]}>{Stations_Name[11]}</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
                     </View>
                     <TouchableOpacity style={styles.stations_complete_btn} onPress={()=>{if(locationtype===1){settimetable(true);}else if(locationtype===2){setfindfare(true);}else if(locationtype===3){setfindcodeVisible(true);}setChooseStationVisible(false);}}>
-                        <Text style={styles.stations_complete_text}>完成</Text>
+                        <Text allowFontScaling={false} style={styles.stations_complete_text}>完成</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -3684,23 +3688,23 @@ export default function App() {
                 </TouchableWithoutFeedback>
                 <View style={[styles.menu,{height:'30%'}]}>
                     <View style={styles.title}>
-                        <Text style={styles.title_text}>選擇座位偏好</Text>
+                        <Text allowFontScaling={false} style={styles.title_text}>選擇座位偏好</Text>
                     </View>
                     <View style={styles.seg_line}></View>
                     <TouchableOpacity style={styles.choices} onPress={()=>{setModalVisible(!modalVisible);setPre(1);}}>
-                        <Text style={styles.menu_text}>靠窗優先</Text>
+                        <Text allowFontScaling={false} style={styles.menu_text}>靠窗優先</Text>
                     </TouchableOpacity>
                     <View style={styles.seg_line}></View>
                     <TouchableOpacity style={styles.choices} onPress={()=>{setModalVisible(!modalVisible);setPre(2);}}>
-                        <Text style={styles.menu_text}>靠走道優先</Text>
+                        <Text allowFontScaling={false} style={styles.menu_text}>靠走道優先</Text>
                     </TouchableOpacity>
                     <View style={styles.seg_line}></View>
                     <TouchableOpacity style={styles.choices} onPress={()=>{setModalVisible(!modalVisible);setPre(0);}}>
-                        <Text style={styles.menu_text}>無偏好</Text>
+                        <Text allowFontScaling={false} style={styles.menu_text}>無偏好</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.cancel_btn} onPress={() => setModalVisible(!modalVisible)}>
-                    <Text style={styles.cancel_text}>取消</Text>
+                    <Text allowFontScaling={false} style={styles.cancel_text}>取消</Text>
                 </TouchableOpacity>
 
             </Modal>
@@ -3711,20 +3715,20 @@ export default function App() {
                 </TouchableWithoutFeedback>
                 <View style={[styles.menu,{height:'60%',width:'100%',bottom:'0%'}]}>
                     <View style={styles.title}>
-                        <Text style={styles.title_text}>選擇乘客人數</Text>
+                        <Text allowFontScaling={false} style={styles.title_text}>選擇乘客人數</Text>
                     </View>
                     <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>
                     <View style={styles.ticket_view}>
                         <View style={styles.ticket_info}>
-                            <Text style={styles.ticket_type_text}>全票</Text>
-                            <Text style={styles.ticket_info_text}>12歲以上</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_type_text}>全票</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_info_text}>12歲以上</Text>
                         </View>
                         <View style={styles.number_of_ticket_view}>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(0,'minus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
                             </TouchableOpacity>
                             <View style={styles.vertical_line}></View>
-                            <Text style={[styles.number_of_ticket_text,{color:Tickets[0]===0?'#000000':'#D83714'}]}>{Tickets[0]}</Text>
+                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[0]===0?'#000000':'#D83714'}]}>{Tickets[0]}</Text>
                             <View style={styles.vertical_line}></View>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(0,'plus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
@@ -3734,15 +3738,15 @@ export default function App() {
                     <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>
                     <View style={styles.ticket_view}>
                         <View style={styles.ticket_info}>
-                            <Text style={styles.ticket_type_text}>孩童</Text>
-                            <Text style={styles.ticket_info_text}>6歲-11歲</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_type_text}>孩童</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_info_text}>6歲-11歲</Text>
                         </View>
                         <View style={styles.number_of_ticket_view}>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(1,'minus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
                             </TouchableOpacity>
                             <View style={styles.vertical_line}></View>
-                            <Text style={[styles.number_of_ticket_text,{color:Tickets[1]===0?'#000000':'#D83714'}]}>{Tickets[1]}</Text>
+                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[1]===0?'#000000':'#D83714'}]}>{Tickets[1]}</Text>
                             <View style={styles.vertical_line}></View>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(1,'plus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
@@ -3752,15 +3756,15 @@ export default function App() {
                     <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>
                     <View style={styles.ticket_view}>
                         <View style={styles.ticket_info}>
-                            <Text style={styles.ticket_type_text}>敬老</Text>
-                            <Text style={styles.ticket_info_text}>65歲以上之本國國民</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_type_text}>敬老</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_info_text}>65歲以上之本國國民</Text>
                         </View>
                         <View style={styles.number_of_ticket_view}>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(2,'minus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
                             </TouchableOpacity>
                             <View style={styles.vertical_line}></View>
-                            <Text style={[styles.number_of_ticket_text,{color:Tickets[2]===0?'#000000':'#D83714'}]}>{Tickets[2]}</Text>
+                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[2]===0?'#000000':'#D83714'}]}>{Tickets[2]}</Text>
                             <View style={styles.vertical_line}></View>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(2,'plus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
@@ -3770,15 +3774,15 @@ export default function App() {
                     <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>
                     <View style={styles.ticket_view}>
                         <View style={styles.ticket_info}>
-                            <Text style={styles.ticket_type_text}>愛心</Text>
-                            <Text style={styles.ticket_info_text}>持有身心障礙證明之本國國民</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_type_text}>愛心</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_info_text}>持有身心障礙證明之本國國民</Text>
                         </View>
                         <View style={styles.number_of_ticket_view}>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(3,'minus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
                             </TouchableOpacity>
                             <View style={styles.vertical_line}></View>
-                            <Text style={[styles.number_of_ticket_text,{color:Tickets[3]===0?'#000000':'#D83714'}]}>{Tickets[3]}</Text>
+                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[3]===0?'#000000':'#D83714'}]}>{Tickets[3]}</Text>
                             <View style={styles.vertical_line}></View>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(3,'plus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
@@ -3789,15 +3793,15 @@ export default function App() {
                     {TypeText==='標準車廂' &&(
                         <View style={styles.ticket_view}>
                         <View style={styles.ticket_info}>
-                            <Text style={styles.ticket_type_text}>大學生</Text>
-                            <Text style={styles.ticket_info_text}>持本國大專院校有效學生證之學生</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_type_text}>大學生</Text>
+                            <Text allowFontScaling={false} style={styles.ticket_info_text}>持本國大專院校有效學生證之學生</Text>
                         </View>
                         <View style={styles.number_of_ticket_view}>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'minus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
                             </TouchableOpacity>
                             <View style={styles.vertical_line}></View>
-                            <Text style={[styles.number_of_ticket_text,{color:Tickets[4]===0?'#000000':'#D83714'}]}>{Tickets[4]}</Text>
+                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[4]===0?'#000000':'#D83714'}]}>{Tickets[4]}</Text>
                             <View style={styles.vertical_line}></View>
                             <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'plus')}}>
                                 <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
@@ -3808,7 +3812,7 @@ export default function App() {
                         <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>)}
                     <View style={[styles.complete_view]} >
                         <TouchableOpacity style={styles.complete_btn} onPress={countTicket}>
-                            <Text style={styles.complete_text}>完成</Text>
+                            <Text allowFontScaling={false} style={styles.complete_text}>完成</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -3821,19 +3825,19 @@ export default function App() {
                 </TouchableWithoutFeedback>
                 <View style={[styles.menu,{height:'20%'}]}>
                     <View style={styles.title}>
-                        <Text style={styles.title_text}>選擇車廂種類</Text>
+                        <Text allowFontScaling={false} style={styles.title_text}>選擇車廂種類</Text>
                     </View>
                     <View style={styles.seg_line}></View>
                     <TouchableOpacity style={styles.choices} onPress={()=>{setTypeVisible(!TypeVisible);TypeChoose(0);}}>
-                        <Text style={styles.menu_text}>標準車廂</Text>
+                        <Text allowFontScaling={false} style={styles.menu_text}>標準車廂</Text>
                     </TouchableOpacity>
                     <View style={styles.seg_line}></View>
                     <TouchableOpacity style={styles.choices} onPress={()=>{setTypeVisible(!TypeVisible);TypeChoose(1);}}>
-                        <Text style={styles.menu_text}>商務車廂</Text>
+                        <Text allowFontScaling={false} style={styles.menu_text}>商務車廂</Text>
                     </TouchableOpacity>
                 </View>
                 <TouchableOpacity style={styles.cancel_btn} onPress={() => setTypeVisible(!TypeVisible)}>
-                    <Text style={styles.cancel_text}>取消</Text>
+                    <Text allowFontScaling={false} style={styles.cancel_text}>取消</Text>
                 </TouchableOpacity>
 
             </Modal>
@@ -3841,23 +3845,23 @@ export default function App() {
             <View style={styles.ebox}>
                 <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(0);setPayOrTake(false);}}>
                     <Image source={Page===0?require('./icons/Ticket_orange.png'):require('./icons/Ticket_gray.png')} style={styles.icons}></Image>
-                    <Text style={[styles.icons_text,{color:Page===0?'#D83714':'#A3A3A3'}]}>我的車票</Text>
+                    <Text allowFontScaling={false} style={[styles.icons_text,{color:Page===0?'#D83714':'#A3A3A3'}]}>我的車票</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(1);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===1?require('./icons/book_orange.png'):require('./icons/book_gray.png')} style={styles.icons}></Image>
-                    <Text style={[styles.icons_text,{color:Page===1?'#D83714':'#A3A3A3'}]}>訂票</Text>
+                    <Text allowFontScaling={false} style={[styles.icons_text,{color:Page===1?'#D83714':'#A3A3A3'}]}>訂票</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(2);setTicketUse(false);}}>
                     <Image source={Page===2?require('./icons/Buy_orange.png'):require('./icons/Buy_gray.png')} style={styles.icons}></Image>
-                    <Text style={[styles.icons_text,{color:Page===2?'#D83714':'#A3A3A3'}]}>付款/取票</Text>
+                    <Text allowFontScaling={false} style={[styles.icons_text,{color:Page===2?'#D83714':'#A3A3A3'}]}>付款/取票</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(3);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===3?require('./icons/load_orange.png'):require('./icons/load_gray.png')} style={styles.icons}></Image>
-                    <Text style={[styles.icons_text,{color:Page===3?'#D83714':'#A3A3A3'}]}>載入訂位</Text>
+                    <Text allowFontScaling={false} style={[styles.icons_text,{color:Page===3?'#D83714':'#A3A3A3'}]}>載入訂位</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.diferent_pages} onPress={()=>{setPage(4);setTicketUse(false);setPayOrTake(false);}}>
                     <Image source={Page===4?require('./icons/others_orange.png'):require('./icons/others_gray.png')} style={[styles.icons,{width:'40%'}]}></Image>
-                    <Text style={[styles.icons_text,{color:Page===4?'#D83714':'#A3A3A3'}]}>其他</Text>
+                    <Text allowFontScaling={false} style={[styles.icons_text,{color:Page===4?'#D83714':'#A3A3A3'}]}>其他</Text>
                 </TouchableOpacity>
             </View>
 
@@ -3871,37 +3875,37 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.title}>{Titletext}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.title}>{Titletext}</Text>
                         <View style={Booking_style.direction_view}>
-                            <Text style={Booking_style.start_end_text}>{start}</Text>
-                            <Text style={Booking_style.start_end_text}>------></Text>
-                            <Text style={Booking_style.start_end_text}>{end}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{start}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>------></Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{end}</Text>
                         </View>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.bookingtime_text}>{gotime}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bookingtime_text}>{gotime}</Text>
                     </View>
                     <ScrollView style={Booking_style.menu}>{
                         datas.map((item, index) => {
                             return (
                                 <TouchableOpacity key={index} style={Booking_style.cards} onPress={()=>{gobook(index);}}>
                                     <View style={Booking_style.up}>
-                                        <Text style={Booking_style.timetext}>{item.StartTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.StartTime}</Text>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                         </View>
-                                        <Text style={Booking_style.timetext}>{item.ArriveTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.ArriveTime}</Text>
                                     </View>
                                     <View style={Booking_style.seg_line}></View>
                                     <View style={Booking_style.down}>
                                         <View style={Booking_style.totaltime_view}>
                                             <Image style={Booking_style.down_icons} source={require('./icons/time.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
                                         </View>
                                         <TouchableOpacity key={index} style={Booking_style.route_btn} onPress={()=>{setStationsByDatas(item.StationsBy);setStationsByOrder(item.Order);setBookStationsByVisible(true);setBookVisible(false);}}>
                                             <Image style={Booking_style.route_img} source={require('./icons/route.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>
@@ -3918,13 +3922,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setBookVisible(true);setBookStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -3932,17 +3936,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -3954,17 +3958,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -3972,7 +3976,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setBookVisible(true);setBookStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -3989,37 +3993,37 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.title}>回程</Text>
+                        <Text allowFontScaling={false} style={Booking_style.title}>回程</Text>
                         <View style={Booking_style.direction_view}>
-                            <Text style={Booking_style.start_end_text}>{end}</Text>
-                            <Text style={Booking_style.start_end_text}>------></Text>
-                            <Text style={Booking_style.start_end_text}>{start}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{end}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>------></Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{start}</Text>
                         </View>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.bookingtime_text}>{backtime}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bookingtime_text}>{backtime}</Text>
                     </View>
                     <ScrollView style={Booking_style.menu}>{
                         backdatas.map((item, index) => {
                             return (
                                 <TouchableOpacity key={index} style={Booking_style.cards} onPress={()=>{backbook(index);}}>
                                     <View style={Booking_style.up}>
-                                        <Text style={Booking_style.timetext}>{item.StartTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.StartTime}</Text>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                         </View>
-                                        <Text style={Booking_style.timetext}>{item.ArriveTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.ArriveTime}</Text>
                                     </View>
                                     <View style={Booking_style.seg_line}></View>
                                     <View style={Booking_style.down}>
                                         <View style={Booking_style.totaltime_view}>
                                             <Image style={Booking_style.down_icons} source={require('./icons/time.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
                                         </View>
                                         <TouchableOpacity style={Booking_style.route_btn} onPress={()=>{setStationsByOrder(item.Order);setStationsByDatas(item.StationsBy);setBackBookStationsByVisible(true);setBackBookVisible(false);}}>
                                             <Image style={Booking_style.route_img} source={require('./icons/route.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>
@@ -4036,13 +4040,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setBackBookVisible(true);setBackBookStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -4050,22 +4054,22 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -4077,17 +4081,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -4095,7 +4099,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setBackBookVisible(true);setBackBookStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4112,45 +4116,45 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>取票人資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>取票人資訊</Text>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.info_text}>請填入基本資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.info_text}>請填入基本資訊</Text>
                     </View>
                     <ScrollView style={Booking_style.info_menu}>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>姓名(Last name and First name)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>姓名(Last name and First name)</Text>
                             <TextInput style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>性別(Gender)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>性別(Gender)</Text>
                             <View style={Booking_style.gender_bg}>
                                 <View style={[Booking_style.white_bar,{left:Gender?'0%':'50%'}]}></View>
                                 <TouchableOpacity onPress={()=>{changeGender(0);}} style={Booking_style.input}>
-                                    <Text style={Booking_style.item_text}>男(Male)</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.item_text}>男(Male)</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={()=>{changeGender(1);}} style={Booking_style.input}>
-                                    <Text style={Booking_style.item_text}>女(Female)</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.item_text}>女(Female)</Text>
                                 </TouchableOpacity>
                             </View>
 
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>身分證字號(ID-number)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>身分證字號(ID-number)</Text>
                             <TextInput style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
                             <TextInput style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
                             <TextInput style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
                         </View>
                     </ScrollView>
 
                     <TouchableOpacity style={[Booking_style.submit_btn,{marginBottom:'10%'}]} onPress={LoginComplete}>
-                        <Text style={Booking_style.submit_text}>送出訂位資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.submit_text}>送出訂位資訊</Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
             </Modal>
@@ -4161,45 +4165,45 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setInfoVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>個人基本資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>個人基本資訊</Text>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.info_text}>請填入基本資訊</Text>
+                        <Text allowFontScaling={false} style={Booking_style.info_text}>請填入基本資訊</Text>
                     </View>
                     <ScrollView style={Booking_style.info_menu}>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>姓名(Last name and First name)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>姓名(Last name and First name)</Text>
                             <TextInput style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>性別(Gender)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>性別(Gender)</Text>
                             <View style={Booking_style.gender_bg}>
                                 <View style={[Booking_style.white_bar,{left:Gender?'0%':'50%'}]}></View>
                                 <TouchableOpacity onPress={()=>{changeGender(0);}} style={Booking_style.input}>
-                                    <Text style={Booking_style.item_text}>男(Male)</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.item_text}>男(Male)</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={()=>{changeGender(1);}} style={Booking_style.input}>
-                                    <Text style={Booking_style.item_text}>女(Female)</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.item_text}>女(Female)</Text>
                                 </TouchableOpacity>
                             </View>
 
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>身分證字號(ID-number)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>身分證字號(ID-number)</Text>
                             <TextInput style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
                             <TextInput style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
-                            <Text style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
+                            <Text allowFontScaling={false} style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
                             <TextInput style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
                         </View>
                     </ScrollView>
 
                     <TouchableOpacity style={[Booking_style.submit_btn,{marginBottom:'10%'}]} onPress={InfoComplete}>
-                        <Text style={Booking_style.submit_text}>完成</Text>
+                        <Text allowFontScaling={false} style={Booking_style.submit_text}>完成</Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
             </Modal>
@@ -4214,26 +4218,26 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.Details_title}>訂位明細</Text>
+                        <Text allowFontScaling={false} style={Booking_style.Details_title}>訂位明細</Text>
                     </View>
                     <View style={Booking_style.Details_view}>
                         <View style={Booking_style.tickets_view}>
                             <View style={{flex:1}}>
-                                <Text>{oneway_return?'去程':'單程'} · {gotime}</Text>
+                                <Text allowFontScaling={false}>{oneway_return?'去程':'單程'} · {gotime}</Text>
                             </View>
                             <View style={{flex:3,flexDirection:'row'}}>
                                 <View style={Booking_style.up}>
                                     <View style={Booking_style.order_view}>
-                                        <Text style={Booking_style.Stations_text}>{StartstationText}</Text>
-                                        <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{Tickinfo[1]}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.Stations_text}>{StartstationText}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{Tickinfo[1]}</Text>
                                     </View>
                                     <View style={Booking_style.order_view}>
-                                        <Text style={Booking_style.order_text}>------></Text>
-                                        <Text style={Booking_style.order_text}>{Tickinfo[0]}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                        <Text allowFontScaling={false} style={Booking_style.order_text}>{Tickinfo[0]}</Text>
                                     </View>
                                     <View style={Booking_style.order_view}>
-                                        <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
-                                        <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{Tickinfo[2]}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{EndstationText}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{Tickinfo[2]}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -4242,21 +4246,21 @@ export default function App() {
                         {oneway_return===true && (
                             <View style={Booking_style.tickets_view}>
                                 <View style={{flex:1}}>
-                                    <Text>回程 · {backtime}</Text>
+                                    <Text allowFontScaling={false}>回程 · {backtime}</Text>
                                 </View>
                                 <View style={{flex:3,flexDirection:'row'}}>
                                     <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.Stations_text}>{EndstationText}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{BackTickinfo[1]}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.Stations_text}>{EndstationText}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{BackTickinfo[1]}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{BackTickinfo[0]}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{BackTickinfo[0]}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{StartstationText}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{BackTickinfo[2]}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{StartstationText}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{BackTickinfo[2]}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -4267,40 +4271,40 @@ export default function App() {
                         )}
                         <View style={Booking_style.cost_view}>
                             <View style={[Booking_style.cost_info_view,{flex:1}]}>
-                                <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}></Text>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票</Text>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童</Text>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老</Text>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心</Text>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}></Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生</Text>
                             </View>
                             <View style={Booking_style.cost_info_view}>
-                                <Text style={[Booking_style.cost_info_title]}>票數</Text>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Tickets[0]*2:Tickets[0]}</Text>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Tickets[1]*2:Tickets[1]}</Text>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Tickets[2]*2:Tickets[2]}</Text>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Tickets[3]*2:Tickets[3]}</Text>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Tickets[4]*2:Tickets[4]}</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_title]}>票數</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Tickets[0]*2:Tickets[0]}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Tickets[1]*2:Tickets[1]}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Tickets[2]*2:Tickets[2]}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Tickets[3]*2:Tickets[3]}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Tickets[4]*2:Tickets[4]}</Text>
                             </View>
                             <View style={Booking_style.cost_info_view}>
-                                <Text style={Booking_style.cost_info_title}>小計</Text>
-                                <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[0])}</Text>
-                                <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[1])}</Text>
-                                <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[2])}</Text>
-                                <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[3])}</Text>
-                                <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[4])}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_title}>小計</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[0])}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[1])}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[2])}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[3])}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[4])}</Text>
                             </View>
                         </View>
                         <View style={[Booking_style.seg_line,{height:'0.5%',width: '100%'}]}></View>
                         <View style={Booking_style.totalcost_view}>
                             <View style={[Booking_style.cost_info_view,{flex:1}]}>
-                                <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>{TypeText}/總計</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>{TypeText}/總計</Text>
                             </View>
                             <View style={Booking_style.cost_info_view}>
-                                <Text style={Booking_style.cost_info_text}>{oneway_return? Number(sumTickets)*2:sumTickets}</Text>
+                                <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{oneway_return? Number(sumTickets)*2:sumTickets}</Text>
                             </View>
                             <View style={Booking_style.cost_info_view}>
-                                <Text style={[Booking_style.cost_info_text,{color:'#D83714'}]}>TWD {moneyManifest(Allprices)}</Text>
+                                <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{color:'#D83714'}]}>TWD {moneyManifest(Allprices)}</Text>
                             </View>
                         </View>
                     </View>
@@ -4309,11 +4313,11 @@ export default function App() {
                             <Image style={Booking_style.check_img} source={Check?require('./icons/check.png'):require('./icons/uncheck.png')}></Image>
                         </TouchableOpacity>
                         <Hyperlink linkDefault={true} style={{alignSelf:'center',justifyContent:'center'}} linkStyle={ { color: '#D83714',textDecorationLine:'underline' } } linkText={url => url === RefundUrl ? '線上購票交易及取消/退票注意事項' : url}>
-                            <Text style={Booking_style.notice_text}>我已了解並同意{RefundUrl}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.notice_text}>我已了解並同意{RefundUrl}</Text>
                         </Hyperlink>
                     </View>
                     <TouchableOpacity onPress={()=>setBook(true)} style={[Booking_style.submit_btn,{flex:0.2,bottom: '3%'}]}>
-                        <Text style={Booking_style.submit_text}>確認車次</Text>
+                        <Text allowFontScaling={false} style={Booking_style.submit_text}>確認車次</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -4324,72 +4328,72 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'10%'}]} onPress={()=>{setPaidTicketVisible(false)}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={ticket_style.header_text}>票證資訊</Text>
+                        <Text allowFontScaling={false} style={ticket_style.header_text}>票證資訊</Text>
                     </View>
                     <View style={ticket_style.cenview}>
                         <ScrollView style={ticket_style.scview}>
                             <View style={ticket_style.card1}>
                                 <View style={ticket_style.up}>
-                                    <Text style={ticket_style.left_text}>訂位代號</Text>
-                                    <Text style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.left_text}>訂位代號</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
                                 </View>
                                 <View style={ticket_style.seg_line}></View>
                                 <View style={ticket_style.info_view}>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>交易狀態</Text>
-                                        <Text style={[ticket_style.down_info,{color:'#000000'}]}>{TicketDatas.BussinessState?'已使用':'已付款'}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>交易狀態</Text>
+                                        <Text allowFontScaling={false} style={[ticket_style.down_info,{color:'#000000'}]}>{TicketDatas.BussinessState?'已使用':'已付款'}</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>付款期限</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.BussinessState?'已使用':'已付款'}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>付款期限</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.BussinessState?'已使用':'已付款'}</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>票數</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.TotalText}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>票數</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.TotalText}</Text>
                                     </View>
                                 </View>
                                 <View style={ticket_style.seg_line}></View>
                                 <View style={ticket_style.up}>
-                                    <Text style={ticket_style.down_left}>總票價</Text>
-                                    <Text style={ticket_style.down_right}>TWD {moneyManifest(TicketDatas.TotalPrice)}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.down_left}>總票價</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.down_right}>TWD {moneyManifest(TicketDatas.TotalPrice)}</Text>
                                 </View>
                             </View>
                             {!(TicketDatas.BussinessState) &&(
                                 <View style={[ticket_style.card2,{height:150,justifyContent:'center',alignSelf: 'center',alignContent:'center'}]}>
-                                    <Text style={{width:'100%',textAlign:'center',textAlignVertical:'center',marginTop:'5%',fontWeight:'bold',fontSize:15,marginBottom:'2.5%'}}>點擊下方票券 進行分票</Text>
+                                    <Text allowFontScaling={false} style={{width:'100%',textAlign:'center',textAlignVertical:'center',marginTop:'5%',fontWeight:'bold',fontSize:15,marginBottom:'2.5%'}}>點擊下方票券 進行分票</Text>
                                     <View style={{width:'100%',flexDirection:'row',height:100,justifyContent:'center',alignSelf: 'center',alignContent:'center'}}>
                                         <TouchableOpacity style={{marginLeft:'5%',margin:'2.5%',flex:1,backgroundColor:'#D9D9D9',borderRadius:5,justifyContent:'space-around',alignContent:'space-around'}} onPress={()=>{GetQRCode(0,TicketDatas.NumOfTickets[0],TicketDatas.NumOfTickets[0]);}}>
-                                            <Text style={{textAlign:'center',textAlignVertical:'center'}}>全票</Text>
-                                            <Text style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[0]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[0]}</Text>
+                                            <Text allowFontScaling={false} style={{textAlign:'center',textAlignVertical:'center'}}>全票</Text>
+                                            <Text allowFontScaling={false} style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[0]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[0]}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={{margin:'2.5%',flex:1,backgroundColor:'#D9D9D9',borderRadius:5,justifyContent:'space-around',alignContent:'space-around'}} onPress={()=>{GetQRCode(1,TicketDatas.NumOfTickets[1],TicketDatas.NumOfTickets[0]+TicketDatas.NumOfTickets[1]);}}>
-                                            <Text style={{textAlign:'center',textAlignVertical:'center'}}>孩童</Text>
-                                            <Text style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[1]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[1]}</Text>
+                                            <Text allowFontScaling={false} style={{textAlign:'center',textAlignVertical:'center'}}>孩童</Text>
+                                            <Text allowFontScaling={false} style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[1]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[1]}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={{margin:'2.5%',flex:1,backgroundColor:'#D9D9D9',borderRadius:5,justifyContent:'space-around',alignContent:'space-around'}} onPress={()=>{GetQRCode(2,TicketDatas.NumOfTickets[2],TicketDatas.NumOfTickets[0]+TicketDatas.NumOfTickets[1]+TicketDatas.NumOfTickets[2]);}}>
-                                            <Text style={{textAlign:'center',textAlignVertical:'center'}}>敬老</Text>
-                                            <Text style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[2]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[2]}</Text>
+                                            <Text allowFontScaling={false} style={{textAlign:'center',textAlignVertical:'center'}}>敬老</Text>
+                                            <Text allowFontScaling={false} style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[2]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[2]}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={{margin:'2.5%',flex:1,backgroundColor:'#D9D9D9',borderRadius:5,justifyContent:'space-around',alignContent:'space-around'}} onPress={()=>{GetQRCode(3,TicketDatas.NumOfTickets[3],TicketDatas.NumOfTickets[0]+TicketDatas.NumOfTickets[1]+TicketDatas.NumOfTickets[2]+TicketDatas.NumOfTickets[3]);}}>
-                                            <Text style={{textAlign:'center',textAlignVertical:'center'}}>愛心</Text>
-                                            <Text style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[3]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[3]}</Text>
+                                            <Text allowFontScaling={false} style={{textAlign:'center',textAlignVertical:'center'}}>愛心</Text>
+                                            <Text allowFontScaling={false} style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[3]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[3]}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={{marginRight:'5%',margin:'2.5%',flex:1,backgroundColor:'#D9D9D9',borderRadius:5,justifyContent:'space-around',alignContent:'space-around'}} onPress={()=>{GetQRCode(4,TicketDatas.NumOfTickets[4],TicketDatas.NumOfTickets[0]+TicketDatas.NumOfTickets[1]+TicketDatas.NumOfTickets[2]+TicketDatas.NumOfTickets[3]+TicketDatas.NumOfTickets[4]);}}>
-                                            <Text style={{textAlign:'center',textAlignVertical:'center'}}>大學生</Text>
-                                            <Text style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[4]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[4]}</Text>
+                                            <Text allowFontScaling={false} style={{textAlign:'center',textAlignVertical:'center'}}>大學生</Text>
+                                            <Text allowFontScaling={false} style={{fontSize:20,textAlign:'center',textAlignVertical:'center',color:TicketDatas.NumOfTickets[4]===0?'#000000':'#D83714'}}>{TicketDatas.NumOfTickets[4]}</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             )}
                             <View style={ticket_style.card2}>
                                 <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                    <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
+                                    <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
                                     <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Start.Order);setStationsByDatas(TicketDatas.Start.StationsBy);setPaidTicketStationsByVisible(true);setPaidTicketVisible(false);}}>
-                                        <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                        <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4397,26 +4401,26 @@ export default function App() {
                                     <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                         <View style={Booking_style.up}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
                                     {TicketDatas.BussinessState &&(TicketDatas.Start.Tickets.map((item,index)=>{
                                         return (
                                             <View key={index} style={ticket_style.cards}>
-                                                <Text style={ticket_style.typetext}>{item.Type}</Text>
-                                                <Text style={ticket_style.seatpostext}>{item.Position}</Text>
+                                                <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                                <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
                                                 <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                                <Text style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
+                                                <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
                                             </View>
 
                                         );
@@ -4426,9 +4430,9 @@ export default function App() {
                             {TicketDatas.OnewayReturn &&(
                                 <View style={ticket_style.card2}>
                                     <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                        <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
+                                        <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
                                         <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Arrive.Order);setStationsByDatas(TicketDatas.Arrive.StationsBy);setPaidTicketStationsByVisible(true);setPaidTicketVisible(false);}}>
-                                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4436,26 +4440,26 @@ export default function App() {
                                         <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                             <View style={Booking_style.up}>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
-                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
                                                 </View>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                    <Text style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
                                                 </View>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
-                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
                                                 </View>
                                             </View>
                                         </View>
                                         {TicketDatas.BussinessState && (TicketDatas.Arrive.Tickets.map((item,index)=>{
                                             return (
                                                 <View key={index} style={ticket_style.cards}>
-                                                    <Text style={ticket_style.typetext}>{item.Type}</Text>
-                                                    <Text style={ticket_style.seatpostext}>{item.Position}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
                                                     <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                                    <Text style={ticket_style.costtext}>TWD {item.Price}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {item.Price}</Text>
                                                 </View>
                                             );
                                         }))}
@@ -4467,7 +4471,7 @@ export default function App() {
 
                     <View style={ticket_style.btview}>
                         <TouchableOpacity style={ticket_style.paybtn} onPress={()=>{distribute(TicketDatas.BussinessState,PayOrUseIndex);}}>
-                            <Text style={ticket_style.paytext}>{TicketDatas.BussinessState?'刪除票券':'立即取票'}</Text>
+                            <Text allowFontScaling={false} style={ticket_style.paytext}>{TicketDatas.BussinessState?'刪除票券':'立即取票'}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4479,14 +4483,14 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'10%'}]} onPress={()=>{checkGot()}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={ticket_style.header_text}>票證資訊</Text>
+                        <Text allowFontScaling={false} style={ticket_style.header_text}>票證資訊</Text>
                     </View>
                     <View style={ticket_style.cenview}>
                         <ScrollView style={ticket_style.scview}>
                             <View style={ticket_style.card1}>
                                 <View style={ticket_style.up}>
-                                    <Text style={ticket_style.left_text}>訂位代號</Text>
-                                    <Text style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.left_text}>訂位代號</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
                                 </View>
                                 <View style={ticket_style.seg_line}></View>
                                 <View style={[ticket_style.info_view,{flex:1}]}>
@@ -4497,9 +4501,9 @@ export default function App() {
                             </View>
                             <View style={ticket_style.card2}>
                                 <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                    <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
+                                    <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
                                     <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Start.Order);setStationsByDatas(TicketDatas.Start.StationsBy);setQRTicketStationsByVisible(true);setQRCodeVisible(false);}}>
-                                        <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                        <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4507,16 +4511,16 @@ export default function App() {
                                     <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                         <View style={Booking_style.up}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -4525,9 +4529,9 @@ export default function App() {
                             {TicketDatas.OnewayReturn &&(
                                 <View style={ticket_style.card2}>
                                     <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                        <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
+                                        <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
                                         <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Arrive.Order);setStationsByDatas(TicketDatas.Arrive.StationsBy);setQRTicketStationsByVisible(true);setQRCodeVisible(false);}}>
-                                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4535,16 +4539,16 @@ export default function App() {
                                         <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                             <View style={Booking_style.up}>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
-                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
                                                 </View>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={Booking_style.order_text}>------></Text>
-                                                    <Text style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
                                                 </View>
                                                 <View style={Booking_style.order_view}>
-                                                    <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
-                                                    <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -4556,7 +4560,7 @@ export default function App() {
 
                     <View style={ticket_style.btview}>
                         <TouchableOpacity style={ticket_style.paybtn} onPress={()=>{checkGot();}}>
-                            <Text style={ticket_style.paytext}>返回</Text>
+                            <Text allowFontScaling={false} style={ticket_style.paytext}>返回</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4568,13 +4572,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setQRCodeVisible(true);setQRTicketStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -4582,17 +4586,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -4604,17 +4608,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -4622,7 +4626,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setQRCodeVisible(true);setQRTicketStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4635,13 +4639,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setPayticketVisible(true);setPayTicketStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -4649,17 +4653,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -4671,17 +4675,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -4689,7 +4693,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setPayticketVisible(true);setPayTicketStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4702,45 +4706,45 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'10%'}]} onPress={()=>{setPayticketVisible(false)}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={ticket_style.header_text}>票證資訊</Text>
+                        <Text allowFontScaling={false} style={ticket_style.header_text}>票證資訊</Text>
                     </View>
                     <View style={ticket_style.cenview}>
                         <ScrollView style={ticket_style.scview}>
                             <View style={ticket_style.card1}>
                                 <View style={ticket_style.up}>
-                                    <Text style={ticket_style.left_text}>訂位代號</Text>
-                                    <Text style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.left_text}>訂位代號</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.right_text}>{TicketDatas.CodeNumber}</Text>
                                 </View>
                                 <View style={ticket_style.seg_line}></View>
                                 <View style={ticket_style.info_view}>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>交易狀態</Text>
-                                        <Text style={[ticket_style.down_info,{color: TicketDatas.BussinessState?'#000000':'#D83714'}]}>{TicketDatas.BussinessState?'已付款':'未付款'}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>交易狀態</Text>
+                                        <Text allowFontScaling={false} style={[ticket_style.down_info,{color: TicketDatas.BussinessState?'#000000':'#D83714'}]}>{TicketDatas.BussinessState?'已付款':'未付款'}</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>付款期限</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.BussinessState?'已付款':'發車前30分鐘'}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>付款期限</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.BussinessState?'已付款':'發車前30分鐘'}</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>行程 / 車廂 / 票種</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.OnewayReturn?'去回票':'單程票'} / {TicketDatas.Type} / 對號座</Text>
                                     </View>
                                     <View style={ticket_style.info_part}>
-                                        <Text style={ticket_style.up_info}>票數</Text>
-                                        <Text style={ticket_style.down_info}>{TicketDatas.TotalText}</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.up_info}>票數</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.down_info}>{TicketDatas.TotalText}</Text>
                                     </View>
                                 </View>
                                 <View style={ticket_style.seg_line}></View>
                                 <View style={ticket_style.up}>
-                                    <Text style={ticket_style.down_left}>總票價</Text>
-                                    <Text style={ticket_style.down_right}>TWD {moneyManifest(TicketDatas.TotalPrice)}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.down_left}>總票價</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.down_right}>TWD {moneyManifest(TicketDatas.TotalPrice)}</Text>
                                 </View>
                             </View>
                             <View style={ticket_style.card2}>
                                 <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                    <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
+                                    <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
                                     <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Start.Order);setStationsByDatas(TicketDatas.Start.StationsBy);setPayTicketStationsByVisible(true);setPayticketVisible(false);}}>
-                                        <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                        <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4748,26 +4752,26 @@ export default function App() {
                                     <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                         <View style={Booking_style.up}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
                                     {TicketDatas.Start.Tickets.map((item,index)=>{
                                             return (
                                                 <View key={index} style={ticket_style.cards}>
-                                                    <Text style={ticket_style.typetext}>{item.Type}</Text>
-                                                    <Text style={ticket_style.seatpostext}>{item.Position}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
                                                     <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                                    <Text style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
                                                 </View>
 
                                             );
@@ -4777,9 +4781,9 @@ export default function App() {
                             {TicketDatas.OnewayReturn &&(
                                 <View style={ticket_style.card2}>
                                     <View style={[ticket_style.up,{flexDirection: 'row',justifyContent: 'space-between'}]}>
-                                        <Text style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
+                                        <Text allowFontScaling={false} style={[ticket_style.left_text]}>{TicketDatas.OnewayReturn?'回程':'單程'} · {TicketDatas.Arrive.Date}</Text>
                                         <TouchableOpacity style={{marginTop:'5%',marginRight:'5%',borderRadius:5,borderColor:'#D83714',borderWidth:1,alignSelf:'center',alignContent:'center'}} onPress={()=>{setStationsByOrder(TicketDatas.Arrive.Order);setStationsByDatas(TicketDatas.Arrive.StationsBy);setPayTicketStationsByVisible(true);setPayticketVisible(false);}}>
-                                            <Text style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={{alignSelf:'center',textAlign:'center',textAlignVertical:'center',color:'#D87413',fontWeight:'bold',fontSize:12}}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={[ticket_style.seg_line,{height:0.5}]}></View>
@@ -4787,26 +4791,26 @@ export default function App() {
                                         <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                         <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
-                                        <Text style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
-                                        <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
                                     </View>
                                     <View style={Booking_style.order_view}>
-                                        <Text style={Booking_style.order_text}>------></Text>
-                                        <Text style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                        <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
                                     </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
                                         </View>
                                     </View>
                                 </View>
                             {TicketDatas.Arrive.Tickets.map((item,index)=>{
                                 return (
                                 <View key={index} style={ticket_style.cards}>
-                                    <Text style={ticket_style.typetext}>{item.Type}</Text>
-                                    <Text style={ticket_style.seatpostext}>{item.Position}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
                                     <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                    <Text style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
                                 </View>
                                 );
                             })}
@@ -4817,23 +4821,23 @@ export default function App() {
                                 {!TicketDatas.BussinessState &&(
                                     <TouchableOpacity style={ticket_style.funcbtn} onPress={()=>{setPayticketVisible(false)}}>
                                         <Image style={ticket_style.refundimg} source={require('./icons/later.png')}></Image>
-                                        <Text style={ticket_style.refundtext}>稍後付款</Text>
+                                        <Text allowFontScaling={false} style={ticket_style.refundtext}>稍後付款</Text>
                                     </TouchableOpacity>
                                 )}
                                 <TouchableOpacity style={ticket_style.funcbtn} onPress={()=>{setOringinDatas(TicketDatas.OnewayReturn?[TicketDatas.Start.Order,TicketDatas.Start.Tickets[0].Position,TicketDatas.Arrive.Order,TicketDatas.Arrive.Tickets[0].Position]:[TicketDatas.Start.Order,TicketDatas.Start.Tickets[0].Position]);let d=TicketDatas;setCopyTicketInfo(d);setEditVisible(true);setPayticketVisible(false);}}>
                                     <Image style={ticket_style.refundimg} source={require('./icons/edit.png')}></Image>
-                                    <Text style={ticket_style.refundtext}>修改</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.refundtext}>修改</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={ticket_style.funcbtn} onPress={()=>{setRefundDetailsVisible(true);setPayticketVisible(false);}}>
                                     <Image style={ticket_style.refundimg} source={require('./icons/refund.png')}></Image>
-                                    <Text style={ticket_style.refundtext}>退票</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.refundtext}>退票</Text>
                                 </TouchableOpacity>
                             </View>
                         </ScrollView>
                     </View>
                     <View style={ticket_style.btview}>
                         <TouchableOpacity style={ticket_style.paybtn} onPress={()=>{getit(TicketDatas.BussinessState,PayOrUseIndex);}}>
-                            <Text style={ticket_style.paytext}>{TicketDatas.BussinessState?'立即使用':'立即付款'}</Text>
+                            <Text allowFontScaling={false} style={ticket_style.paytext}>{TicketDatas.BussinessState?'立即使用':'立即付款'}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4845,13 +4849,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setPaidTicketVisible(true);setPaidTicketStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -4859,17 +4863,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -4881,17 +4885,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -4899,7 +4903,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setPaidTicketVisible(true);setPaidTicketStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4912,69 +4916,69 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'10%'}]} onPress={()=>{setEditVisible(false)}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={ticket_style.header_text}>訂位修改</Text>
+                        <Text allowFontScaling={false} style={ticket_style.header_text}>訂位修改</Text>
                     </View>
                     <View style={ticket_style.cenview}>
                         <View style={ticket_style.card2}>
                             <View style={ticket_style.up}>
-                                <Text style={[ticket_style.left_text,{width:'95%'}]}>{CopyTicketInfo.OnewayReturn?'去程':'單程'} · {CopyTicketInfo.Start.Date}</Text>
+                                <Text allowFontScaling={false} style={[ticket_style.left_text,{width:'95%'}]}>{CopyTicketInfo.OnewayReturn?'去程':'單程'} · {CopyTicketInfo.Start.Date}</Text>
                             </View>
                             <View style={[ticket_style.seg_line,{height:1}]}></View>
                             <View>
                                 <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                     <View style={[Booking_style.up,{height:100}]}>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.Stations_text}>{CopyTicketInfo.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.StartTime}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.Stations_text}>{CopyTicketInfo.StartStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.StartTime}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{CopyTicketInfo.Start.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{CopyTicketInfo.Start.Order}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
                                         </View>
                                     </View>
                                 </View>
                             </View>
                             <TouchableOpacity style={ticket_style.editbtn} onPress={()=>{editit(0);}}>
-                                <Text style={ticket_style.edittext}>修改</Text>
+                                <Text allowFontScaling={false} style={ticket_style.edittext}>修改</Text>
                             </TouchableOpacity>
                         </View>
                         {CopyTicketInfo.OnewayReturn &&(
                             <View style={ticket_style.card2}>
                                 <View style={ticket_style.up}>
-                                    <Text style={[ticket_style.left_text,{width:'95%'}]}>{CopyTicketInfo.OnewayReturn?'回程':'單程'} · {CopyTicketInfo.Arrive.Date}</Text>
+                                    <Text allowFontScaling={false} style={[ticket_style.left_text,{width:'95%'}]}>{CopyTicketInfo.OnewayReturn?'回程':'單程'} · {CopyTicketInfo.Arrive.Date}</Text>
                                 </View>
                                 <View style={[ticket_style.seg_line,{height:1}]}></View>
                                 <View>
                                     <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
                                         <View style={[Booking_style.up,{height:100}]}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{CopyTicketInfo.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{CopyTicketInfo.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{CopyTicketInfo.Arrive.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{CopyTicketInfo.Arrive.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.StartStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.StartStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
                                 </View>
                                 <TouchableOpacity style={ticket_style.editbtn} onPress={()=>{editit(1);}}>
-                                    <Text style={ticket_style.edittext}>修改</Text>
+                                    <Text allowFontScaling={false} style={ticket_style.edittext}>修改</Text>
                                 </TouchableOpacity>
                             </View>
                         )}
                     </View>
                     <View style={ticket_style.btview}>
                         <TouchableOpacity style={ticket_style.paybtn} onPress={editcheck}>
-                            <Text style={ticket_style.paytext}>下一步</Text>
+                            <Text allowFontScaling={false} style={ticket_style.paytext}>下一步</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -4983,7 +4987,7 @@ export default function App() {
             <Modal animationType="slide" transparent={false} visible={EditDateVisible} onRequestClose={() => setEditDateVisible(!EditDateVisible)}>
                 <View style={{alignSelf:'center',justifyContent:'space-around',width:'100%',height:'100%'}}>
                     <View style={styles.hbox}>
-                        <Text style={[styles.Htext]}>選擇出發日期</Text>
+                        <Text allowFontScaling={false} style={[styles.Htext]}>選擇出發日期</Text>
                     </View>
                     {CalerdarVisible && (
                         <DatePicker
@@ -5007,14 +5011,14 @@ export default function App() {
                     )}
                     <View style={{flex:3,flexDirection:'row',justifyContent:'center',alignContent:'center'}}>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',backgroundColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={seteditbeinit}>
-                            <Text style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFFFFF',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>今天</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{alignSelf:'center',justifyContent:'center',margin:'5%',width:'40%',borderWidth:3,borderColor:'#FFA25B',height:'90%',borderRadius:10}} onPress={cancelsetedittime}>
-                            <Text style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
+                            <Text allowFontScaling={false} style={{color:'#FFA25B',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>取消</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={{alignContent:'center',alignSelf:'center',justifyContent:'center',margin:'10%',width:'90%',backgroundColor:'#34393E',height:'8%',borderRadius:10}} onPress={completeselecteditday}>
-                        <Text style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
+                        <Text allowFontScaling={false} style={{color:'#FFA25B',alignSelf:'center',textAlign:'center',textAlignVertical:'center',fontWeight:'bold'}}>確認</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
@@ -5029,37 +5033,37 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.title}>{editstate?"去程":"回程"}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.title}>{editstate?"去程":"回程"}</Text>
                         <View style={Booking_style.direction_view}>
-                            <Text style={Booking_style.start_end_text}>{editstate?CopyTicketInfo.StartStation:CopyTicketInfo.ArriveStation}</Text>
-                            <Text style={Booking_style.start_end_text}>------></Text>
-                            <Text style={Booking_style.start_end_text}>{(!editstate)?CopyTicketInfo.StartStation:CopyTicketInfo.ArriveStation}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{editstate?CopyTicketInfo.StartStation:CopyTicketInfo.ArriveStation}</Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>------></Text>
+                            <Text allowFontScaling={false} style={Booking_style.start_end_text}>{(!editstate)?CopyTicketInfo.StartStation:CopyTicketInfo.ArriveStation}</Text>
                         </View>
                     </View>
                     <View style={Booking_style.time_view}>
-                        <Text style={Booking_style.bookingtime_text}>{backType(DateOfEdit)} ({chiness_weeksate[new Date(DateOfEdit).getDay()]})</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bookingtime_text}>{backType(DateOfEdit)} ({chiness_weeksate[new Date(DateOfEdit).getDay()]})</Text>
                     </View>
                     <ScrollView style={Booking_style.menu}>{
                         datas.map((item, index) => {
                             return (
                                 <TouchableOpacity key={index} style={Booking_style.cards} onPress={()=>{goedit(index)}}>
                                     <View style={Booking_style.up}>
-                                        <Text style={Booking_style.timetext}>{item.StartTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.StartTime}</Text>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{item.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{item.Order}</Text>
                                         </View>
-                                        <Text style={Booking_style.timetext}>{item.ArriveTime}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.timetext}>{item.ArriveTime}</Text>
                                     </View>
                                     <View style={Booking_style.seg_line}></View>
                                     <View style={Booking_style.down}>
                                         <View style={Booking_style.totaltime_view}>
                                             <Image style={Booking_style.down_icons} source={require('./icons/time.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>{getTotalTime(item.StartTime,item.ArriveTime)}</Text>
                                         </View>
                                         <TouchableOpacity style={Booking_style.route_btn} onPress={()=>{setStationsByOrder(item.Order);setStationsByDatas(item.StationsBy);setTrainsStationsByVisible(true);setEditTrains(false);}}>
                                             <Image style={Booking_style.route_img} source={require('./icons/route.png')}></Image>
-                                            <Text style={Booking_style.totaltimetext}>查看停靠站</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.totaltimetext}>查看停靠站</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </TouchableOpacity>
@@ -5076,13 +5080,13 @@ export default function App() {
                         <TouchableOpacity style={[styles.backbtn,{bottom:'20%'}]} onPress={()=>{setEditTrains(true);setTrainsStationsByVisible(false);}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
+                        <Text allowFontScaling={false} style={Booking_style.bigtitle}>車次 {StationsByOrder}</Text>
                     </View>
                     <View style={Booking_style.wcard}>
                         <View style={Booking_style.upcard}>
-                            <Text style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'right'}]}>發車時間</Text>
                             <View style={{flex:2}}></View>
-                            <Text style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.uptext,{textAlign:'left'}]}>停靠站</Text>
                         </View>
                         <View style={[Booking_style.seg_line,{marginTop:'5%',height:1}]}></View>
                         <View style={Booking_style.downcard}>
@@ -5090,17 +5094,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D83714'}]}>{item}</Text>
                                         )
                                     }
                                     else if(item.length===0){
                                         return(
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#FFFFFF'}]}>00</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardtime,{color:'#D9D9D9'}]}>{item}</Text>
                                         )
                                     }
                                 })
@@ -5112,17 +5116,17 @@ export default function App() {
                                 {StationsByDatas.map((item,index)=>{
                                     if(item.length===0){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D9D9D9'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else if(index===StartStation || index===EndStation){
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#D83714'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                     else{
                                         return (
-                                            <Text key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
+                                            <Text allowFontScaling={false} key={index} style={[Booking_style.cardStation,{color:'#000000'}]}>{Stations_Name[index]}</Text>
                                         )
                                     }
                                 })
@@ -5130,7 +5134,7 @@ export default function App() {
                             </View>
                         </View>
                         <TouchableOpacity style={Booking_style.cardclose} onPress={()=>{setEditTrains(true);setTrainsStationsByVisible(false);}}>
-                            <Text style={Booking_style.cardclosetext}>關閉</Text>
+                            <Text allowFontScaling={false} style={Booking_style.cardclosetext}>關閉</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -5147,31 +5151,31 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.Details_title}>票證修改明細</Text>
+                        <Text allowFontScaling={false} style={Booking_style.Details_title}>票證修改明細</Text>
                     </View>
                     <ScrollView style={{width:'100%',alignContent:'center',alignSelf:'center'}}>
                         <View style={{marginTop:'5%',alignSelf:'center',width:'90%',alignContent:'center',flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={{flex:1,color:'#000000',fontSize:15,fontWeight:'bold',marginLeft:'5%',textAlign:'left',textAlignVertical:'center'}}>訂位代號</Text>
-                            <Text style={{flex:1,color:'#D83714',fontSize:15,fontWeight:'bold',marginRight:'5%',textAlign:'right',textAlignVertical:'center'}}>{CopyTicketInfo.CodeNumber}</Text>
+                            <Text allowFontScaling={false} style={{flex:1,color:'#000000',fontSize:15,fontWeight:'bold',marginLeft:'5%',textAlign:'left',textAlignVertical:'center'}}>訂位代號</Text>
+                            <Text allowFontScaling={false} style={{flex:1,color:'#D83714',fontSize:15,fontWeight:'bold',marginRight:'5%',textAlign:'right',textAlignVertical:'center'}}>{CopyTicketInfo.CodeNumber}</Text>
                         </View>
                         <View style={[Booking_style.Details_view,{marginTop:'5%',alignSelf:'center',height:CopyTicketInfo.OnewayReturn?600:400}]}>
                             <View style={[Booking_style.tickets_view,{marginTop:'10%'}]}>
                                 <View style={{flex:1}}>
-                                    <Text>{CopyTicketInfo.OnewayReturn?'去程':'單程'} · {CopyTicketInfo.Start.Date}</Text>
+                                    <Text allowFontScaling={false}>{CopyTicketInfo.OnewayReturn?'去程':'單程'} · {CopyTicketInfo.Start.Date}</Text>
                                 </View>
                                 <View style={{flex:3,flexDirection:'row'}}>
                                     <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.Stations_text}>{CopyTicketInfo.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.StartTime}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.Stations_text}>{CopyTicketInfo.StartStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.StartTime}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{CopyTicketInfo.Start.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{CopyTicketInfo.Start.Order}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Start.ArriveTime}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -5180,21 +5184,21 @@ export default function App() {
                             {CopyTicketInfo.OnewayReturn===true && (
                                 <View style={Booking_style.tickets_view}>
                                     <View style={{flex:1}}>
-                                        <Text>回程 · {CopyTicketInfo.Arrive.Date}</Text>
+                                        <Text allowFontScaling={false}>回程 · {CopyTicketInfo.Arrive.Date}</Text>
                                     </View>
                                     <View style={{flex:3,flexDirection:'row'}}>
                                         <View style={Booking_style.up}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{CopyTicketInfo.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{CopyTicketInfo.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{CopyTicketInfo.Arrive.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{CopyTicketInfo.Arrive.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{CopyTicketInfo.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{CopyTicketInfo.Arrive.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -5206,76 +5210,76 @@ export default function App() {
                             <View style={Booking_style.cost_view}>
                                 {(!CopyTicketInfo.OnewayReturn) && (
                                     <View style={[Booking_style.cost_info_view,{flex:1.5}]}>
-                                        <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]:""}</Text>
                                     </View>
                                 )}
                                 {CopyTicketInfo.OnewayReturn && (
                                     <View style={[Booking_style.cost_info_view,{flex:1.5}]}>
-                                        <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]*2:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]*2:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]*2:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]*2:""}</Text>
-                                        <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]*2:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>票數</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票{CopyTicketInfo.NumOfTickets[0]>0?"*"+CopyTicketInfo.NumOfTickets[0]*2:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童{CopyTicketInfo.NumOfTickets[1]>0?"*"+CopyTicketInfo.NumOfTickets[1]*2:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老{CopyTicketInfo.NumOfTickets[2]>0?"*"+CopyTicketInfo.NumOfTickets[2]*2:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心{CopyTicketInfo.NumOfTickets[3]>0?"*"+CopyTicketInfo.NumOfTickets[3]*2:""}</Text>
+                                        <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生{CopyTicketInfo.NumOfTickets[4]>0?"*"+CopyTicketInfo.NumOfTickets[4]*2:""}</Text>
                                     </View>
                                 )}
 
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>變更後票價</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[0])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[1])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[2])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[3])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(Prices[4])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_title}>變更後票價</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[0])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[1])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[2])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[3])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Prices[4])}</Text>
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>原票價</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[0])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[1])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[2])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[3])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[4])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_title}>原票價</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[0])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[1])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[2])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[3])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.Prices[4])}</Text>
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>手續費</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Fees[0]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Fees[1]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Fees[2]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Fees[3]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{Fees[4]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_title}>手續費</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Fees[0]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Fees[1]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Fees[2]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Fees[3]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Fees[4]}</Text>
                                 </View>
                             </View>
                         </View>
                         <View style={[Booking_style.Details_view,{marginTop:'5%',alignSelf:'center',height:200}]}>
                             <View style={Booking_style.cost_view}>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>變更後票價</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>原票價</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>手續費</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>返回帳戶金額</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>本次應付金額</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>變更後票價</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>原票價</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>手續費</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>返回帳戶金額</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>本次應付金額</Text>
                                 </View>
                                 {CopyTicketInfo.BussinessState &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{moneyManifest(Allprices)}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.TotalPrice)}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{AllFees}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{(Number(Allprices)+Number(AllFees)-CopyTicketInfo.TotalPrice)>0?'0':(-Number(Allprices)-Number(AllFees)+Number(CopyTicketInfo.TotalPrice)).toString()}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{(Number(Allprices)+Number(AllFees)-CopyTicketInfo.TotalPrice)>0?(Number(Allprices)+Number(AllFees)-Number(CopyTicketInfo.TotalPrice)).toString():'0'}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Allprices)}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.TotalPrice)}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{AllFees}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{(Number(Allprices)+Number(AllFees)-CopyTicketInfo.TotalPrice)>0?'0':(-Number(Allprices)-Number(AllFees)+Number(CopyTicketInfo.TotalPrice)).toString()}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{(Number(Allprices)+Number(AllFees)-CopyTicketInfo.TotalPrice)>0?(Number(Allprices)+Number(AllFees)-Number(CopyTicketInfo.TotalPrice)).toString():'0'}</Text>
                                     </View>
                                 )}
                                 {(!CopyTicketInfo.BussinessState) &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{moneyManifest(Allprices)}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.TotalPrice)}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{AllFees}</Text>
-                                        <Text style={Booking_style.cost_info_text}>未付款</Text>
-                                        <Text style={Booking_style.cost_info_text}>未付款</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(Allprices)}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(CopyTicketInfo.TotalPrice)}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{AllFees}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>未付款</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>未付款</Text>
                                     </View>
                                 )}
                             </View>
@@ -5284,7 +5288,7 @@ export default function App() {
                             <TouchableOpacity style={Booking_style.check_btn} onPress={()=>{setCheck(!Check);}}>
                                 <Image style={Booking_style.check_img} source={Check?require('./icons/check.png'):require('./icons/uncheck.png')}></Image>
                             </TouchableOpacity>
-                            <Text style={Booking_style.notice_text}>我同意修改</Text>
+                            <Text allowFontScaling={false} style={Booking_style.notice_text}>我同意修改</Text>
                         </View>
                     </ScrollView>
                     <View style={{shadowColor:'black',
@@ -5294,10 +5298,10 @@ export default function App() {
                         //該屬性僅支援Android
                         elevation:1.5,backgroundColor:'#FFFFFF',justifyContent:'flex-start',height:80,width:'100%',flexDirection:'row',alignContent:'center'}}>
                         <TouchableOpacity onPress={()=>{setCheck(false);setEditDetailsVisible(false)}} style={[Booking_style.submit_btn,{margin:0,marginLeft:'5%',height:30,width: '42.5%'}]}>
-                            <Text style={[Booking_style.submit_text,{fontSize: 12}]}>取消修改</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.submit_text,{fontSize: 12}]}>取消修改</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={()=>editnow()} style={[Booking_style.submit_btn,{backgroundColor:'#D83714',borderWidth:0,margin:0,marginLeft:'5%',height:30,width: '42.5%'}]}>
-                            <Text style={[Booking_style.submit_text,{color:'#FFFFFF',fontSize: 12}]}>確定修改</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.submit_text,{color:'#FFFFFF',fontSize: 12}]}>確定修改</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -5313,31 +5317,31 @@ export default function App() {
                             ])}}>
                             <Image style={styles.backimg} source={require('./icons/back.png')}></Image>
                         </TouchableOpacity>
-                        <Text style={Booking_style.Details_title}>退票明細</Text>
+                        <Text allowFontScaling={false} style={Booking_style.Details_title}>退票明細</Text>
                     </View>
                     <ScrollView style={{width:'100%',alignContent:'center',alignSelf:'center'}}>
                         <View style={{marginTop:'5%',alignSelf:'center',width:'90%',alignContent:'center',flexDirection:'row',justifyContent:'space-between'}}>
-                            <Text style={{flex:1,color:'#000000',fontSize:15,fontWeight:'bold',marginLeft:'5%',textAlign:'left',textAlignVertical:'center'}}>訂位代號</Text>
-                            <Text style={{flex:1,color:'#D83714',fontSize:15,fontWeight:'bold',marginRight:'5%',textAlign:'right',textAlignVertical:'center'}}>{TicketDatas.CodeNumber}</Text>
+                            <Text allowFontScaling={false} style={{flex:1,color:'#000000',fontSize:15,fontWeight:'bold',marginLeft:'5%',textAlign:'left',textAlignVertical:'center'}}>訂位代號</Text>
+                            <Text allowFontScaling={false} style={{flex:1,color:'#D83714',fontSize:15,fontWeight:'bold',marginRight:'5%',textAlign:'right',textAlignVertical:'center'}}>{TicketDatas.CodeNumber}</Text>
                         </View>
                         <View style={[Booking_style.Details_view,{marginTop:'5%',alignSelf:'center',height:TicketDatas.OnewayReturn?600:400}]}>
                             <View style={[Booking_style.tickets_view,{marginTop:'10%'}]}>
                                 <View style={{flex:1}}>
-                                    <Text>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
+                                    <Text allowFontScaling={false}>{TicketDatas.OnewayReturn?'去程':'單程'} · {TicketDatas.Start.Date}</Text>
                                 </View>
                                 <View style={{flex:3,flexDirection:'row'}}>
                                     <View style={Booking_style.up}>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.StartStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Start.StartTime}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={Booking_style.order_text}>------></Text>
-                                            <Text style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                            <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Start.Order}</Text>
                                         </View>
                                         <View style={Booking_style.order_view}>
-                                            <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
-                                            <Text style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{TicketDatas.Start.ArriveTime}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
+                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:oneway_return?22:25}]}>{TicketDatas.Start.ArriveTime}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -5346,21 +5350,21 @@ export default function App() {
                             {TicketDatas.OnewayReturn===true && (
                                 <View style={Booking_style.tickets_view}>
                                     <View style={{flex:1}}>
-                                        <Text>回程 · {TicketDatas.Arrive.Date}</Text>
+                                        <Text allowFontScaling={false}>回程 · {TicketDatas.Arrive.Date}</Text>
                                     </View>
                                     <View style={{flex:3,flexDirection:'row'}}>
                                         <View style={Booking_style.up}>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={Booking_style.order_text}>------></Text>
-                                                <Text style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
                                             </View>
                                             <View style={Booking_style.order_view}>
-                                                <Text style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
-                                                <Text style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.ArriveStation}</Text>
+                                                <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -5371,47 +5375,47 @@ export default function App() {
                             )}
                             <View style={Booking_style.cost_view}>
                                 <View style={[Booking_style.cost_info_view,{flex:2}]}>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}></Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心</Text>
-                                    <Text style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}></Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>全票</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>孩童</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>敬老</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>愛心</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_text,{textAlign:'left'}]}>大學生</Text>
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>票數</Text>
-                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*2:TicketDatas.NumOfTickets[0]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*2:TicketDatas.NumOfTickets[1]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*2:TicketDatas.NumOfTickets[2]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*2:TicketDatas.NumOfTickets[3]}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*2:TicketDatas.NumOfTickets[4]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_title}>票數</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*2:TicketDatas.NumOfTickets[0]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*2:TicketDatas.NumOfTickets[1]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*2:TicketDatas.NumOfTickets[2]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*2:TicketDatas.NumOfTickets[3]}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*2:TicketDatas.NumOfTickets[4]}</Text>
                                 </View>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={Booking_style.cost_info_title}>小計</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[0])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[1])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[2])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[3])}</Text>
-                                    <Text style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[4])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_title}>小計</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[0])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[1])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[2])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[3])}</Text>
+                                    <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{moneyManifest(TicketDatas.Prices[4])}</Text>
                                 </View>
                                 {(!TicketDatas.BussinessState) &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_title}>手續費</Text>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[0])*0}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[1])*0}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[2])*0}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[3])*0}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[4])*0}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_title}>手續費</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[0])*0}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[1])*0}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[2])*0}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[3])*0}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{Number(TicketDatas.NumOfTickets[4])*0}</Text>
                                     </View>
                                 )}
                                 {TicketDatas.BussinessState &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_title}>手續費</Text>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*40:TicketDatas.NumOfTickets[0]*20}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*40:TicketDatas.NumOfTickets[1]*20}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*40:TicketDatas.NumOfTickets[2]*20}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*40:TicketDatas.NumOfTickets[3]*20}</Text>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*40:TicketDatas.NumOfTickets[4]*20}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_title}>手續費</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[0]*40:TicketDatas.NumOfTickets[0]*20}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[1]*40:TicketDatas.NumOfTickets[1]*20}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[2]*40:TicketDatas.NumOfTickets[2]*20}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[3]*40:TicketDatas.NumOfTickets[3]*20}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?TicketDatas.NumOfTickets[4]*40:TicketDatas.NumOfTickets[4]*20}</Text>
                                     </View>
                                 )}
                             </View>
@@ -5419,25 +5423,25 @@ export default function App() {
                         <View style={[Booking_style.Details_view,{marginTop:'5%',alignSelf:'center',height:200}]}>
                             <View style={Booking_style.cost_view}>
                                 <View style={Booking_style.cost_info_view}>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>退票張數</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>變更後票價</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>手續費</Text>
-                                    <Text style={[Booking_style.cost_info_title,{textAlign:'left'}]}>返回帳戶金額</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>退票張數</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>變更後票價</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>手續費</Text>
+                                    <Text allowFontScaling={false} style={[Booking_style.cost_info_title,{textAlign:'left'}]}>返回帳戶金額</Text>
                                 </View>
                                 {TicketDatas.BussinessState &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD 0</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD {20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))}</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD {moneyManifest(TicketDatas.TotalPrice-(20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))))}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>TWD 0</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>TWD {20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>TWD {moneyManifest(TicketDatas.TotalPrice-(20*(TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4]))))}</Text>
                                     </View>
                                 )}
                                 {(!TicketDatas.BussinessState) &&(
                                     <View style={Booking_style.cost_info_view}>
-                                        <Text style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
-                                        <Text style={Booking_style.cost_info_text}>TWD 0</Text>
-                                        <Text style={Booking_style.cost_info_text}>未付款</Text>
-                                        <Text style={Booking_style.cost_info_text}>未付款</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>{TicketDatas.OnewayReturn?2*(Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])):Number(TicketDatas.NumOfTickets[0])+Number(TicketDatas.NumOfTickets[1])+Number(TicketDatas.NumOfTickets[2])+Number(TicketDatas.NumOfTickets[3])+Number(TicketDatas.NumOfTickets[4])}</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>TWD 0</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>未付款</Text>
+                                        <Text allowFontScaling={false} style={Booking_style.cost_info_text}>未付款</Text>
                                     </View>
                                 )}
                             </View>
@@ -5446,7 +5450,7 @@ export default function App() {
                             <TouchableOpacity style={Booking_style.check_btn} onPress={()=>{setCheck(!Check);}}>
                                 <Image style={Booking_style.check_img} source={Check?require('./icons/check.png'):require('./icons/uncheck.png')}></Image>
                             </TouchableOpacity>
-                            <Text style={Booking_style.notice_text}>我同意退票</Text>
+                            <Text allowFontScaling={false} style={Booking_style.notice_text}>我同意退票</Text>
                         </View>
                     </ScrollView>
                     <View style={{shadowColor:'black',
@@ -5456,7 +5460,7 @@ export default function App() {
                         //該屬性僅支援Android
                         elevation:1.5,backgroundColor:'#FFFFFF',justifyContent:'center',height:80,width:'100%',flexDirection:'row',alignContent:'center'}}>
                         <TouchableOpacity onPress={()=>{refundnow()}} style={[Booking_style.submit_btn,{backgroundColor:'#D83714',borderWidth:0,margin:0,height:30,width: '70%',alignSelf: 'center'}]}>
-                            <Text style={[Booking_style.submit_text,{color:'#FFFFFF',fontSize: 12}]}>確定</Text>
+                            <Text allowFontScaling={false} style={[Booking_style.submit_text,{color:'#FFFFFF',fontSize: 12}]}>確定</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
