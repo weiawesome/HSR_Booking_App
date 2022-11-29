@@ -1,6 +1,15 @@
 ﻿# HSR_Booking_App
-<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/assets/icon.png" width=50% height=50%>
-
+<View flex-direction=column>
+    <div flex-direction=row>
+        <t>haha</t>
+        <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/icon.png" flex=1 margin-left=5%>
+    </div>
+    <View>
+        <t>lala</t>
+        <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/UI.jpg" flex=1 margin-left=5%>
+    </View>
+    
+</View>
 Hello this is our term-project for DB class.
 
 We use the "React-Native" to make the UI format(front-end), and now I use "Pyhon" as back-end.
