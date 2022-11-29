@@ -268,7 +268,7 @@ export default function App() {
             }, 10*60 * 1000));
             ReNewDatas();
         }
-        },[Start]);
+    },[Start]);
 
 //---------------------------------------------All fetch---------------------------------------------//
     useEffect(()=>{
@@ -327,9 +327,9 @@ export default function App() {
                     setLoadingVisible(false);
                 })
                 .then(()=>{
-                    setLoadingVisible(false);
-                }
-            );
+                        setLoadingVisible(false);
+                    }
+                );
         }
         setSearch(false);
     },[Search]);
@@ -424,56 +424,56 @@ export default function App() {
             expires: null,
         });
         setInfoVisible(false);
-    //     if(Name===''){
-    //         Alert.alert('大笨蛋','名字不能是空的!');
-    //     }
-    //     else if(!(IDnumber.match(/^[A-Z](1|2)\d{8}$/i))){
-    //         Alert.alert('大笨蛋','身分證號碼格式不符\n提示 : 大寫英文字加數字共10位!');
-    //     }
-    //     else if(!(Phonenumber.match(/09\d{8}$/))){
-    //         Alert.alert('大笨蛋','電話號碼格式不符\n提示 : 09加上8位數字!');
-    //     }
-    //     else if(!(Email.match(/^(([.](?=[^.]|^))|[\w_%{|}#$~`+!?-])+@(?:[\w-]+\.)+[a-zA-Z.]{2,63}$/))){
-    //         Alert.alert('大笨蛋','電子信箱格式不符');
-    //     }
-    //     else{
-    //         const data={
-    //             'Name':Name.toString(),
-    //             'Gender': Gender,
-    //             'ID' : IDnumber.toString(),
-    //             'Phone':Phonenumber.toString(),
-    //             'Email':Email.toString(),
-    //         };
-    //         console.log('Data Sent!');
-    //         console.log('Data:',data);
-    //         fetch(apiurl+'/CheckID/',{method:'POST',headers:{
-    //                 'Accept': 'application/json',
-    //                 'Content-Type':'application/json'
-    //             },body:JSON.stringify(data)})
-    //             .then((response) => response.json())
-    //             .then(async (responseJson) => {
-    //                 try {
-    //                     if (responseJson.Status === 'True') {
-    //                         console.log('Data Get!');
-    //                         console.log('Data:', responseJson);
-    //
-    //
-    //                         console.log('Data Set!');
-    //                         console.log('Complete!');
-    //                     } else {
-    //                         Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
-    //                     }
-    //                 }
-    //                 catch (e) {
-    //                     console.log(e)
-    //                     Alert.alert('大笨蛋', '後端出現問題!');
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.error(error);
-    //                 Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
-    //             });
-    // }
+        //     if(Name===''){
+        //         Alert.alert('大笨蛋','名字不能是空的!');
+        //     }
+        //     else if(!(IDnumber.match(/^[A-Z](1|2)\d{8}$/i))){
+        //         Alert.alert('大笨蛋','身分證號碼格式不符\n提示 : 大寫英文字加數字共10位!');
+        //     }
+        //     else if(!(Phonenumber.match(/09\d{8}$/))){
+        //         Alert.alert('大笨蛋','電話號碼格式不符\n提示 : 09加上8位數字!');
+        //     }
+        //     else if(!(Email.match(/^(([.](?=[^.]|^))|[\w_%{|}#$~`+!?-])+@(?:[\w-]+\.)+[a-zA-Z.]{2,63}$/))){
+        //         Alert.alert('大笨蛋','電子信箱格式不符');
+        //     }
+        //     else{
+        //         const data={
+        //             'Name':Name.toString(),
+        //             'Gender': Gender,
+        //             'ID' : IDnumber.toString(),
+        //             'Phone':Phonenumber.toString(),
+        //             'Email':Email.toString(),
+        //         };
+        //         console.log('Data Sent!');
+        //         console.log('Data:',data);
+        //         fetch(apiurl+'/CheckID/',{method:'POST',headers:{
+        //                 'Accept': 'application/json',
+        //                 'Content-Type':'application/json'
+        //             },body:JSON.stringify(data)})
+        //             .then((response) => response.json())
+        //             .then(async (responseJson) => {
+        //                 try {
+        //                     if (responseJson.Status === 'True') {
+        //                         console.log('Data Get!');
+        //                         console.log('Data:', responseJson);
+        //
+        //
+        //                         console.log('Data Set!');
+        //                         console.log('Complete!');
+        //                     } else {
+        //                         Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
+        //                     }
+        //                 }
+        //                 catch (e) {
+        //                     console.log(e)
+        //                     Alert.alert('大笨蛋', '後端出現問題!');
+        //                 }
+        //             })
+        //             .catch((error) => {
+        //                 console.error(error);
+        //                 Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
+        //             });
+        // }
     };
 
     useEffect(()=>{
@@ -2180,27 +2180,27 @@ export default function App() {
                             d.TotalText=TicketsToText(d.NumOfTickets,d.OnewayReturn);
                             d.TotalPrice-=QRCodeData.TotalPrice;
                             let ds={
-                                    CodeNumber: d.CodeNumber,
-                                    OnewayReturn: d.OnewayReturn,
-                                    StartDate: d.Start.Date,
-                                    BackDate: d.Arrive.Date,
-                                    StartStation: d.StartStation,
-                                    ArriveStation: d.ArriveStation,
-                                    StartTime: d.Start.StartTime,
-                                    ArriveTime: d.Start.ArriveTime,
-                                    Order: d.Start.Order,
-                                    BackStartTime: d.Arrive.StartTime,
-                                    BackArriveTime: d.Arrive.ArriveTime,
-                                    BackOrder: d.Arrive.Order,
-                                    Type:d.Type,
-                                    TotalText:TicketsToText(d.NumOfTickets,d.OnewayReturn),
-                                    TotalPrice:d.TotalPrice,
-                                    StationsBy:d.Start.StationsBy,
-                                    BackStationsBy:d.Arrive.StationsBy,
-                                    NumOfTickets:d.NumOfTickets,
-                                    Prices:d.Prices,
-                                    Tickets:d.Start.Tickets,
-                                    BackTickets:d.Arrive.Tickets,
+                                CodeNumber: d.CodeNumber,
+                                OnewayReturn: d.OnewayReturn,
+                                StartDate: d.Start.Date,
+                                BackDate: d.Arrive.Date,
+                                StartStation: d.StartStation,
+                                ArriveStation: d.ArriveStation,
+                                StartTime: d.Start.StartTime,
+                                ArriveTime: d.Start.ArriveTime,
+                                Order: d.Start.Order,
+                                BackStartTime: d.Arrive.StartTime,
+                                BackArriveTime: d.Arrive.ArriveTime,
+                                BackOrder: d.Arrive.Order,
+                                Type:d.Type,
+                                TotalText:TicketsToText(d.NumOfTickets,d.OnewayReturn),
+                                TotalPrice:d.TotalPrice,
+                                StationsBy:d.Start.StationsBy,
+                                BackStationsBy:d.Arrive.StationsBy,
+                                NumOfTickets:d.NumOfTickets,
+                                Prices:d.Prices,
+                                Tickets:d.Start.Tickets,
+                                BackTickets:d.Arrive.Tickets,
                             }
                             await storage.save({
                                 key: 'PaidTicket', // 注意:请不要在key中使用_下划线符号!
@@ -2229,13 +2229,12 @@ export default function App() {
     return (
         <View style={[styles.container,{opacity:PaidTicketStationsByVisible || PaidTicketVisible||QRCodeVisible||QRTicketStationsByVisible||TableStationsByVisible || timetable || findfare || findcodeVisible ||TableDateVisible || TableVisible||ChooseStationVisible ||Gainfare|| FindDateVisible ||FindDetailsVisible||TrainsStationsByVisible ||EditDetailsVisible ||RefundDetailsVisible ||EditVisible ||EditTrains ||EditDateVisible ||PayticketVisible ||BookStationsByVisible ||BackBookStationsByVisible || PayTicketStationsByVisible ||EditVisible ||BookVisible||BackBookVisible||IDcheckVisible||DetailsVisible?0:1}]}>
 
-            <View style={styles.hbox}>
-                <Text allowFontScaling={false} style={styles.Htext}>高鐵訂票系統</Text>
-                <View style={{position: 'absolute',top:'55%',left: '85%',width:'5%'}}>
-                    <TouchableOpacity onPress={()=>{setInfoVisible(true);}}>
-                        <Image source={require('./icons/user.png')} style={styles.user_image}></Image>
-                    </TouchableOpacity>
-                </View>
+            <View style={[styles.hbox,{alignContent: 'space-around',justifyContent: 'space-around',flexDirection: 'row'}]}>
+                <View style={{marginTop:'10%',resizeMode:'contain',aspectRatio:1,flex:0.5,marginLeft:'10%'}}></View>
+                <Text allowFontScaling={false} style={[styles.Htext,{flex:6,textAlign:'center',textAlignVertical:'center'}]}>高鐵訂票系統</Text>
+                <TouchableOpacity style={styles.user_btn} onPress={()=>{setInfoVisible(true);}}>
+                    <Image source={require('./icons/user.png')} style={styles.user_image}></Image>
+                </TouchableOpacity>
             </View>
 
             {/*loading view*/}
@@ -2424,7 +2423,7 @@ export default function App() {
             {Page===1 &&(
                 <View style={styles.cbox}>
                     <View style={{width:'100%',flex:3,justifyContent:'flex-start', alignSelf:'center'}}>
-                        <View style={{marginTop:'1%',alignSelf:'center',width:'50%',height:'60%',alignContent:'center',justifyContent:'space-between',flexDirection:'row'}}>
+                        <View style={{marginTop:'1%',alignSelf:'center',width:'50%',height:'60%',alignContent:'center',justifyContent:'center',flexDirection:'row'}}>
                             <View style={styles.circle}></View>
                             <Text allowFontScaling={false} style={styles.work_text}>全線正常營運</Text>
                         </View>
@@ -2512,24 +2511,24 @@ export default function App() {
                     </TouchableOpacity>
                     <View style={[styles.seg_line,{width: '90%',height:'0.2%'}]}></View>
                     {sumTickets===1 && (
-                    <TouchableOpacity style={styles.chossen_bars} onPress={() => setModalVisible(true)}>
-                        <View style={styles.menu_icon_pos}>
-                            <Image source={require('./icons/seat.png')} style={styles.menu_icon}></Image>
-                        </View>
-                        <View style={styles.chossen_pos}>
-                            <Text allowFontScaling={false} style={styles.chossen_title}>座位偏好</Text>
-                            <Text allowFontScaling={false} style={styles.chossen_text}>{PreText}</Text>
-                        </View>
-                        <View style={styles.to_pos}>
-                            <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
-                        </View>
-                    </TouchableOpacity>)}
+                        <TouchableOpacity style={styles.chossen_bars} onPress={() => setModalVisible(true)}>
+                            <View style={styles.menu_icon_pos}>
+                                <Image source={require('./icons/seat.png')} style={styles.menu_icon}></Image>
+                            </View>
+                            <View style={styles.chossen_pos}>
+                                <Text allowFontScaling={false} style={styles.chossen_title}>座位偏好</Text>
+                                <Text allowFontScaling={false} style={styles.chossen_text}>{PreText}</Text>
+                            </View>
+                            <View style={styles.to_pos}>
+                                <Image source={require('./icons/to.png')} style={styles.to_img}></Image>
+                            </View>
+                        </TouchableOpacity>)}
                     {sumTickets===1 && (
-                    <View style={[styles.seg_line,{width: '90%',height:'0.2%'}]}></View>)}
+                        <View style={[styles.seg_line,{width: '90%',height:'0.2%'}]}></View>)}
                     <TouchableOpacity style={[styles.submit_btn,{flex:2,margin:'5%'}]}  onPress={()=>{setSearch(true);}}>
-                    <Text allowFontScaling={false} style={styles.submit_text}>查詢</Text>
-                </TouchableOpacity>
-            </View>
+                        <Text allowFontScaling={false} style={styles.submit_text}>查詢</Text>
+                    </TouchableOpacity>
+                </View>
             )}
 
             {Page===2 &&(
@@ -2712,12 +2711,12 @@ export default function App() {
                         </View>
                         <View style={load_view.inputview}>
                             <Text allowFontScaling={false} style={load_view.explaintext}>訂位代號</Text>
-                            <TextInput style={load_view.inputtext} keyboardType='numeric' maxLength={8} onChangeText={setBookNumber} value={BookNumber} placeholder="訂位代號共8碼"></TextInput>
+                            <TextInput allowFontScaling={false} style={load_view.inputtext} keyboardType='numeric' maxLength={8} onChangeText={setBookNumber} value={BookNumber} placeholder="訂位代號共8碼"></TextInput>
                             <View style={load_view.seg_line}></View>
                         </View>
                         <View style={load_view.inputview}>
                             <Text allowFontScaling={false} style={load_view.explaintext}>取票驗證碼/取票識別碼</Text>
-                            <TextInput style={load_view.inputtext} autoCapitalize={'characters'} maxLength={10} onChangeText={setGetTicketCode} value={GetTicketCode} placeholder="驗證碼或身分證/護照/居留證號末4碼"></TextInput>
+                            <TextInput allowFontScaling={false} style={load_view.inputtext} autoCapitalize={'characters'} maxLength={10} onChangeText={setGetTicketCode} value={GetTicketCode} placeholder="驗證碼或身分證/護照/居留證號末4碼"></TextInput>
                             <View style={load_view.seg_line}></View>
                         </View>
                     </View>
@@ -3158,7 +3157,7 @@ export default function App() {
                             </TouchableOpacity>
                             <View style={[load_view.inputview,{height:'20%'}]}>
                                 <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
-                                <TextInput style={[load_view.inputtext,{fontSize: 14}]} onChangeText={setOrderOfFind} value={OrderOfFind} placeholder="車次號碼"></TextInput>
+                                <TextInput allowFontScaling={false} style={[load_view.inputtext,{fontSize: 14}]} onChangeText={setOrderOfFind} value={OrderOfFind} placeholder="車次號碼"></TextInput>
                                 <View style={load_view.seg_line}></View>
                             </View>
                             <View style={[load_view.inputview,{width:'90%',height:'20%'}]}>
@@ -3175,7 +3174,7 @@ export default function App() {
                                     </TouchableOpacity>
                                     <View style={[load_view.idbtn,{height:'30%'}]}>
                                         <View style={load_view.idtextview}>
-                                            <TextInput style={[load_view.inputtext,{fontSize: 15,marginTop: '0%'}]} maxLength={10} onChangeText={setIdOfFind} value={IdOfFind} placeholder=""></TextInput>
+                                            <TextInput allowFontScaling={false} style={[load_view.inputtext,{fontSize: 15,marginTop: '0%'}]} maxLength={10} onChangeText={setIdOfFind} value={IdOfFind} placeholder=""></TextInput>
                                             <View style={load_view.chooseview}>
                                             </View>
                                         </View>
@@ -3200,62 +3199,62 @@ export default function App() {
                         <Text allowFontScaling={false} style={Booking_style.bigtitle}>查詢訂位代號</Text>
                     </View>
                     <ScrollView style={{width:'100%'}}>
-                    <View style={[load_view.card,{height:250}]}>
-                        <View style={[load_view.inputview,{height:'20%',marginTop:'5%'}]}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>取票人證號</Text>
-                            <Text allowFontScaling={false} style={load_view.inputtext}>{IdOfFind}</Text>
-                            <View style={load_view.seg_line}></View>
+                        <View style={[load_view.card,{height:250}]}>
+                            <View style={[load_view.inputview,{height:'20%',marginTop:'5%'}]}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>取票人證號</Text>
+                                <Text allowFontScaling={false} style={load_view.inputtext}>{IdOfFind}</Text>
+                                <View style={load_view.seg_line}></View>
+                            </View>
+                            <View style={[load_view.inputview,{height:'20%'}]}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>起訖車站</Text>
+                                <Text allowFontScaling={false} style={load_view.inputtext}>{StartstationText} - {EndstationText}</Text>
+                                <View style={load_view.seg_line}></View>
+                            </View>
+                            <View style={[load_view.inputview,{height:'20%'}]}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
+                                <Text allowFontScaling={false} style={load_view.inputtext}>{FindTimeText}</Text>
+                                <View style={load_view.seg_line}></View>
+                            </View>
+                            <View style={[load_view.inputview,{height:'20%'}]}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
+                                <Text allowFontScaling={false} style={load_view.inputtext}>{OrderOfFind}</Text>
+                                <View style={load_view.seg_line}></View>
+                            </View>
                         </View>
-                        <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>起訖車站</Text>
-                            <Text allowFontScaling={false} style={load_view.inputtext}>{StartstationText} - {EndstationText}</Text>
-                            <View style={load_view.seg_line}></View>
+                        <Text allowFontScaling={false} style={{marginBottom:'5%',marginTop:'5%',alignSelf:'center',textAlign:'left',textAlignVertical:'center',width:'81%',maxWidth:'100%',fontWeight:'bold',fontSize:15}}>符合結果之訂位紀錄如下，點選訂位代號可將該筆訂位紀錄擷取至手機。</Text>
+                        <View style={[load_view.card,{flexDirection:'row',height:'auto'}]}>
+                            <View style={[load_view.triview,{justifyContent:'flex-start',marginLeft:'5%'}]}>
+                                <Text allowFontScaling={false} style={load_view.explaintext}>訂位代號</Text>
+                                {FindOfDatas.map((item,index)=>{
+                                    return(
+                                        <TouchableOpacity style={load_view.findcodebtn} key={index} onPress={()=>{loadticketnow(item.State==='True',item)}}>
+                                            <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'left',textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714'}]}>{item.Code}</Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+                            <View style={load_view.triview}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign: 'center'}]}>交易狀態</Text>
+                                {FindOfDatas.map((item,index)=>{
+                                    return(
+                                        <TouchableOpacity key={index} style={load_view.findcodebtn} onPress={()=>{loadticketnow(item.State==='True',item)}}>
+                                            <Text allowFontScaling={false} style={[load_view.findcodetext,{textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714',textAlign:'center'}]}>{item.State==='True'?'已付款':'未付款'}</Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </View>
+                            <View style={[load_view.triview,{justifyContent:'flex-start',marginRight:'5%'}]}>
+                                <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign:'right'}]}>付款期限</Text>
+                                {FindOfDatas.map((item,index)=>{
+                                    return(
+                                        <View key={index} style={load_view.findcodebtn}>
+                                            <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'right'}]}>{item.State==='True'?'已付款':'發車前30分'}</Text>
+                                        </View>
+                                    );
+                                })}
+                            </View>
                         </View>
-                        <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>去程日期</Text>
-                            <Text allowFontScaling={false} style={load_view.inputtext}>{FindTimeText}</Text>
-                            <View style={load_view.seg_line}></View>
-                        </View>
-                        <View style={[load_view.inputview,{height:'20%'}]}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{fontSize: 14}]}>車次號碼</Text>
-                            <Text allowFontScaling={false} style={load_view.inputtext}>{OrderOfFind}</Text>
-                            <View style={load_view.seg_line}></View>
-                        </View>
-                    </View>
-                    <Text allowFontScaling={false} style={{marginBottom:'5%',marginTop:'5%',alignSelf:'center',textAlign:'left',textAlignVertical:'center',width:'81%',maxWidth:'100%',fontWeight:'bold',fontSize:15}}>符合結果之訂位紀錄如下，點選訂位代號可將該筆訂位紀錄擷取至手機。</Text>
-                    <View style={[load_view.card,{flexDirection:'row',height:'auto'}]}>
-                        <View style={[load_view.triview,{justifyContent:'flex-start',marginLeft:'5%'}]}>
-                            <Text allowFontScaling={false} style={load_view.explaintext}>訂位代號</Text>
-                            {FindOfDatas.map((item,index)=>{
-                                return(
-                                    <TouchableOpacity style={load_view.findcodebtn} key={index} onPress={()=>{loadticketnow(item.State==='True',item)}}>
-                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'left',textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714'}]}>{item.Code}</Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                        <View style={load_view.triview}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign: 'center'}]}>交易狀態</Text>
-                            {FindOfDatas.map((item,index)=>{
-                                return(
-                                    <TouchableOpacity key={index} style={load_view.findcodebtn} onPress={()=>{loadticketnow(item.State==='True',item)}}>
-                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textDecorationLine: item.State==='True'?'none':'underline',textDecorationColor:'#D83714',color:item.State==='True'?'#000000':'#D83714',textAlign:'center'}]}>{item.State==='True'?'已付款':'未付款'}</Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
-                        <View style={[load_view.triview,{justifyContent:'flex-start',marginRight:'5%'}]}>
-                            <Text allowFontScaling={false} style={[load_view.explaintext,{textAlign:'right'}]}>付款期限</Text>
-                            {FindOfDatas.map((item,index)=>{
-                                return(
-                                    <View key={index} style={load_view.findcodebtn}>
-                                        <Text allowFontScaling={false} style={[load_view.findcodetext,{textAlign:'right'}]}>{item.State==='True'?'已付款':'發車前30分'}</Text>
-                                    </View>
-                                );
-                            })}
-                        </View>
-                    </View>
-                </ScrollView>
+                    </ScrollView>
                 </View>
             </Modal>
 
@@ -3792,22 +3791,22 @@ export default function App() {
                     <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>
                     {TypeText==='標準車廂' &&(
                         <View style={styles.ticket_view}>
-                        <View style={styles.ticket_info}>
-                            <Text allowFontScaling={false} style={styles.ticket_type_text}>大學生</Text>
-                            <Text allowFontScaling={false} style={styles.ticket_info_text}>持本國大專院校有效學生證之學生</Text>
-                        </View>
-                        <View style={styles.number_of_ticket_view}>
-                            <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'minus')}}>
-                                <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
-                            </TouchableOpacity>
-                            <View style={styles.vertical_line}></View>
-                            <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[4]===0?'#000000':'#D83714'}]}>{Tickets[4]}</Text>
-                            <View style={styles.vertical_line}></View>
-                            <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'plus')}}>
-                                <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
-                            </TouchableOpacity>
-                        </View>
-                    </View>)}
+                            <View style={styles.ticket_info}>
+                                <Text allowFontScaling={false} style={styles.ticket_type_text}>大學生</Text>
+                                <Text allowFontScaling={false} style={styles.ticket_info_text}>持本國大專院校有效學生證之學生</Text>
+                            </View>
+                            <View style={styles.number_of_ticket_view}>
+                                <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'minus')}}>
+                                    <Image style={styles.plus_minus_img} source={require('./icons/minus.png')}></Image>
+                                </TouchableOpacity>
+                                <View style={styles.vertical_line}></View>
+                                <Text allowFontScaling={false} style={[styles.number_of_ticket_text,{color:Tickets[4]===0?'#000000':'#D83714'}]}>{Tickets[4]}</Text>
+                                <View style={styles.vertical_line}></View>
+                                <TouchableOpacity style={styles.plus_minus_btn} onPress={()=>{setTicketNumber(4,'plus')}}>
+                                    <Image style={styles.plus_minus_img} source={require('./icons/plus.png')}></Image>
+                                </TouchableOpacity>
+                            </View>
+                        </View>)}
                     {TypeText==='標準車廂' &&(
                         <View style={[styles.seg_line,{width: '80%',height: '0.2%'}]}></View>)}
                     <View style={[styles.complete_view]} >
@@ -4124,7 +4123,7 @@ export default function App() {
                     <ScrollView style={Booking_style.info_menu}>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>姓名(Last name and First name)</Text>
-                            <TextInput style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>性別(Gender)</Text>
@@ -4141,15 +4140,15 @@ export default function App() {
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>身分證字號(ID-number)</Text>
-                            <TextInput style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
-                            <TextInput style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
-                            <TextInput style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
                         </View>
                     </ScrollView>
 
@@ -4173,7 +4172,7 @@ export default function App() {
                     <ScrollView style={Booking_style.info_menu}>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>姓名(Last name and First name)</Text>
-                            <TextInput style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} onChangeText={setName} value={Name} placeholder="童維維"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>性別(Gender)</Text>
@@ -4190,15 +4189,15 @@ export default function App() {
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>身分證字號(ID-number)</Text>
-                            <TextInput style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} maxLength={10} onChangeText={setIDnumber} value={IDnumber} placeholder="A123456789"></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>手機號碼(Phone-number)</Text>
-                            <TextInput style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} maxLength={10} onChangeText={setPhonenumber} value={Phonenumber} placeholder="0912345678" keyboardType='numeric'></TextInput>
                         </View>
                         <View style={Booking_style.info_view}>
                             <Text allowFontScaling={false} style={Booking_style.item_text}>電子郵箱(E-mail)</Text>
-                            <TextInput style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
+                            <TextInput allowFontScaling={false} style={Booking_style.input} onChangeText={setEmail} value={Email} placeholder="abc@xxx.com"></TextInput>
                         </View>
                     </ScrollView>
 
@@ -4766,15 +4765,15 @@ export default function App() {
                                         </View>
                                     </View>
                                     {TicketDatas.Start.Tickets.map((item,index)=>{
-                                            return (
-                                                <View key={index} style={ticket_style.cards}>
-                                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
-                                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
-                                                    <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
-                                                </View>
+                                        return (
+                                            <View key={index} style={ticket_style.cards}>
+                                                <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                                <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
+                                                <View style={[ticket_style.black_seg_line,{height:1}]}></View>
+                                                <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
+                                            </View>
 
-                                            );
+                                        );
                                     })}
                                 </View>
                             </View>
@@ -4789,32 +4788,32 @@ export default function App() {
                                     <View style={[ticket_style.seg_line,{height:0.5}]}></View>
                                     <View>
                                         <View style={{flexDirection:'row',width:'90%',alignSelf:'center'}}>
-                                        <View style={Booking_style.up}>
-                                        <View style={Booking_style.order_view}>
-                                        <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
-                                        <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
-                                    </View>
-                                    <View style={Booking_style.order_view}>
-                                        <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
-                                        <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
-                                    </View>
-                                        <View style={Booking_style.order_view}>
-                                            <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
-                                            <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                            <View style={Booking_style.up}>
+                                                <View style={Booking_style.order_view}>
+                                                    <Text allowFontScaling={false} style={Booking_style.Stations_text}>{TicketDatas.ArriveStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.StartTime}</Text>
+                                                </View>
+                                                <View style={Booking_style.order_view}>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>------></Text>
+                                                    <Text allowFontScaling={false} style={Booking_style.order_text}>{TicketDatas.Arrive.Order}</Text>
+                                                </View>
+                                                <View style={Booking_style.order_view}>
+                                                    <Text allowFontScaling={false} style={[Booking_style.Stations_text,{alignSelf:'flex-end'}]}>{TicketDatas.StartStation}</Text>
+                                                    <Text allowFontScaling={false} style={[Booking_style.timetext,{fontSize:22}]}>{TicketDatas.Arrive.ArriveTime}</Text>
+                                                </View>
+                                            </View>
                                         </View>
+                                        {TicketDatas.Arrive.Tickets.map((item,index)=>{
+                                            return (
+                                                <View key={index} style={ticket_style.cards}>
+                                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
+                                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
+                                                    <View style={[ticket_style.black_seg_line,{height:1}]}></View>
+                                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
+                                                </View>
+                                            );
+                                        })}
                                     </View>
-                                </View>
-                            {TicketDatas.Arrive.Tickets.map((item,index)=>{
-                                return (
-                                <View key={index} style={ticket_style.cards}>
-                                    <Text allowFontScaling={false} style={ticket_style.typetext}>{item.Type}</Text>
-                                    <Text allowFontScaling={false} style={ticket_style.seatpostext}>{item.Position}</Text>
-                                    <View style={[ticket_style.black_seg_line,{height:1}]}></View>
-                                    <Text allowFontScaling={false} style={ticket_style.costtext}>TWD {moneyManifest(item.Price)}</Text>
-                                </View>
-                                );
-                            })}
-                                </View>
                                 </View>
                             )}
                             <View style={ticket_style.card3}>
@@ -6234,11 +6233,20 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         alignSelf:'center',
         justifyContent:'center',
-        letterSpacing:5
+        letterSpacing:5,
+    },
+    user_btn:{
+        marginRight:'10%',
+        marginTop:'10%',
+        alignSelf:'center',
+        justifyContent:'center',
+        flex:0.5,
+        aspectRatio:1
     },
     user_image:{
         resizeMode:'contain',
-        width:'100%'
+        width:'100%',
+        height:'100%'
     },
     hbox:{
         flexDirection:'row',
@@ -6271,6 +6279,7 @@ const styles = StyleSheet.create({
         margin:'5%'
     },
     circle:{
+        marginRight:'5%',
         alignSelf:'center',
         alignItems: 'center',
         justifyContent: 'center',
@@ -6281,6 +6290,7 @@ const styles = StyleSheet.create({
         borderRadius: 60,
     },
     work_text:{
+        marginLeft:'5%',
         alignSelf:'center',
         justifyContent:'center',
         color:'#5dd942',
