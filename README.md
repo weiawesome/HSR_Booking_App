@@ -1,5 +1,9 @@
 ﻿# HSR_Booking_App
-<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/assets/icon.png" width=50% height=50%>
+<div flex-direction=row>
+<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/icon.png" width=30% height=30% margin-right=5%>
+<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/UI.jpg" height=30%>
+
+</div>
 
 Hello this is our term-project for DB class.
 
