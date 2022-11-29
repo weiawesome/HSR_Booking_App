@@ -30,5 +30,9 @@
 3. Search anything we may need
 
 ---
->Download node.js
->><img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/icon.png" width=30% margin-left=5%>
+1. Download node.js
+<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/node.png" width=30% margin-left=5%>
+2. Open terminal and execute "npm -g install expo-cli"
+3. Open terminal and execute "expo init {Your project's name}"
+4. Open the project by your IDE
+
