@@ -21,6 +21,8 @@
  * Then why is the Expo
  
     * I use a ASUS laptop to develope it. Hence, by Expo I can easily use my Iphone to solve it without a emulator.
+    * Use the app "Expo Go" download by Google play or App store
+     <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/expo-go.png" width=20% margin-left=30%>
 
 ---
 >The step we do
@@ -31,8 +33,30 @@
 
 ---
 1. Download node.js
-<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/node.png" width=30% margin-left=5%>
-2. Open terminal and execute "npm -g install expo-cli"
-3. Open terminal and execute "expo init {Your project's name}"
-4. Open the project by your IDE
 
+   <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/node.png" width=30% margin-left=5%>
+   
+2. Open terminal and execute "npm -g install expo-cli"
+```console
+npm -g install expo-cli
+```
+3. Open terminal and execute "expo init {Your project's name}"
+```console
+expo init {Your project's name}
+```
+4. Open the project by your (IDE Vscode or Webstorm(recommand))
+<div flex-direction=column>
+ <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/IDE-vscode.png" width=20% margin-left=5%>
+ <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/IDE-webstorm.png" width=20% margin-left=30%>
+</div>
+5. Open terminal in your project path and execute "npm start"
+
+```console
+npm start
+```
+
+>>Press "i" open ios emulator 
+
+>>Press "a" android emulator
+
+>>Scan QRcode open by "Expo Go" in your phone
