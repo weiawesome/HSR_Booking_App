@@ -1,5 +1,5 @@
 ﻿# HSR_Booking_App
-![image](https://github.com/weiawesome/HSR_Booking_App/blob/main/assets/icon.png)
+<img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/assets/icon.png" width=50% height=50%>
 
 Hello this is our term-project for DB class.
 
