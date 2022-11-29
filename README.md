@@ -1,4 +1,5 @@
 ﻿# HSR_Booking_App
+![image](https://github.com/weiawesome/HSR_Booking_App/blob/main/assets/icon.png)
 
 Hello this is our term-project for DB class.
 
