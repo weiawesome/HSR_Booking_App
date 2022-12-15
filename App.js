@@ -424,56 +424,6 @@ export default function App() {
             expires: null,
         });
         setInfoVisible(false);
-        //     if(Name===''){
-        //         Alert.alert('大笨蛋','名字不能是空的!');
-        //     }
-        //     else if(!(IDnumber.match(/^[A-Z](1|2)\d{8}$/i))){
-        //         Alert.alert('大笨蛋','身分證號碼格式不符\n提示 : 大寫英文字加數字共10位!');
-        //     }
-        //     else if(!(Phonenumber.match(/09\d{8}$/))){
-        //         Alert.alert('大笨蛋','電話號碼格式不符\n提示 : 09加上8位數字!');
-        //     }
-        //     else if(!(Email.match(/^(([.](?=[^.]|^))|[\w_%{|}#$~`+!?-])+@(?:[\w-]+\.)+[a-zA-Z.]{2,63}$/))){
-        //         Alert.alert('大笨蛋','電子信箱格式不符');
-        //     }
-        //     else{
-        //         const data={
-        //             'Name':Name.toString(),
-        //             'Gender': Gender,
-        //             'ID' : IDnumber.toString(),
-        //             'Phone':Phonenumber.toString(),
-        //             'Email':Email.toString(),
-        //         };
-        //         console.log('Data Sent!');
-        //         console.log('Data:',data);
-        //         fetch(apiurl+'/CheckID/',{method:'POST',headers:{
-        //                 'Accept': 'application/json',
-        //                 'Content-Type':'application/json'
-        //             },body:JSON.stringify(data)})
-        //             .then((response) => response.json())
-        //             .then(async (responseJson) => {
-        //                 try {
-        //                     if (responseJson.Status === 'True') {
-        //                         console.log('Data Get!');
-        //                         console.log('Data:', responseJson);
-        //
-        //
-        //                         console.log('Data Set!');
-        //                         console.log('Complete!');
-        //                     } else {
-        //                         Alert.alert('大笨蛋', '身分資訊錯誤 請確認與先前輸入資訊是否一致!');
-        //                     }
-        //                 }
-        //                 catch (e) {
-        //                     console.log(e)
-        //                     Alert.alert('大笨蛋', '後端出現問題!');
-        //                 }
-        //             })
-        //             .catch((error) => {
-        //                 console.error(error);
-        //                 Alert.alert('大笨蛋', '出現些許錯誤 請重試!');
-        //             });
-        // }
     };
 
     useEffect(()=>{
@@ -773,7 +723,7 @@ export default function App() {
                         if(responseJson.Out==='True'){
                             await storage.save({
                                 key: 'UsedTicket', // 注意:请不要在key中使用_下划线符号!
-                                id:YourTickets[index].CodeNumber+YourTickets[index].Tickets.Position,
+                                id:YourTickets[index].CodeNumber+YourTickets[index].Tickets[0].Position,
                                 data: YourTickets[index],
                                 expires: null,
                             });
@@ -893,9 +843,10 @@ export default function App() {
                                 });
                             }
                             else{
+                                await storage.remove({key: 'Ticket', id: CopyTicketInfo.CodeNumber+CopyTicketInfo.Start.Tickets[0].Position});
                                 await storage.save({
                                     key: 'Ticket', // 注意:请不要在key中使用_下划线符号!
-                                    id: CopyTicketInfo.CodeNumber,
+                                    id: CopyTicketInfo.CodeNumber+d1[0].Position,
                                     data: {
                                         CodeNumber: CopyTicketInfo.CodeNumber,
                                         OnewayReturn: CopyTicketInfo.OnewayReturn,
@@ -988,7 +939,7 @@ export default function App() {
                             if (!TicketDatas.BussinessState) {
                                 await storage.remove({key: 'BookedTicket', id: TicketDatas.CodeNumber});
                             } else {
-                                await storage.remove({key: 'Ticket', id: TicketDatas.CodeNumber});
+                                await storage.remove({key: 'Ticket', id: TicketDatas.CodeNumber+TicketDatas.Start.Tickets[0].Position});
                             }
                             setStarted(true);
                             setRefundDetailsVisible(false);
@@ -1668,10 +1619,7 @@ export default function App() {
         setPaidTicketVisible(true);
     };
 
-    async function test(){
-        await storage.clearMapForKey('BookedTicket');
-        await storage.clearMapForKey('PaidTicket');
-        await storage.clearMapForKey('Ticket');
+    async function ClearTicket(){
         await storage.clearMapForKey('UsedTicket');
     };
 
@@ -1912,8 +1860,7 @@ export default function App() {
             Linking.openURL(ContractUrl);
         }
         else if(index===5){
-            test();
-            setStarted(true);
+            Alert.alert('提醒','此功能為清除該裝置上已使用票券。\n此項動作無法復原，如要繼續請按確定!',[{text:'確定',onPress:()=>{ClearTicket();setStarted(true);}},{text:'取消'}]);
             return ;
         }
         else if(index===6){
