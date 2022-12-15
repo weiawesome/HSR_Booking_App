@@ -1,4 +1,4 @@
-﻿﻿# HSR_Booking_App
+# HSR_Booking_App
 >This is the App UI and its icon!
 <div flex-direction=column>
  <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/icon.png" width=30% margin-left=5%>
@@ -13,16 +13,16 @@
 ---
 >Why we choose React-Native and Expo
 
-* why is the React-Native
+ * why is the React-Native
     * Because using React-Native is a good choice for developing a dual platform app in a short time.
 
     * You just only need to know a few knowledge about css event without javascript then you can make it.
 
-* Then why is the Expo
-
+ * Then why is the Expo
+ 
     * I use a ASUS laptop to develope it. Hence, by Expo I can easily use my Iphone to solve it without a emulator.
     * Use the app "Expo Go" download by Google play or App store
-      <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/expo-go.png" width=20% margin-left=30%>
+     <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/expo-go.png" width=20% margin-left=30%>
 
 ---
 >The step we do
@@ -35,7 +35,7 @@
 1. Download node.js
 
    <img src="https://github.com/weiawesome/HSR_Booking_App/blob/main/Result_img/node.png" width=30% margin-left=5%>
-
+   
 2. Open terminal and execute "npm -g install expo-cli"
 ```console
 npm -g install expo-cli
@@ -55,7 +55,7 @@ expo init {Your project's name}
 npm start
 ```
 
->>Press "i" open ios emulator
+>>Press "i" open ios emulator 
 
 >>Press "a" android emulator
 
